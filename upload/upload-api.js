@@ -1,8 +1,10 @@
 (() => {
   "use strict";
 
+  const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
+
   async function request(path, options = {}) {
-    const response = await fetch(path, {
+    const response = await fetch(API_BASE + path, {
       ...options,
       headers: {
         "Accept": "application/json",
