@@ -140,7 +140,7 @@
   function initialize() {
     $("video-file").addEventListener("change", handleFile);
     $("creator-login").addEventListener("click", () => authenticate(false));
-    $("creator-register").addEventListener("click", () => authenticate(true));
+    $("creator-register").addEventListener("click", () => { window.location.href = "register.html?next=creator-upload.html"; });
     $("prepare-upload").addEventListener("click", prepare);
     $("reset-upload").addEventListener("click", reset);
     checkStorage();
