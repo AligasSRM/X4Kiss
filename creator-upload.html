@@ -36,7 +36,7 @@
         <strong>Creator account</strong>
         <div class="upload-grid">
           <label><span>Email</span><input id="creator-email" type="email" autocomplete="username" placeholder="you@example.com"></label>
-          <label><span>Password (minimum 10 characters)</span><input id="creator-password" type="password" autocomplete="current-password" minlength="10"></label>
+          <label><span>Password (minimum 8 characters)</span><input id="creator-password" type="password" autocomplete="current-password" minlength="8"></label>
         </div>
         <div class="upload-actions">
           <button id="creator-login" class="primary" type="button">Sign in</button>
@@ -63,7 +63,7 @@
       <div class="upload-grid">
         <label>
           <span>Title</span>
-          <input id="video-title" type="text" maxlength="120" placeholder="Video title">
+          <input id="video-title" type="text" autocomplete="off" maxlength="120" placeholder="Video title">
         </label>
 
         <label>
@@ -81,7 +81,7 @@
 
         <label class="full">
           <span>Description</span>
-          <textarea id="video-description" maxlength="2000" rows="5" placeholder="Describe your video"></textarea>
+          <textarea id="video-description" autocomplete="off" maxlength="2000" rows="5" placeholder="Describe your video"></textarea>
         </label>
 
         <label>
