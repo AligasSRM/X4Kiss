@@ -1254,21 +1254,14 @@ export default {
         }, 503);
       }
 
-      if (!env.XKISS_UPLOAD_KEY) {
-        return json({
-          ok: false,
-          storageReady: true,
-          message: "Upload authorization is not configured yet."
-        }, 503);
+      if (!env.XKISS_AUTH_DB) {
+        return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       }
-
-      const suppliedKey = request.headers.get("X-XKiss-Upload-Key");
-
-      if (!suppliedKey || suppliedKey !== env.XKISS_UPLOAD_KEY) {
-        return json({
-          ok: false,
-          message: "Upload authorization failed."
-        }, 401);
+      const authorization = request.headers.get("Authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      const session = await authenticateSession(env, token);
+      if (!session.ok) {
+        return json({ ok: false, message: "Sign in with your creator account before uploading." }, 401);
       }
 
       const fileName = request.headers.get("X-XKiss-File-Name");
@@ -1304,13 +1297,15 @@ export default {
           title: request.headers.get("X-XKiss-Title") || "",
           description: request.headers.get("X-XKiss-Description") || "",
           category: request.headers.get("X-XKiss-Category") || "",
-          downloadPolicy: request.headers.get("X-XKiss-Download-Policy") || "disabled",
-          visibility: request.headers.get("X-XKiss-Visibility") || "private"
+          creatorId: session.user.id,
+          downloadPolicy: "disabled",
+          visibility: "private"
         });
 
         return json({
           ...stored,
-          message: "Video uploaded successfully."
+          visibility: "private",
+          message: "Video uploaded to private storage. Public publishing and playback are not enabled yet."
         }, 201);
       } catch {
         return json({
