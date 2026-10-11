@@ -28,8 +28,8 @@ jobs:
           node <<'NODE'
           const base = process.env.BASE_URL;
           const email = `xk1-${process.env.RUN_ID}@example.com`;
-          const password = "XKiss-Acceptance-2026-Long-Test!";
-          const registration = { fullName: "XKiss Acceptance Tester", email, phone: "+12025550123", password, ageConfirmed: true, termsAccepted: true };
+          const password = "XkTest8!";
+          const registration = { fullName: "XKiss Acceptance Tester", email, password, ageConfirmed: true, termsAccepted: true };
           
           async function call(path, options = {}) {
             const res = await fetch(base + path, {
@@ -73,13 +73,19 @@ jobs:
             method: "POST",
             body: JSON.stringify(registration)
           });
-          assert(register.status === 201 && register.body?.ok === true && register.body?.status === "created" && typeof register.body?.token === "string" && register.body?.user?.fullName === registration.fullName && register.body?.user?.phone === registration.phone, "register with profile and session", { status: register.status, body: register.body });
+          assert(register.status === 201 && register.body?.ok === true && register.body?.status === "created" && typeof register.body?.token === "string" && register.body?.user?.fullName === registration.fullName, "register with profile and session", { status: register.status, body: register.body });
           
           const missingProfile = await call("/api/auth/register", {
             method: "POST",
             body: JSON.stringify({ email: `invalid-${process.env.RUN_ID}@example.com`, password, ageConfirmed: true, termsAccepted: true })
           });
           assert(missingProfile.status === 400 && missingProfile.body?.ok === false && missingProfile.body?.status === "invalid_input", "registration requires full profile fields");
+          
+          const tooShortPassword = await call("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({ fullName: "Short Password Tester", email: `short-${process.env.RUN_ID}@example.com`, password: "Aa123!x", ageConfirmed: true, termsAccepted: true })
+          });
+          assert(tooShortPassword.status === 400 && tooShortPassword.body?.status === "invalid_input", "passwords shorter than eight characters rejected");
 
           const duplicate = await call("/api/auth/register", {
             method: "POST",
@@ -102,7 +108,7 @@ jobs:
           const registeredSession = await call("/api/auth/me", {
             headers: { Authorization: `Bearer ${register.body.token}` }
           });
-          assert(registeredSession.status === 200 && registeredSession.body?.ok === true && registeredSession.body?.user?.fullName === registration.fullName && registeredSession.body?.user?.phone === registration.phone, "registration creates a usable authenticated session with profile", { status: registeredSession.status, body: registeredSession.body });
+          assert(registeredSession.status === 200 && registeredSession.body?.ok === true && registeredSession.body?.user?.fullName === registration.fullName, "registration creates a usable authenticated session with profile", { status: registeredSession.status, body: registeredSession.body });
 
           const token = login.body.token;
           const me = await call("/api/auth/me", {
