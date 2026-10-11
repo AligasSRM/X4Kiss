@@ -29,9 +29,6 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
       <label>Email address
         <input id="register-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
       </label>
-      <label>Phone number (include country code)
-        <input id="phone" name="phone" type="tel" autocomplete="tel" minlength="7" maxlength="24" required placeholder="+31 6 12345678">
-      </label>
       <label>Password (10–200 characters)
         <div class="password-wrap"><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="200" required><button class="password-toggle" type="button" data-password-target="register-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
       </label>
@@ -54,7 +51,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
       <button class="primary" id="login-submit" type="submit">Sign in and enter</button>
     </form>
     <div id="message" class="message" role="status" aria-live="polite"></div>
-    <p class="fine"><strong>Important:</strong> phone number is collected but SMS verification is not connected yet. The age checkbox is a self-declaration, not independent age verification. Never share your password with support.</p>
+    <p class="fine"><strong>Important:</strong> the age checkbox is a self-declaration, not independent age verification. Never share your password with support.</p>
   </section>
 </main>
 <script>
@@ -105,13 +102,12 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     event.preventDefault();
     var fullName=document.getElementById("full-name").value.trim();
     var email=document.getElementById("register-email").value.trim();
-    var phone=document.getElementById("phone").value.trim();
     var password=document.getElementById("register-password").value;
     var confirm=document.getElementById("confirm-password").value;
     if(password!==confirm){showMessage("The passwords do not match.","error");return;}
     if(!document.getElementById("age-confirm").checked||!document.getElementById("terms-confirm").checked){showMessage("Confirm the 18+ declaration and accept the terms to continue.","error");return;}
     var button=document.getElementById("register-submit");button.disabled=true;button.textContent="Creating account…";
-    try{await call("/api/auth/register",{fullName:fullName,email:email,phone:phone,password:password,ageConfirmed:true,termsAccepted:true});}
+    try{await call("/api/auth/register",{fullName:fullName,email:email,password:password,ageConfirmed:true,termsAccepted:true});}
     catch(error){showMessage(error.message,"error");button.disabled=false;button.textContent="Create account and enter";}
   });
   loginForm.addEventListener("submit",async function(event){
