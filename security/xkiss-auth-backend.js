@@ -71,12 +71,12 @@ function userPublic(row) {
 
 export async function registerMember(env, { fullName, email, phone, password, ageConfirmed, termsAccepted }) {
   const normalized = normalizeEmail(email);
-  const normalizedName = typeof fullName === "string" ? fullName.trim().replace(/\\s+/g, " ") : "";
+  const normalizedName = typeof fullName === "string" ? fullName.trim().replace(/\s+/g, " ") : "";
   const normalizedPhone = typeof phone === "string" ? phone.trim() : "";
   const validName = normalizedName.length >= 2 && normalizedName.length <= 100;
-  const validPhone = /^\\+?[0-9() .-]{7,24}$/.test(normalizedPhone) &&
-    normalizedPhone.replace(/\\D/g, "").length >= 7 &&
-    normalizedPhone.replace(/\\D/g, "").length <= 15;
+  const validPhone = /^\+?[0-9() .-]{7,24}$/.test(normalizedPhone) &&
+    normalizedPhone.replace(/\D/g, "").length >= 7 &&
+    normalizedPhone.replace(/\D/g, "").length <= 15;
 
   if (!validName || !validEmail(normalized) || !validPhone || !validPassword(password) ||
       ageConfirmed !== true || termsAccepted !== true) {
