@@ -123,6 +123,23 @@
     setProgress(0, "Upload not started");
   }
 
+  async function restoreSession() {
+    const status = $("creator-auth-status");
+    try {
+      const result = await window.XKissUploadAPI.verifySession();
+      state.signedIn = result.ok === true && result.status === "authenticated";
+      if (state.signedIn) {
+        status.textContent = "Signed in as " + (result.user?.email || "creator") + ". You can upload privately.";
+      } else {
+        status.textContent = "Sign in or create an account before uploading.";
+      }
+    } catch {
+      // Do not discard a possibly valid token for transient network errors.
+      state.signedIn = false;
+      status.textContent = "Could not verify your saved session. Check your connection, then sign in again if needed.";
+    }
+  }
+
   async function authenticate(createAccount) {
     const status = $("creator-auth-status");
     const email = $("creator-email").value.trim();
@@ -143,6 +160,7 @@
     $("creator-register").addEventListener("click", () => { window.location.href = "register.html?next=creator-upload.html"; });
     $("prepare-upload").addEventListener("click", prepare);
     $("reset-upload").addEventListener("click", reset);
+    restoreSession();
     checkStorage();
   }
 
