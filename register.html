@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<title>XKiss — Register or Sign In</title>
+<style>
+:root{color-scheme:dark;--bg:#08090d;--panel:#11131a;--line:#292c36;--text:#f5f5f7;--muted:#a0a4b1;--pink:#ff2d75;--purple:#bf5af2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 0%,#35162b 0,transparent 35%),radial-gradient(circle at 100% 20%,#25163a 0,transparent 35%),var(--bg);font:16px/1.5 Arial,Helvetica,sans-serif;color:var(--text);display:grid;place-items:center;padding:22px}
+a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{font-size:34px;font-weight:900;letter-spacing:-1.5px;text-align:center;margin-bottom:22px}.brand span{background:linear-gradient(90deg,#ff2d55,#ff9500,#ffd60a,#30d158,#0a84ff,#bf5af2);-webkit-background-clip:text;color:transparent}.brand b{color:#fff}.card{background:rgba(17,19,26,.96);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,5vw,34px);box-shadow:0 28px 90px #0008}.eyebrow{color:#ff80ac;font-size:11px;font-weight:800;letter-spacing:1.8px}.title{font-size:32px;letter-spacing:-1px;margin:7px 0}.intro{color:var(--muted);font-size:14px;margin:0 0 22px}.tabs{display:flex;background:#090a0e;padding:4px;border-radius:12px;margin:0 0 22px}.tabs button{flex:1;border:0;border-radius:9px;padding:11px;background:transparent;color:#b8bbc5;font-weight:700}.tabs button.active{background:linear-gradient(120deg,var(--pink),var(--purple));color:white}form{display:grid;gap:14px}label{display:grid;gap:7px;font-size:13px;color:#d9dbe2}input[type=text],input[type=email],input[type=tel],input[type=password]{width:100%;background:#090a0e;border:1px solid #343743;border-radius:11px;padding:13px 14px;color:white;outline:none}input:focus{border-color:#bd66dd}.checks{display:grid;gap:11px;margin:2px 0}.check{display:flex;align-items:flex-start;gap:10px;color:#c5c8d1;font-size:12px}.check input{margin-top:3px;accent-color:#d45aab}.primary{border:0;border-radius:12px;padding:14px;background:linear-gradient(120deg,var(--pink),var(--purple));color:#fff;font-weight:800;cursor:pointer}.primary:disabled{opacity:.55;cursor:wait}.message{display:none;border:1px solid #3d414d;background:#0b0d12;border-radius:12px;padding:12px;font-size:13px;line-height:1.55;white-space:pre-wrap}.message.show{display:block}.message.error{border-color:#8b334b;color:#ffb4c7}.message.success{border-color:#287a50;color:#a1f0be}.fine{font-size:11px;color:#858a98;margin-top:18px}.fine strong{color:#c5c8d1}.hidden{display:none!important}@media(max-width:420px){body{padding:12px}.title{font-size:28px}.card{border-radius:18px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="brand"><span>X</span><b>Kiss</b></div>
+  <section class="card">
+    <div class="eyebrow">MEMBER ACCESS · 18+</div>
+    <h1 class="title" id="heading">Create your XKiss account</h1>
+    <p class="intro" id="intro">Complete the required details to enter the platform. Your password is stored as a secure hash, not as plain text.</p>
+    <div class="tabs" role="tablist" aria-label="Account access">
+      <button type="button" class="active" id="show-register" aria-selected="true">Register</button>
+      <button type="button" id="show-login" aria-selected="false">Sign in</button>
+    </div>
+    <form id="register-form" novalidate>
+      <label>Full name
+        <input id="full-name" name="fullName" type="text" autocomplete="name" minlength="2" maxlength="100" required placeholder="Your full name">
+      </label>
+      <label>Email address
+        <input id="register-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+      </label>
+      <label>Phone number (include country code)
+        <input id="phone" name="phone" type="tel" autocomplete="tel" minlength="7" maxlength="24" required placeholder="+31 6 12345678">
+      </label>
+      <label>Password (10–200 characters)
+        <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="200" required>
+      </label>
+      <label>Confirm password
+        <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" maxlength="200" required>
+      </label>
+      <div class="checks">
+        <label class="check"><input id="age-confirm" type="checkbox" required> I confirm that I am at least 18 years old.</label>
+        <label class="check"><input id="terms-confirm" type="checkbox" required> I agree to the platform terms and privacy notice.</label>
+      </div>
+      <button class="primary" id="register-submit" type="submit">Create account and enter</button>
+    </form>
+    <form id="login-form" class="hidden" novalidate>
+      <label>Email address
+        <input id="login-email" type="email" autocomplete="username" required placeholder="you@example.com">
+      </label>
+      <label>Password
+        <input id="login-password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="primary" id="login-submit" type="submit">Sign in and enter</button>
+    </form>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+    <p class="fine"><strong>Important:</strong> phone number is collected but SMS verification is not connected yet. The age checkbox is a self-declaration, not independent age verification. Never share your password with support.</p>
+  </section>
+</main>
+<script>
+(function(){
+  "use strict";
+  var API="https://xkiss.srourr-ali73.workers.dev";
+  var params=new URLSearchParams(location.search);
+  var next=params.get("next")||"index.html";
+  var allowed=["index.html","creator-upload.html","videos.html","live.html"];
+  if(!allowed.includes(next.split(/[?#]/)[0])) next="index.html";
+  var registerForm=document.getElementById("register-form");
+  var loginForm=document.getElementById("login-form");
+  var message=document.getElementById("message");
+  var heading=document.getElementById("heading");
+  var intro=document.getElementById("intro");
+  var registerTab=document.getElementById("show-register");
+  var loginTab=document.getElementById("show-login");
+  function showMessage(text,type){message.textContent=text;message.className="message show"+(type?" "+type:"");}
+  function setMode(mode){
+    var isRegister=mode==="register";
+    registerForm.classList.toggle("hidden",!isRegister);
+    loginForm.classList.toggle("hidden",isRegister);
+    registerTab.classList.toggle("active",isRegister);loginTab.classList.toggle("active",!isRegister);
+    registerTab.setAttribute("aria-selected",String(isRegister));loginTab.setAttribute("aria-selected",String(!isRegister));
+    heading.textContent=isRegister?"Create your XKiss account":"Welcome back";
+    intro.textContent=isRegister?"Complete the required details to enter the platform.":"Sign in with the email and password for your existing account.";
+    message.className="message";
+  }
+  async function call(path,body){
+    var response;
+    try{response=await fetch(API+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store"});}
+    catch(_){throw new Error("Could not reach the XKiss account service. Please try again later.");}
+    var data={};try{data=await response.json();}catch(_){}
+    if(!response.ok||data.ok!==true){
+      if(data.status==="already_exists") throw new Error("This email already has an account. Choose Sign in. If you do not know that password, account recovery is not available yet.");
+      if(data.status==="invalid_input") throw new Error(data.message||"Check all required fields and try again.");
+      if(data.status==="invalid_credentials") throw new Error("Email or password was not accepted.");
+      if(data.status==="backend_not_configured") throw new Error("The account service is not configured. No account was created.");
+      throw new Error(data.message||("Account request failed (HTTP "+response.status+")."));
+    }
+    if(!data.token) throw new Error("The service did not return a session. Please do not retry repeatedly; contact support with this error.");
+    sessionStorage.setItem("xkiss_session_token",data.token);
+    location.replace(next);
+  }
+  registerTab.addEventListener("click",function(){setMode("register");});
+  loginTab.addEventListener("click",function(){setMode("login");});
+  registerForm.addEventListener("submit",async function(event){
+    event.preventDefault();
+    var fullName=document.getElementById("full-name").value.trim();
+    var email=document.getElementById("register-email").value.trim();
+    var phone=document.getElementById("phone").value.trim();
+    var password=document.getElementById("register-password").value;
+    var confirm=document.getElementById("confirm-password").value;
+    if(password!==confirm){showMessage("The passwords do not match.","error");return;}
+    if(!document.getElementById("age-confirm").checked||!document.getElementById("terms-confirm").checked){showMessage("Confirm the 18+ declaration and accept the terms to continue.","error");return;}
+    var button=document.getElementById("register-submit");button.disabled=true;button.textContent="Creating account…";
+    try{await call("/api/auth/register",{fullName:fullName,email:email,phone:phone,password:password,ageConfirmed:true,termsAccepted:true});}
+    catch(error){showMessage(error.message,"error");button.disabled=false;button.textContent="Create account and enter";}
+  });
+  loginForm.addEventListener("submit",async function(event){
+    event.preventDefault();
+    var button=document.getElementById("login-submit");button.disabled=true;button.textContent="Signing in…";
+    try{await call("/api/auth/login",{email:document.getElementById("login-email").value.trim(),password:document.getElementById("login-password").value});}
+    catch(error){showMessage(error.message,"error");button.disabled=false;button.textContent="Sign in and enter";}
+  });
+  if(params.get("reason")==="required") showMessage("Register or sign in is required before entering XKiss.","error");
+  if(params.get("reason")==="session") showMessage("Your session expired or is no longer valid. Please sign in again.","error");
+})();
+</script>
+</body>
+</html>
