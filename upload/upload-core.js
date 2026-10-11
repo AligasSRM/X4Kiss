@@ -111,8 +111,9 @@
       setProgress(25, "Creator session verified — transferring video");
       const data = await window.XKissUploadAPI.uploadFile(state.file, metadata);
       setProgress(100, "Video stored privately — not published");
-      setResult((data.message || "Video stored privately.") + " Video key: " + (data.key || "stored"), "success");
-      $("upload-status").textContent = "Upload complete to private storage. Public publishing and playback are not enabled.";
+      setResult((data.message || "Video stored privately.") + " Opening My Videos…", "success");
+      $("upload-status").textContent = "Upload confirmed by the server. Opening your private video library.";
+      window.location.assign("creator-library.html?uploaded=1");
     } catch (error) {
       setProgress(0, "Upload readiness check failed");
       setResult(error.message || "Upload readiness check failed. No file was uploaded.", "error");
@@ -141,30 +142,17 @@
     try {
       const result = await window.XKissUploadAPI.verifySession();
       state.signedIn = result.ok === true && result.status === "authenticated";
-      if (state.signedIn) {
-        status.textContent = "Signed in as " + (result.user?.email || "creator") + ". You can upload privately.";
-      } else {
-        status.textContent = "Sign in or create an account before uploading.";
+      if (status) status.textContent = state.signedIn
+        ? "Creator session verified."
+        : "Your session is missing. Return to Home and sign in.";
+      if (!state.signedIn) {
+        window.location.replace("register.html?reason=required");
       }
     } catch {
-      // Do not discard a possibly valid token for transient network errors.
       state.signedIn = false;
-      status.textContent = "Could not verify your saved session. Check your connection, then sign in again if needed.";
+      if (status) status.textContent = "Could not verify your session. Please return to Home and sign in again.";
+      window.location.replace("register.html?reason=session");
     }
-  }
-
-  async function authenticate(createAccount) {
-    const status = $("creator-auth-status");
-    const email = $("creator-email").value.trim();
-    const password = $("creator-password").value;
-    if (!email || !password) { status.textContent = "Enter your email and password."; return; }
-    status.textContent = createAccount ? "Creating account…" : "Signing in…";
-    try {
-      const result = await window.XKissUploadAPI.authenticate(email, password, createAccount);
-      if (createAccount) { status.textContent = result.message || "Account created. Sign in to continue."; return; }
-      state.signedIn = true;
-      status.textContent = "Signed in as " + (result.user?.email || email) + ". You can upload privately."; 
-    } catch (error) { state.signedIn = false; status.textContent = error.message || "Account request failed."; }
   }
 
   function initialize() {
@@ -182,8 +170,6 @@
     titleField.addEventListener("change", () => {
       if (titleField.value.trim()) titleField.removeAttribute("aria-invalid");
     });
-    $("creator-login").addEventListener("click", () => authenticate(false));
-    $("creator-register").addEventListener("click", () => { window.location.href = "register.html?next=creator-upload.html"; });
     $("prepare-upload").addEventListener("click", prepare);
     $("reset-upload").addEventListener("click", reset);
     restoreSession();
