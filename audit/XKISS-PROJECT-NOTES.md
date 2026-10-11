@@ -219,3 +219,72 @@ These are findings supported by source or CI evidence, not guesses. They are rec
 - Tests / live checks performed:
 - Changes made (if any):
 - Exact next action:
+
+
+## Important product/design notes from Ali — 2026-10-11
+
+**Status: 🟡 IMPORTANT REQUIREMENTS / TO REVIEW AND IMPLEMENT IN ORDER**  
+**Source:** Ali's homepage reference screenshots and direct instructions in the conversation on 2026-10-11.  
+**Purpose:** Preserve the intended user journey and homepage layout before implementation. This section is a requirements reference, not proof that any feature is implemented or tested.
+
+### N-001 — Homepage-first browsing and visual layout
+- The public homepage should open to a video-discovery layout, not a login/register wall.
+- Use the supplied screenshots as layout references: site identity and top navigation, search, content categories, a responsive video-card grid with thumbnails and titles, and pagination near the bottom (page numbers such as 1–5 plus Next/Previous).
+- Include a useful footer with the site's own short description and links for FAQ, Contact Support, Privacy, Terms, and cookie preferences.
+- Treat the screenshots as design references, not permission to copy another site's branding, text, or assets.
+- Verify mobile-first layout and usability before locking the homepage design.
+
+### N-002 — Entry flow: age gate and cookie choices
+- Define and test the entry sequence Ali requested: homepage entry → age assurance for restricted adult content → cookie preference choices → normal homepage browsing.
+- A self-declaration alone must not be described as robust age verification. Determine the appropriate compliant age-assurance method and server-side enforcement before public adult-content launch; fail closed where required.
+- Cookie choices must include Essential (always active), Functional, Analytics, and Targeting/Advertising, with Accept All, Accept Only Essential, and Save And Apply.
+- Optional cookies and non-essential tracking must remain off until valid consent is obtained. Persist and respect the user's choices; provide a way to revisit them.
+- Do not infer legal compliance from a visible modal alone; verify jurisdictional requirements before launch.
+
+### N-003 — Registration, login, and personal account
+- The user should be able to browse the public homepage without registering.
+- Sign Up creates an account once; successful registration should continue through the intended authenticated flow without unnecessarily asking the user to log in a second time.
+- Log In should return an existing user to the correct signed-in experience. Session state must be validated server-side, with safe expiry and logout.
+- The personal account should have a clear account/dashboard page and show account-only functions based on authenticated state.
+- Do not trust client-only identity or permissions, and do not expose one user's private account data to another user.
+
+### N-004 — Navigation and feature inventory
+Reference items to assess and implement only when their real behavior and data contract are defined:
+- Sign Up / Log In (context-aware: signed-in users should see account navigation instead of duplicate sign-in prompts).
+- Liked Videos.
+- Subscriptions.
+- Upload.
+- Language selection (initial reference: English).
+- Region/worldwide preference where relevant.
+- Feed.
+- FAQ.
+- Contact Support.
+- My Videos / creator library and account dashboard.
+- Search, category navigation, and functional pagination.
+
+Every visible control must have a defined purpose, permission boundary, privacy behavior, success/error state, and a real implementation. Remove, disable, or clearly mark placeholders instead of presenting nonfunctional controls as complete.
+
+### N-005 — Upload and creator library acceptance
+- Upload must collect a title and any required metadata, validate the selected file, send the actual file through the authenticated server-side upload path, and show truthful progress/error/success states.
+- After confirmed storage, navigate to My Videos or show the uploaded item there.
+- The creator library must be authenticated and scoped to the creator ID derived by the server, not a client-supplied identity.
+- Distinguish private, unlisted, and public states. Upload completion must not automatically imply public publishing or playback.
+- Acceptance requires a real end-to-end test: select a file on the user's device, upload it, verify storage, then retrieve and display it in the owner's library.
+
+### N-006 — Per-control implementation and privacy review
+For each button, link, menu item, form, and preference:
+1. Identify its intended behavior and target.
+2. Define authentication, authorization, ownership, and age restrictions as applicable.
+3. Define the minimum data collected and privacy/consent requirements.
+4. Implement the actual action and truthful loading/success/error feedback.
+5. Test the expected path, invalid input, unauthorized access, failure path, and mobile interaction.
+6. Record test evidence and mark GREEN only after acceptance criteria pass; otherwise keep YELLOW or RED.
+
+### N-007 — Ordered next step
+- First compare these requirements against the current repository, existing notes, and the development-stage record.
+- Produce a gap matrix: already present, partially present, missing, tested, and blocked.
+- Then create the visual homepage blueprint and agree the page/route flow before changing the homepage.
+- Implement in isolated, reviewable stages with regression tests. Preserve previously GREEN/LOCKED stages unless a proven defect requires reopening.
+- Do not merge PRs, change production configuration, or claim end-to-end readiness without the evidence and approval required by the project operating rules.
+
+**Current disposition:** 🟡 Recorded as important work to review. No new implementation stage is marked GREEN by this note.
