@@ -1204,45 +1204,21 @@ export default {
     }
 
     if (url.pathname === "/api/upload/prepare" && request.method === "POST") {
-      if (!storageReady) {
-        return json({
-          ok: false,
-          storageReady: false,
-          message: "Production storage is not activated yet. The video was not uploaded."
-        }, 503);
-      }
-
+      if (!storageReady) return json({ ok: false, storageReady: false, message: "Production storage is not ready. No file was uploaded." }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      const authorization = request.headers.get("Authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      const session = await authenticateSession(env, token);
+      if (!session.ok) return json({ ok: false, message: "Sign in with your creator account before uploading." }, 401);
       let body;
-
-      try {
-        body = await request.json();
-      } catch {
-        return json({
-          ok: false,
-          message: "Invalid upload metadata."
-        }, 400);
+      try { body = await request.json(); } catch { return json({ ok: false, message: "Invalid upload metadata." }, 400); }
+      if (!body.fileName || !body.contentType || !String(body.contentType).startsWith("video/") || !body.title || !body.category) {
+        return json({ ok: false, message: "A file name, video content type, title and category are required." }, 400);
       }
-
-      if (!body.fileName || !body.contentType || !body.title) {
-        return json({
-          ok: false,
-          message: "fileName, contentType and title are required."
-        }, 400);
+      if (!Number.isSafeInteger(body.fileSize) || body.fileSize < 1 || body.fileSize > 100 * 1024 * 1024) {
+        return json({ ok: false, message: "Video must be no larger than 100 MB." }, 413);
       }
-
-      const key = createVideoKey(body.fileName);
-
-      return json({
-        ok: true,
-        storageReady: true,
-        uploadReady: Boolean(env.XKISS_UPLOAD_KEY),
-        key,
-        fileName: String(body.fileName),
-        contentType: String(body.contentType),
-        message: env.XKISS_UPLOAD_KEY
-          ? "Upload preparation is ready for the connected storage layer."
-          : "Storage is connected, but upload authorization is not configured yet."
-      });
+      return json({ ok: true, storageReady: true, uploadReady: true, creatorId: session.user.id, visibility: "private", message: "Creator session verified; private upload is authorized." });
     }
 
     if (url.pathname === "/api/upload" && request.method === "POST") {
