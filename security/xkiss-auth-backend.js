@@ -61,16 +61,30 @@ function userPublic(row) {
   return {
     id: row.id,
     email: row.email,
+    fullName: row.full_name || null,
+    phone: row.phone || null,
     role: row.role,
     status: row.status,
     createdAt: row.created_at
   };
 }
 
-export async function registerMember(env, { email, password }) {
+export async function registerMember(env, { fullName, email, phone, password, ageConfirmed, termsAccepted }) {
   const normalized = normalizeEmail(email);
-  if (!validEmail(normalized) || !validPassword(password)) {
-    return { ok: false, status: "invalid_input", message: "Valid email and password are required." };
+  const normalizedName = typeof fullName === "string" ? fullName.trim().replace(/\\s+/g, " ") : "";
+  const normalizedPhone = typeof phone === "string" ? phone.trim() : "";
+  const validName = normalizedName.length >= 2 && normalizedName.length <= 100;
+  const validPhone = /^\\+?[0-9() .-]{7,24}$/.test(normalizedPhone) &&
+    normalizedPhone.replace(/\\D/g, "").length >= 7 &&
+    normalizedPhone.replace(/\\D/g, "").length <= 15;
+
+  if (!validName || !validEmail(normalized) || !validPhone || !validPassword(password) ||
+      ageConfirmed !== true || termsAccepted !== true) {
+    return {
+      ok: false,
+      status: "invalid_input",
+      message: "Enter your full name, a valid email, phone number, password, and confirm you are 18+ and accept the terms."
+    };
   }
 
   const existing = await env.XKISS_AUTH_DB.prepare(
@@ -78,7 +92,7 @@ export async function registerMember(env, { email, password }) {
   ).bind(normalized).first();
 
   if (existing) {
-    return { ok: false, status: "already_exists", message: "An account with this email already exists." };
+    return { ok: false, status: "already_exists", message: "An account with this email already exists. Sign in to that account." };
   }
 
   const id = crypto.randomUUID();
@@ -87,13 +101,24 @@ export async function registerMember(env, { email, password }) {
   const now = new Date().toISOString();
 
   await env.XKISS_AUTH_DB.prepare(
-    "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5)"
-  ).bind(id, normalized, passwordHash, salt, now).run();
+    "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at,full_name,phone,age_confirmed_at,terms_accepted_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5,?6,?7,?5,?5)"
+  ).bind(id, normalized, passwordHash, salt, now, normalizedName, normalizedPhone).run();
+
+  const rawToken = await randomBase64(32);
+  const tokenHash = await hashToken(rawToken);
+  const sessionId = crypto.randomUUID();
+  const expires = new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString();
+
+  await env.XKISS_AUTH_DB.prepare(
+    "INSERT INTO sessions (id,user_id,token_hash,expires_at,created_at) VALUES (?1,?2,?3,?4,?5)"
+  ).bind(sessionId, id, tokenHash, expires, now).run();
 
   return {
     ok: true,
     status: "created",
-    user: { id, email: normalized, role: "member", status: "active", createdAt: now }
+    token: rawToken,
+    expiresAt: expires,
+    user: { id, email: normalized, fullName: normalizedName, phone: normalizedPhone, role: "member", status: "active", createdAt: now }
   };
 }
 
@@ -104,7 +129,7 @@ export async function loginMember(env, { email, password }) {
   }
 
   const row = await env.XKISS_AUTH_DB.prepare(
-    "SELECT id,email,password_hash,password_salt,role,status,created_at FROM users WHERE email = ?1 LIMIT 1"
+    "SELECT id,email,password_hash,password_salt,role,status,created_at,full_name,phone FROM users WHERE email = ?1 LIMIT 1"
   ).bind(normalized).first();
 
   if (!row || row.status !== "active") {
