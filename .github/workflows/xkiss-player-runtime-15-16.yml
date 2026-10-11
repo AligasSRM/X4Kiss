@@ -5,12 +5,14 @@ on:
     paths:
       - "index.html"
       - "player.html"
+      - "videos.html"
       - "js/player.js"
       - "js/video-data.js"
       - "js/player/*.js"
       - "home/*.js"
       - "player/runtime/*.js"
       - ".github/workflows/xkiss-player-runtime-15-16.yml"
+      - ".github/workflows/xkiss-final-review.yml"
   workflow_dispatch:
 
 jobs:
@@ -75,7 +77,7 @@ jobs:
           cat /tmp/xkiss-mp4-headers.txt || true
           ls -lh /tmp/xkiss-mp4.bin || true
 
-      - name: Real Home and Player browser test
+      - name: Real Home and Player access-gate browser test
         run: |
           node --input-type=module <<'NODE'
           import { chromium } from "playwright";
@@ -92,82 +94,35 @@ jobs:
 
           if (await page.title() !== "XKiss — Home") throw new Error("Home title failed");
           if (!(await page.locator(".hero").count())) throw new Error("Home hero missing");
-          if ((await page.locator(".video-card").count()) < 1) throw new Error("Home video cards missing");
+          if ((await page.locator(".video-card").count()) !== 0) throw new Error("Unpublished/test video leaked onto home page");
+          if (!(await page.locator("#home-videos-empty").isVisible())) throw new Error("Published-video empty state missing");
+          if (!(await page.locator("#home-categories-empty").isVisible())) throw new Error("Category empty state missing");
+          if (!(await page.locator("#home-creators-empty").isVisible())) throw new Error("Verified-creator empty state missing");
+          if ((await page.locator("#featured.show").count()) !== 0) throw new Error("Featured section shown without published featured content");
 
-          await page.locator("[data-hero-action='watch']").first().click();
-          await page.waitForURL(/player\.html\?id=video-001/);
-          await page.waitForLoadState("networkidle");
-
-          if (await page.title() !== "XKiss Video Player") throw new Error("Player title failed");
-          if (!(await page.locator("#video").count())) throw new Error("Video element missing");
-          if (!(await page.locator("#player").count())) throw new Error("Player container missing");
-
-          await page.waitForFunction(() => window.XKissPlayerCore && window.XKissPlayerCore.platformCore?.connected === true);
-          await page.waitForFunction(() => window.XKissPlayerCore && Object.keys(window.XKissPlayerCore.getModuleStatus()).length >= 5);
-
-          const qualities = await page.locator("#qualityMenu [data-quality]").evaluateAll(nodes => nodes.map(node => node.dataset.quality));
-          const expected = ["340p", "460p", "720p", "1080p"];
-          if (JSON.stringify(qualities) !== JSON.stringify(expected)) throw new Error("Quality set failed: " + JSON.stringify(qualities));
-
-          const source = await page.locator("#videoSource").getAttribute("src");
-          if (!source || !source.includes(".mp4")) throw new Error("Video source not configured");
-
-          await page.waitForFunction(() => document.getElementById("video")?.readyState >= 1, null, { timeout: 10000 }).catch(() => {});
+          await page.locator("#home-search-input").fill("sample");
+          await page.locator(".home-search button").click();
+          await page.waitForURL(/videos\.html\?q=sample/);
+          if (!new URL(page.url()).searchParams.has("q")) throw new Error("Search query was not preserved");
           
-          const directTest = await page.evaluate(async () => {
-            const v = document.getElementById("video");
-            v.pause();
-            v.src = "20260923_234200-3.mp4";
-            v.load();
-            await new Promise(resolve => {
-              const done = () => resolve();
-              v.addEventListener("loadedmetadata", done, { once: true });
-              v.addEventListener("error", done, { once: true });
-              setTimeout(done, 5000);
-            });
-            return {
-              readyState: v.readyState,
-              error: v.error ? { code: v.error.code, message: v.error.message || "" } : null,
-              duration: v.duration,
-              currentSrc: v.currentSrc
-            };
-          });
-          console.log("DIRECT_MP4_TEST", JSON.stringify(directTest));
+          await page.goto("http://127.0.0.1:4173/player.html?id=video-001", { waitUntil: "networkidle" });
+          await page.waitForURL(/register\.html\?next=/);
+          if (!new URL(page.url()).searchParams.has("next")) throw new Error("Protected player route did not preserve return path");
+          if (await page.locator("#player").count()) throw new Error("Player content leaked before authentication");
 
-          await page.locator("#playPauseBtn").click();
-          await page.waitForTimeout(3000);
-
-          const runtime = await page.locator("#video").evaluate(video => ({
-            currentTime: video.currentTime,
-            paused: video.paused,
-            readyState: video.readyState,
-            source: document.getElementById("videoSource")?.src || "",
-            error: video.error ? { code: video.error.code, message: video.error.message || "" } : null,
-            networkState: video.networkState,
-            duration: video.duration,
-            currentSrc: video.currentSrc,
-            canPlayMp4: video.canPlayType("video/mp4")
-          }));
-
-          if (runtime.readyState < 1) throw new Error("Video did not reach metadata-ready state: " + JSON.stringify(runtime));
-          if (!(runtime.currentTime > 0 || runtime.paused === false)) throw new Error("Video did not start playback");
           const unexpectedErrors = errors.filter(error =>
-            !error.includes("Watch progress module could not find player state") &&
-            !error.includes("Response to preflight request doesn't pass access control check") &&
+            !error.includes("Failed to fetch") &&
             !error.includes("ERR_FAILED") &&
-            !error.includes("XKiss: View event failed: TypeError: Failed to fetch") &&
             !error.includes("Failed to load resource: the server responded with a status of 404")
           );
           if (unexpectedErrors.length) throw new Error("Unexpected browser errors: " + unexpectedErrors.join(" | "));
 
           console.log(JSON.stringify({
             home: "PASS",
-            navigation: "PASS",
-            player: "PASS",
-            platformCoreBridge: "PASS",
-            playerModules: "PASS",
-            qualities,
-            videoRuntime: runtime
+            homePublishedContentSafety: "PASS",
+            searchNavigation: "PASS",
+            unauthenticatedPlayerAccessDenied: "PASS",
+            returnPathPreserved: "PASS"
           }, null, 2));
 
           await browser.close();

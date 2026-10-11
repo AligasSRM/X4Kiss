@@ -9,6 +9,8 @@ on:
       - "core/**"
       - "settings/**"
       - ".github/workflows/xkiss-final-review.yml"
+      - ".github/workflows/xkiss-player-runtime-15-16.yml"
+      - ".github/workflows/section14-security.yml"
   workflow_dispatch:
 
 jobs:

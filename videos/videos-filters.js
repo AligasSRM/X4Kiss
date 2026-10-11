@@ -12,6 +12,16 @@ document.addEventListener("xkiss:videos-ready", () => {
     return;
   }
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const initialSearch = queryParams.get("q") || "";
+  const requestedCategory = queryParams.get("category") || "All";
+  const matchingCategory = API.getCategories().find(category =>
+    category.toLowerCase() === requestedCategory.toLowerCase()
+  ) || "All";
+  searchInput.value = initialSearch;
+  API.setState({ search: initialSearch, category: matchingCategory });
+  API.applyFilters();
+
   function renderFilters() {
     filterContainer.innerHTML = "";
     API.getCategories().forEach(category => {
