@@ -32,8 +32,20 @@
     if (!state.file.type || !state.file.type.startsWith("video/")) return "The selected file is not a supported video.";
     if (state.file.size <= 0) return "The selected video file is empty.";
     if (state.file.size > 100 * 1024 * 1024) return "The upload limit is 100 MB per video.";
-    if (! $("video-title").value.trim()) return "Enter a video title.";
-    if (!$("video-category").value) return "Select a category.";
+    const title = $("video-title");
+    if (!title.value.trim()) {
+      title.setAttribute("aria-invalid", "true");
+      title.focus({ preventScroll: true });
+      title.scrollIntoView({ behavior: "smooth", block: "center" });
+      return "Enter a video title in the Title field above.";
+    }
+    title.removeAttribute("aria-invalid");
+    if (!$("video-category").value) {
+      const category = $("video-category");
+      category.focus({ preventScroll: true });
+      category.scrollIntoView({ behavior: "smooth", block: "center" });
+      return "Select a category before uploading.";
+    }
     return "";
   }
 
@@ -156,6 +168,13 @@
 
   function initialize() {
     $("video-file").addEventListener("change", handleFile);
+    const titleField = $("video-title");
+    titleField.addEventListener("input", () => {
+      if (titleField.value.trim()) titleField.removeAttribute("aria-invalid");
+    });
+    titleField.addEventListener("change", () => {
+      if (titleField.value.trim()) titleField.removeAttribute("aria-invalid");
+    });
     $("creator-login").addEventListener("click", () => authenticate(false));
     $("creator-register").addEventListener("click", () => { window.location.href = "register.html?next=creator-upload.html"; });
     $("prepare-upload").addEventListener("click", prepare);
