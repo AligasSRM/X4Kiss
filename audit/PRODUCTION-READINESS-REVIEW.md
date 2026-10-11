@@ -31,7 +31,7 @@ Last updated: 2026-10-11.
 
 ## Remaining production activation blockers
 
-1. Authorized video upload, processing, playback delivery, and creator ownership checks end-to-end. ElasticLake object storage itself is verified; upload authorization is not configured (the Worker has no `XKISS_UPLOAD_KEY` binding), and the current upload page only prepares metadata rather than sending the selected file.
+1. **Private video upload — implementation committed, production verification pending.** The creator page now targets the Worker API, provides account registration/sign-in, and sends the selected video to the Worker using a bearer session; the Worker checks the session, validates video type and declared size (maximum 100 MB), and stores creator ID metadata while forcing private visibility. These changes have not yet been verified in a successful deployed end-to-end upload, and public publishing, processing, playback authorization, and owner-scoped library access remain incomplete. Keep this gate YELLOW until a real authenticated upload is tested and read back safely.
 2. Publish and configure a compliant, actual age-assurance/creator-verification workflow; securely connect the server-side provider credentials; then run a controlled live end-to-end verification and confirm the signed webhook is delivered and durably recorded. Existing draft workflows and zero webhook deliveries do not satisfy this gate.
 3. Real moderation, user reporting, and durable safety-audit enforcement.
 4. Settings authorization and audit verification before enabling any production activation control.
@@ -43,6 +43,6 @@ Last updated: 2026-10-11.
 
 ## Gate semantics
 
-A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Current Cloudflare Worker bindings include ElasticLake secrets, D1 auth/admin bindings, the auth-session KV namespace, and the Super Admin MFA key; the inspected Worker settings did not show the required live identity-provider credentials, moderation, payment, payout, or notification-provider bindings. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until the real provider integrations and end-to-end paths are independently verified.
+A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Current Cloudflare Worker bindings include ElasticLake secrets, D1 auth/admin bindings, the auth-session KV namespace, and the Super Admin MFA key; the inspected Worker settings did not show the required live identity-provider credentials, moderation, payment, payout, or notification-provider bindings. The upload implementation changes are committed in GitHub, but the latest deployment and end-to-end transfer have not been verified in this review. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until the real provider integrations and end-to-end paths are independently verified.
 
 No existing 15.23–15.31 GREEN / LOCKED runtime work was reopened or changed.
