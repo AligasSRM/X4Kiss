@@ -15,6 +15,12 @@
 - The current video metadata contains a test record rather than a verified published-video feed. The refreshed homepage therefore intentionally shows an honest empty state rather than demo cards.
 - The player-runtime sub-stages **15.23–15.31** are a legacy/runtime sequence and are **not** the same thing as current Section 15, Platform Settings. Keep those namespaces distinct; do not renumber or reopen locked runtime work just to remove the naming collision.
 
+## Numbering conflict found in legacy audit material
+
+The legacy root file `xkiss-production-readiness-audit.md` is explicitly dated 2026-09-26 and labels itself **AUDIT-01**. It uses an older numbering map in which Safety & Verification is Section 13, Admin Dashboard is Section 14, and Super Admin MFA is Section 15.3. The current `audit/PRODUCTION-READINESS-REVIEW.md`, `core/xkiss-production-readiness-core.js`, and `audit/xkiss-final-review.js` use **AUDIT-02 / the current canonical map**: Section 12 Safety & Verification, Section 13 Admin Dashboard, Section 14 Super Admin & Security, and Section 15 Platform Settings.
+
+**Resolution for this inventory:** use the current final-review script and current readiness core as the canonical technical map. Treat the root AUDIT-01 file as historical until it is explicitly archived or reconciled in a separate reviewed documentation change. Do not silently reinterpret old issue numbers as current section numbers.
+
 ## Status vocabulary
 
 - **GREEN / LOCKED:** the specific software scope has passing evidence and is protected from unnecessary changes.
