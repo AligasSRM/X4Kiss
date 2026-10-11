@@ -63,6 +63,7 @@
         "Authorization": "Bearer " + sessionToken,
         "Content-Type": file.type,
         "X-XKiss-File-Name": file.name,
+        "X-XKiss-File-Size": String(file.size),
         "X-XKiss-Title": metadata.title,
         "X-XKiss-Description": metadata.description || "",
         "X-XKiss-Category": metadata.category
