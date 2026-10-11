@@ -47,12 +47,16 @@ export function runXKissBackendProviderContractSelfTest() {
     })
   );
 
-  const strictConnectionCases = [true, 1, "true", null, undefined].map((connected) =>
+  const strictConnectionCases = [1, "true", null, undefined].map((connected) =>
     evaluateBackendProviderContract({
       ...complete,
       safety: { ...complete.safety, connected }
     })
   );
+  const validConnectionFlag = evaluateBackendProviderContract({
+    ...complete,
+    safety: { ...complete.safety, connected: true }
+  });
 
   const cases = {
     contractDeclaresFourProviders:
@@ -85,6 +89,7 @@ export function runXKissBackendProviderContractSelfTest() {
         result.activationAllowed === false
       ),
     connectionMustBeStrictBooleanTrue:
+      validConnectionFlag.status === "READY_FOR_INTEGRATION_TEST" &&
       strictConnectionCases.every((result) =>
         result.status === "BLOCKED" &&
         result.missingProviders.includes("safety") &&
@@ -93,6 +98,7 @@ export function runXKissBackendProviderContractSelfTest() {
     activationAlwaysDisabled:
       blocked.activationAllowed === false &&
       ready.activationAllowed === false &&
+      validConnectionFlag.activationAllowed === false &&
       individuallyMissingProviders.every(({ result }) => result.activationAllowed === false) &&
       disconnectedProviders.every((result) => result.activationAllowed === false) &&
       missingCapabilityCases.every(({ result }) => result.activationAllowed === false) &&
