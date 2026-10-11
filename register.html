@@ -91,6 +91,8 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
       if(data.status==="backend_not_configured") throw new Error("The account service is not configured. No account was created.");
       throw new Error(data.message||("Account request failed (HTTP "+response.status+")."));
     }
+    // Registration is intentionally separate from sign-in. Do not persist the registration token.
+    if (path === "/api/auth/register") return data;
     if(!data.token) throw new Error("The service did not return a session. Please do not retry repeatedly; contact support with this error.");
     // Verify the returned session before leaving the form. This prevents a failed
     // session/route-guard check from silently sending the user back to an empty form.
@@ -125,7 +127,14 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     if(password!==confirm){showMessage("The passwords do not match.","error");return;}
     if(!document.getElementById("age-confirm").checked||!document.getElementById("terms-confirm").checked){showMessage("Confirm the 18+ declaration and accept the terms to continue.","error");return;}
     var button=document.getElementById("register-submit");button.disabled=true;button.textContent="Creating account…";
-    try{await call("/api/auth/register",{fullName:fullName,email:email,password:password,ageConfirmed:true,termsAccepted:true});}
+    try{
+      await call("/api/auth/register",{fullName:fullName,email:email,password:password,ageConfirmed:true,termsAccepted:true});
+      document.getElementById("login-email").value=email;
+      button.disabled=false;
+      button.textContent="Create account and enter";
+      setMode("login");
+      showMessage("Registration complete. Now sign in with your email and password to enter XKiss Home.", "success");
+    }
     catch(error){
       button.disabled=false;
       button.textContent="Create account and enter";
