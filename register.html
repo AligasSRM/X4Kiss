@@ -58,10 +58,9 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
 (function(){
   "use strict";
   var API="https://xkiss.srourr-ali73.workers.dev";
-  var params=new URLSearchParams(location.search);
-  var next=params.get("next")||"index.html";
-  var allowed=["index.html","creator-upload.html","videos.html","live.html"];
-  if(!allowed.includes(next.split(/[?#]/)[0])) next="index.html";
+  // Registration and sign-in always return to the public Home page.
+  // Do not honor ?next=creator-upload.html: the user must land on Home first.
+  var next="index.html";
   var registerForm=document.getElementById("register-form");
   var loginForm=document.getElementById("login-form");
   var message=document.getElementById("message");
