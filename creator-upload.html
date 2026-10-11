@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#07080b">
 <title>XKiss — Creator Upload</title>
+<script src="auth/route-guard.js"></script>
 <link rel="stylesheet" href="upload/upload.css">
 </head>
 <body>
@@ -18,7 +19,7 @@
       <a class="active" href="creator-upload.html">Upload</a>
       <a href="index.html#account">Account</a>
     </div>
-    <a class="login" href="index.html#account">Login</a>
+    <a class="login" href="register.html?next=creator-upload.html">Account</a>
   </nav>
 </header>
 
@@ -39,7 +40,7 @@
         </div>
         <div class="upload-actions">
           <button id="creator-login" class="primary" type="button">Sign in</button>
-          <button id="creator-register" class="secondary" type="button">Create account</button>
+          <button id="creator-register" class="secondary" type="button">Register / Sign in</button>
         </div>
         <p id="creator-auth-status" aria-live="polite">Sign in or create an account before uploading.</p>
       </div>
