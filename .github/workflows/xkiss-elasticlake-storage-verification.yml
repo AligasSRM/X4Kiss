@@ -10,6 +10,7 @@ on:
       - "storage/xkiss-storage-production-gate.js"
       - "storage/xkiss-storage-production-gate-self-test.js"
       - "security/xkiss-secret-management-monitor.js"
+      - "audit/PRODUCTION-READINESS-REVIEW.md"
 
 permissions:
   contents: read
