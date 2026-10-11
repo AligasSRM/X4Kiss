@@ -23,6 +23,7 @@ Last updated: 2026-10-11.
 - Settings runtime: connected; `activationAllowed=false`.
 - Safety status/self-test: contract checks pass; enforcement remains disabled because real safety, age/creator verification, moderation, reporting, and audit providers are not connected.
 - Durable view-event storage: live write → read → delete passed; returned event matched; cleanup succeeded; verified=true.
+- ElasticLake provider verification workflow now runs automatically when this readiness report changes, performing a real private object write, read-back comparison, and delete using GitHub Actions secrets.
 - Views/revenue: persistence reports connected and server-side rules are configured.
 - Wallet ledger and settlement: status endpoints report ready; end-to-end financial transaction/provider verification is still required.
 - Payout lifecycle/security: tests pass; real payouts remain disabled; client-side authorization is forbidden and secrets remain server-side.
