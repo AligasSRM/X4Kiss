@@ -93,6 +93,23 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
       throw new Error(data.message||("Account request failed (HTTP "+response.status+")."));
     }
     if(!data.token) throw new Error("The service did not return a session. Please do not retry repeatedly; contact support with this error.");
+    // Verify the returned session before leaving the form. This prevents a failed
+    // session/route-guard check from silently sending the user back to an empty form.
+    var verified;
+    try {
+      verified = await fetch(API+"/api/auth/me", {
+        method: "GET",
+        headers: {"Authorization":"Bearer "+data.token},
+        cache: "no-store"
+      });
+    } catch (_) {
+      throw new Error("The account service responded, but the new session could not be checked. Your account may already exist. Keep this page open and try Sign in; do not register repeatedly.");
+    }
+    var sessionData={};
+    try { sessionData=await verified.json(); } catch (_) {}
+    if(!verified.ok || sessionData.ok!==true || sessionData.status!=="authenticated") {
+      throw new Error("The account service returned a session that could not be verified. Your account may already exist. Keep this page open and try Sign in; do not register repeatedly.");
+    }
     sessionStorage.setItem("xkiss_session_token",data.token);
     location.replace(next);
   }
