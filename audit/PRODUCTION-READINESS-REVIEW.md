@@ -23,14 +23,14 @@ Last updated: 2026-10-11.
 - Settings runtime: connected; `activationAllowed=false`.
 - Safety status/self-test: contract checks pass; enforcement remains disabled because real safety, age/creator verification, moderation, reporting, and audit providers are not connected.
 - Durable view-event storage: live write → read → delete passed; returned event matched; cleanup succeeded; verified=true.
-- ElasticLake provider verification workflow now runs automatically when this readiness report changes, performing a real private object write, read-back comparison, and delete using GitHub Actions secrets.
+- ElasticLake object storage — GREEN by live production Worker write/read/delete test. Latest successful workflow: https://github.com/AligasSRM/XKiss/actions/runs/38137851409. The workflow calls the production Worker self-test and does not duplicate storage credentials into GitHub Actions.
 - Views/revenue: persistence reports connected and server-side rules are configured.
 - Wallet ledger and settlement: status endpoints report ready; end-to-end financial transaction/provider verification is still required.
 - Payout lifecycle/security: tests pass; real payouts remain disabled; client-side authorization is forbidden and secrets remain server-side.
 
 ## Remaining production activation blockers
 
-1. Real video object upload, processing, authorization, and delivery end-to-end verification.
+1. Authorized video upload, processing, playback delivery, and creator ownership checks end-to-end. ElasticLake object storage itself is verified; upload authorization is not configured (the Worker has no `XKISS_UPLOAD_KEY` binding), and the current upload page only prepares metadata rather than sending the selected file.
 2. Real safety and age/creator verification providers, with enforcement enabled only after verified configuration.
 3. Real moderation, user reporting, and durable safety-audit enforcement.
 4. Settings authorization and audit verification before enabling any production activation control.
@@ -42,6 +42,6 @@ Last updated: 2026-10-11.
 
 ## Gate semantics
 
-A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until their specific dependencies are independently verified.
+A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Current Cloudflare Worker bindings include ElasticLake secrets, D1 auth/admin bindings, the auth-session KV namespace, and the Super Admin MFA key; no Veriff/Didit, AWS Rekognition, payment, payout, or notification-provider bindings were present in the inspected Worker settings. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until the real provider integrations and end-to-end paths are independently verified.
 
 No existing 15.23–15.31 GREEN / LOCKED runtime work was reopened or changed.
