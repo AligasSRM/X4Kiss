@@ -25,6 +25,7 @@ jobs:
           const base = process.env.BASE_URL;
           const email = `xk1-${process.env.RUN_ID}@example.com`;
           const password = "XKiss-Acceptance-2026-Long-Test!";
+          const registration = { fullName: "XKiss Acceptance Tester", email, phone: "+12025550123", password, ageConfirmed: true, termsAccepted: true };
           
           async function call(path, options = {}) {
             const res = await fetch(base + path, {
@@ -66,13 +67,13 @@ jobs:
           
           const register = await call("/api/auth/register", {
             method: "POST",
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify(registration)
           });
-          assert(register.status === 201 && register.body?.ok === true && register.body?.status === "created", "register");
+          assert(register.status === 201 && register.body?.ok === true && register.body?.status === "created" && typeof register.body?.token === "string" && register.body?.user?.fullName === registration.fullName && register.body?.user?.phone === registration.phone, "register with profile and session");
           
           const duplicate = await call("/api/auth/register", {
             method: "POST",
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify(registration)
           });
           assert(duplicate.status === 201 && duplicate.body?.ok === false && duplicate.body?.status === "already_exists", "duplicate registration rejected");
           
