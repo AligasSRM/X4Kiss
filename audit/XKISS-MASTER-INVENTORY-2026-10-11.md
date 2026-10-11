@@ -16,6 +16,18 @@
 - **Homepage PR #24 is still a draft, not merged or deployed.** Its CI checks passed on the recorded commit, but visual review is pending.
 - **First practical step:** finish and record the visual blueprint/review of the homepage, navigation and primary user flows. Then validate PR #24, merge only after acceptance, and test the merged baseline. Do not start by enabling payments, payouts, age assurance or other production-sensitive controls.
 
+## Storage provider — 🟢 GREEN / LOCKED (DO NOT CHANGE)
+
+**Storage provider and verified scope:** ElasticLake object storage, using `storage/elasticlake-adapter.js`, configured by `wrangler.toml`, bucket `xkiss-storage--xkiss-production--xkiss-midea`, region `auto`. Required access credentials remain Worker/server-side secrets; never copy them into source code or browser code.
+
+**Live evidence:** Production Worker storage verification workflow [run #38137879706](https://github.com/AligasSRM/XKiss/actions/runs/38137879706) completed successfully. Its job, “Live ElasticLake write-read-delete through production Worker,” completed with conclusion `success`. The documented live self-test returned HTTP 200 and verified write=stored, read=found with matching data, and cleanup=deleted; `storageReady=true` and `verified=true`.
+
+**Lock:** Keep AUDIT-03 storage-provider closure **🟢 GREEN / LOCKED**. Do not switch providers, rename/change the bucket, enable Cloudflare R2, alter the adapter/configuration, or reopen this scope without contradictory live runtime evidence and an explicit technical reason. Storage must be left untouched while unrelated sections are developed.
+
+**Boundary:** This lock confirms the provider/configuration and the tested object write/read/delete path. It does **not** mean the entire creator workflow is complete: full playable video upload, large-file transfer, processing, playback, owner-scoped library indexing, and publishing remain separate acceptance work under Section 7.
+
+Reference: [AUDIT-03 storage closure on main](https://github.com/AligasSRM/XKiss/blob/main/audit/xkiss-audit-03-fresh-baseline.md) and [production-readiness review](https://github.com/AligasSRM/XKiss/blob/main/audit/PRODUCTION-READINESS-REVIEW.md).
+
 ## Status rules
 
 - **🟢 GREEN / LOCKED:** specific scope has evidence of passing checks and should not be reopened without a concrete technical reason.
