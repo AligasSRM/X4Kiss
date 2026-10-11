@@ -54,6 +54,23 @@
     return result;
   }
 
+  async function verifySession() {
+    if (!sessionToken) return { ok: false, status: "unauthenticated" };
+    try {
+      const result = await request("/api/auth/me", {
+        method: "GET",
+        headers: { "Authorization": "Bearer " + sessionToken },
+        cache: "no-store"
+      });
+      if (result.ok === true && result.status === "authenticated") return result;
+      setSessionToken("");
+      return { ok: false, status: "unauthenticated" };
+    } catch (error) {
+      if (error.status === 401) setSessionToken("");
+      throw error;
+    }
+  }
+
   async function prepareUpload(metadata) {
     if (!sessionToken) throw new Error("Sign in before uploading.");
     return request("/api/upload/prepare", {
@@ -82,5 +99,5 @@
 
   function setSessionToken(token) { sessionToken = token || ""; if (sessionToken) window.sessionStorage.setItem("xkiss_session_token", sessionToken); else window.sessionStorage.removeItem("xkiss_session_token"); }
 
-  window.XKissUploadAPI = { getStorageStatus, authenticate, prepareUpload, uploadFile, setSessionToken };
+  window.XKissUploadAPI = { getStorageStatus, authenticate, verifySession, prepareUpload, uploadFile, setSessionToken };
 })();
