@@ -19,7 +19,7 @@
       <a class="active" href="creator-upload.html">Upload</a>
       <a href="index.html#account">Account</a>
     </div>
-    <a class="login" href="register.html?next=creator-upload.html">Account</a>
+    <a class="login" href="creator-dashboard.html">My Account</a>
   </nav>
 </header>
 
@@ -27,22 +27,14 @@
   <section class="upload-hero">
     <span class="eyebrow">XKISS CREATOR</span>
     <h1>Upload Video</h1>
-    <p>Sign in, select a video up to 100 MB, and transfer it to private storage. Public publishing and playback are not yet enabled.</p>
+    <p>Select a video up to 100 MB. After the server confirms storage, XKiss will take you to My Videos. Public publishing and playback remain disabled for now.</p>
   </section>
 
   <section class="upload-section">
     <div class="upload-card">
-      <div class="architecture-note">
-        <strong>Creator account</strong>
-        <div class="upload-grid">
-          <label><span>Email</span><input id="creator-email" type="email" autocomplete="username" placeholder="you@example.com"></label>
-          <label><span>Password (minimum 8 characters)</span><input id="creator-password" type="password" autocomplete="current-password" minlength="8"></label>
-        </div>
-        <div class="upload-actions">
-          <button id="creator-login" class="primary" type="button">Sign in</button>
-          <button id="creator-register" class="secondary" type="button">Register / Sign in</button>
-        </div>
-        <p id="creator-auth-status" aria-live="polite">Sign in or create an account before uploading.</p>
+      <div class="architecture-note" id="creator-auth-status" aria-live="polite">
+        <strong>Creator session</strong>
+        <span>You're using the account session from sign-in. Uploads are private and appear in My Videos after the server confirms storage.</span>
       </div>
       <div class="section-head">
         <div>
