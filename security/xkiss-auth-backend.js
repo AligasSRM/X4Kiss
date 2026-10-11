@@ -93,20 +93,33 @@ export async function registerMember(env, { fullName, email, password, ageConfir
   const id = crypto.randomUUID();
   const salt = await randomBase64(16);
   const passwordHash = await hashPassword(password, salt);
-  const now = new Date().toISOString();
-
-  await env.XKISS_AUTH_DB.prepare(
-    "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at,full_name,age_confirmed_at,terms_accepted_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5,?6,?5,?5)"
-  ).bind(id, normalized, passwordHash, salt, now, normalizedName).run();
-
   const rawToken = await randomBase64(32);
   const tokenHash = await hashToken(rawToken);
   const sessionId = crypto.randomUUID();
+  const now = new Date().toISOString();
   const expires = new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString();
 
-  await env.XKISS_AUTH_DB.prepare(
-    "INSERT INTO sessions (id,user_id,token_hash,expires_at,created_at) VALUES (?1,?2,?3,?4,?5)"
-  ).bind(sessionId, id, tokenHash, expires, now).run();
+  // Keep account creation and session creation atomic. A failed session insert
+  // must not leave an account that blocks the user from registering again.
+  try {
+    await env.XKISS_AUTH_DB.batch([
+      env.XKISS_AUTH_DB.prepare(
+        "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at,full_name,age_confirmed_at,terms_accepted_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5,?6,?5,?5)"
+      ).bind(id, normalized, passwordHash, salt, now, normalizedName),
+      env.XKISS_AUTH_DB.prepare(
+        "INSERT INTO sessions (id,user_id,token_hash,expires_at,created_at) VALUES (?1,?2,?3,?4,?5)"
+      ).bind(sessionId, id, tokenHash, expires, now)
+    ]);
+  } catch (error) {
+    // A concurrent request may have won the unique-email race.
+    const raced = await env.XKISS_AUTH_DB.prepare(
+      "SELECT id FROM users WHERE email = ?1 LIMIT 1"
+    ).bind(normalized).first();
+    if (raced) {
+      return { ok: false, status: "already_exists", message: "An account with this email already exists. Sign in to that account." };
+    }
+    throw error;
+  }
 
   return {
     ok: true,
