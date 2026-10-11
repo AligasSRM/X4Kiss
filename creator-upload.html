@@ -26,7 +26,7 @@
   <section class="upload-hero">
     <span class="eyebrow">XKISS CREATOR</span>
     <h1>Upload Video</h1>
-    <p>Prepare a creator video for secure XKiss storage, metadata and publishing.</p>
+    <p>Check creator upload readiness. Actual transfer and publishing remain disabled until secure authorization and processing are verified.</p>
   </section>
 
   <section class="upload-section">
@@ -101,7 +101,7 @@
       </div>
 
       <div class="upload-actions">
-        <button id="prepare-upload" class="primary" type="button">Prepare Upload</button>
+        <button id="prepare-upload" class="primary" type="button">Check Upload Readiness</button>
         <button id="reset-upload" class="secondary" type="button">Reset</button>
       </div>
 
@@ -109,7 +109,7 @@
 
       <div class="architecture-note">
         <strong>Storage architecture</strong>
-        <span>The upload layer is connected to the XKiss Worker. Cloud storage is intentionally not activated yet; when R2 is enabled and creator authorization is connected, the same flow will support the production upload.</span>
+        <span>ElasticLake object storage has passed a direct write/read/delete test. This page currently checks metadata and server readiness only; it does not transfer the selected file. Actual uploads require authenticated creator sessions, server-side ownership checks, a secure upload pipeline, processing, and playback authorization.</span>
       </div>
     </div>
   </section>
