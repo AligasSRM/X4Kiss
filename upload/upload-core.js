@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const state = { file: null, storageReady: false };
+  const state = { file: null, storageReady: false, signedIn: false };
 
   function $(id) { return document.getElementById(id); }
 
@@ -27,9 +27,11 @@
   }
 
   function validate() {
+    if (!state.signedIn) return "Sign in with your creator account first.";
     if (!state.file) return "Select a video file first.";
     if (!state.file.type || !state.file.type.startsWith("video/")) return "The selected file is not a supported video.";
     if (state.file.size <= 0) return "The selected video file is empty.";
+    if (state.file.size > 100 * 1024 * 1024) return "The upload limit is 100 MB per video.";
     if (! $("video-title").value.trim()) return "Enter a video title.";
     if (!$("video-category").value) return "Select a category.";
     return "";
@@ -87,29 +89,23 @@
     setProgress(10, "Checking server-side upload readiness");
 
     try {
-      const data = await window.XKissUploadAPI.prepareUpload({
-        fileName: state.file.name,
-        fileSize: state.file.size,
-        contentType: state.file.type,
-        title: $("video-title").value.trim(),
-        description: $("video-description").value.trim(),
-        category: $("video-category").value,
-        downloadPolicy: $("download-policy").value,
-        visibility: $("video-visibility").value
-      });
-
-      setProgress(0, "Readiness checked — no file transfer performed");
-      setResult(
-        "Server response: " + (data.message || data.status || "readiness checked") +
-        ". This page does not transfer or publish the selected video. No file was uploaded.",
-        "error"
-      );
+      const metadata = {
+        fileName: state.file.name, fileSize: state.file.size, contentType: state.file.type,
+        title: $("video-title").value.trim(), description: $("video-description").value.trim(),
+        category: $("video-category").value
+      };
+      await window.XKissUploadAPI.prepareUpload(metadata);
+      setProgress(25, "Creator session verified — transferring video");
+      const data = await window.XKissUploadAPI.uploadFile(state.file, metadata);
+      setProgress(100, "Video stored privately — not published");
+      setResult((data.message || "Video stored privately.") + " Video key: " + (data.key || "stored"), "success");
+      $("upload-status").textContent = "Upload complete to private storage. Public publishing and playback are not enabled.";
     } catch (error) {
       setProgress(0, "Upload readiness check failed");
       setResult(error.message || "Upload readiness check failed. No file was uploaded.", "error");
     } finally {
       button.disabled = false;
-      button.textContent = "Check Upload Readiness";
+      button.textContent = "Upload Video Privately";
     }
   }
 
@@ -127,8 +123,24 @@
     setProgress(0, "Upload not started");
   }
 
+  async function authenticate(createAccount) {
+    const status = $("creator-auth-status");
+    const email = $("creator-email").value.trim();
+    const password = $("creator-password").value;
+    if (!email || !password) { status.textContent = "Enter your email and password."; return; }
+    status.textContent = createAccount ? "Creating account…" : "Signing in…";
+    try {
+      const result = await window.XKissUploadAPI.authenticate(email, password, createAccount);
+      if (createAccount) { status.textContent = result.message || "Account created. Sign in to continue."; return; }
+      state.signedIn = true;
+      status.textContent = "Signed in as " + (result.user?.email || email) + ". You can upload privately."; 
+    } catch (error) { state.signedIn = false; status.textContent = error.message || "Account request failed."; }
+  }
+
   function initialize() {
     $("video-file").addEventListener("change", handleFile);
+    $("creator-login").addEventListener("click", () => authenticate(false));
+    $("creator-register").addEventListener("click", () => authenticate(true));
     $("prepare-upload").addEventListener("click", prepare);
     $("reset-upload").addEventListener("click", reset);
     checkStorage();
