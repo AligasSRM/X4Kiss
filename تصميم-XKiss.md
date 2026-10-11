@@ -47,6 +47,40 @@
 - هذا صف تنقّل مستقل تحت الشريط الأول، ويُسجَّل كجزء من تصميم الصفحة الرئيسية.
 
 
+# قسم إعدادات الموقع
+
+هذا قسم مستقل لتوثيق الخيارات التي تظهر داخل إعدادات الموقع، كما أرسلها علي. تُحفظ أسماء الخيارات كما وردت، وتُراجع التفاصيل والسلوك لاحقًا قبل التنفيذ.
+
+## خيارات الحساب والمحتوى
+
+- Subscriptions
+- Liked videos
+- History
+- Watch later
+- Show subscriptions on homepage
+- "Videos I Like" page
+- "Viewed" icon
+- "Watch later" button
+
+## خيارات العملة والواجهة
+
+- Payment currency: $
+- User Interface
+- Colors
+- Automatic
+- 4 columns
+- Big UI
+- Video preview
+- Automatic video titles translation
+
+## خيارات السجل
+
+- History
+
+## نص إضافي وارد ضمن القائمة
+
+- MIDGET NEXT TO HIS I fuck the female bosses- they
+
 # قسم ثلاثة: الشريط الفوقاني للصفحة الرئيسية
 
 عند فتح الصفحة الرئيسية، نسجّل الخيارات الظاهرة في الشريط الفوقاني كما يرسلها علي، ونرتّبها حسب الترتيب الذي يحدده. لا نضيف أو نحذف أي خيار من دون تعليماته.
