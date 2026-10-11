@@ -35,9 +35,10 @@
     const title = $("video-title");
     if (!title.value.trim()) {
       title.setAttribute("aria-invalid", "true");
-      title.focus({ preventScroll: true });
+      // Do not force programmatic focus on mobile: Android browsers may move
+      // focus without opening the keyboard, making the field appear uneditable.
       title.scrollIntoView({ behavior: "smooth", block: "center" });
-      return "Enter a video title in the Title field above.";
+      return "Tap the Title field and type a name for this video, then tap Upload Video Privately again.";
     }
     title.removeAttribute("aria-invalid");
     if (!$("video-category").value) {
@@ -169,6 +170,12 @@
   function initialize() {
     $("video-file").addEventListener("change", handleFile);
     const titleField = $("video-title");
+    titleField.setAttribute("inputmode", "text");
+    titleField.setAttribute("enterkeyhint", "done");
+    titleField.addEventListener("pointerdown", () => {
+      // Let the user's tap own focus so the mobile keyboard can open normally.
+      titleField.removeAttribute("aria-invalid");
+    });
     titleField.addEventListener("input", () => {
       if (titleField.value.trim()) titleField.removeAttribute("aria-invalid");
     });
