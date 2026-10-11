@@ -21,45 +21,15 @@ concurrency:
 
 jobs:
   elasticlake-write-read-delete:
-    name: ElasticLake S3 write-read-delete
+    name: Live ElasticLake write-read-delete through production Worker
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.ELASTICLAKE_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.ELASTICLAKE_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: auto
-      S3_ENDPOINT: https://app.elasticlake.com
-      S3_BUCKET: xkiss-storage--xkiss-production--xkiss-midea
     steps:
-      - name: Validate required credentials are configured
+      - name: Run live storage integration test
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${AWS_ACCESS_KEY_ID}" || { echo "Missing GitHub Actions secret: ELASTICLAKE_ACCESS_KEY_ID"; exit 1; }
-          test -n "${AWS_SECRET_ACCESS_KEY}" || { echo "Missing GitHub Actions secret: ELASTICLAKE_SECRET_ACCESS_KEY"; exit 1; }
-
-      - name: Install AWS CLI
-        run: |
-          python -m pip install --user awscli
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-
-      - name: Write, read, compare, and delete a private test object
-        shell: bash
-        run: |
-          set -euo pipefail
-          key="xkiss-github-verification/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt"
-          expected="XKiss ElasticLake verification ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          printf '%s' "$expected" > /tmp/xkiss-storage-test.txt
-
-          aws --endpoint-url "$S3_ENDPOINT" --region "$AWS_DEFAULT_REGION" s3api put-object \
-            --bucket "$S3_BUCKET" --key "$key" --body /tmp/xkiss-storage-test.txt >/dev/null
-
-          aws --endpoint-url "$S3_ENDPOINT" --region "$AWS_DEFAULT_REGION" s3api get-object \
-            --bucket "$S3_BUCKET" --key "$key" /tmp/xkiss-storage-readback.txt >/dev/null
-
-          cmp /tmp/xkiss-storage-test.txt /tmp/xkiss-storage-readback.txt
-
-          aws --endpoint-url "$S3_ENDPOINT" --region "$AWS_DEFAULT_REGION" s3api delete-object \
-            --bucket "$S3_BUCKET" --key "$key" >/dev/null
-
-          echo "PASS: ElasticLake accepted a real write, read-back comparison, and delete."
+          response="$(curl --fail --silent --show-error --max-time 30 \
+            "https://xkiss.srourr-ali73.workers.dev/api/views/storage/self-test")"
+          printf '%s\n' "$response"
+          python -c 'import json,sys; d=json.load(sys.stdin); assert d.get("ok") is True, "Worker storage self-test returned ok=false"; assert d.get("verified") is True, "ElasticLake write/read/delete verification failed"; assert d.get("cleanup",{}).get("ok") is True, "ElasticLake cleanup failed"; print("PASS: Production Worker completed real ElasticLake write, read-back, and delete.")' <<< "$response"
