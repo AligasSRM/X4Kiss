@@ -88,7 +88,9 @@ export default {
       if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_input" }, 400); }
-      return json(await registerMember(env, body), 201);
+      const result = await registerMember(env, body);
+      const statusCode = result.ok ? 201 : result.status === "already_exists" ? 409 : result.status === "invalid_input" ? 400 : 500;
+      return json(result, statusCode);
     }
 
     if (url.pathname === "/api/auth/login" && request.method === "POST") {
