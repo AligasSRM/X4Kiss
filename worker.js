@@ -1266,6 +1266,7 @@ export default {
 
       const fileName = request.headers.get("X-XKiss-File-Name");
       const contentType = request.headers.get("Content-Type") || "application/octet-stream";
+      const fileSize = Number(request.headers.get("X-XKiss-File-Size") || 0);
 
       if (!fileName) {
         return json({
