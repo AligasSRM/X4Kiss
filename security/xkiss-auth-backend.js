@@ -62,28 +62,23 @@ function userPublic(row) {
     id: row.id,
     email: row.email,
     fullName: row.full_name || null,
-    phone: row.phone || null,
     role: row.role,
     status: row.status,
     createdAt: row.created_at
   };
 }
 
-export async function registerMember(env, { fullName, email, phone, password, ageConfirmed, termsAccepted }) {
+export async function registerMember(env, { fullName, email, password, ageConfirmed, termsAccepted }) {
   const normalized = normalizeEmail(email);
   const normalizedName = typeof fullName === "string" ? fullName.trim().replace(/\s+/g, " ") : "";
-  const normalizedPhone = typeof phone === "string" ? phone.trim() : "";
   const validName = normalizedName.length >= 2 && normalizedName.length <= 100;
-  const validPhone = /^\+?[0-9() .-]{7,24}$/.test(normalizedPhone) &&
-    normalizedPhone.replace(/\D/g, "").length >= 7 &&
-    normalizedPhone.replace(/\D/g, "").length <= 15;
 
-  if (!validName || !validEmail(normalized) || !validPhone || !validPassword(password) ||
+  if (!validName || !validEmail(normalized) || !validPassword(password) ||
       ageConfirmed !== true || termsAccepted !== true) {
     return {
       ok: false,
       status: "invalid_input",
-      message: "Enter your full name, a valid email, phone number, password, and confirm you are 18+ and accept the terms."
+      message: "Enter your full name, a valid email, password, and confirm you are 18+ and accept the terms."
     };
   }
 
@@ -101,8 +96,8 @@ export async function registerMember(env, { fullName, email, phone, password, ag
   const now = new Date().toISOString();
 
   await env.XKISS_AUTH_DB.prepare(
-    "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at,full_name,phone,age_confirmed_at,terms_accepted_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5,?6,?7,?5,?5)"
-  ).bind(id, normalized, passwordHash, salt, now, normalizedName, normalizedPhone).run();
+    "INSERT INTO users (id,email,password_hash,password_salt,role,status,created_at,updated_at,full_name,age_confirmed_at,terms_accepted_at) VALUES (?1,?2,?3,?4,'member','active',?5,?5,?6,?5,?5)"
+  ).bind(id, normalized, passwordHash, salt, now, normalizedName).run();
 
   const rawToken = await randomBase64(32);
   const tokenHash = await hashToken(rawToken);
@@ -118,7 +113,7 @@ export async function registerMember(env, { fullName, email, phone, password, ag
     status: "created",
     token: rawToken,
     expiresAt: expires,
-    user: { id, email: normalized, fullName: normalizedName, phone: normalizedPhone, role: "member", status: "active", createdAt: now }
+    user: { id, email: normalized, fullName: normalizedName, role: "member", status: "active", createdAt: now }
   };
 }
 
@@ -129,7 +124,7 @@ export async function loginMember(env, { email, password }) {
   }
 
   const row = await env.XKISS_AUTH_DB.prepare(
-    "SELECT id,email,password_hash,password_salt,role,status,created_at,full_name,phone FROM users WHERE email = ?1 LIMIT 1"
+    "SELECT id,email,password_hash,password_salt,role,status,created_at,full_name FROM users WHERE email = ?1 LIMIT 1"
   ).bind(normalized).first();
 
   if (!row || row.status !== "active") {
@@ -165,7 +160,7 @@ export async function authenticateSession(env, token) {
 
   const tokenHash = await hashToken(token);
   const row = await env.XKISS_AUTH_DB.prepare(
-    "SELECT s.id AS session_id,s.expires_at,s.mfa_verified_at,s.reauthenticated_at,u.id,u.email,u.role,u.status,u.created_at,u.full_name,u.phone FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=?1 AND s.revoked_at IS NULL LIMIT 1"
+    "SELECT s.id AS session_id,s.expires_at,s.mfa_verified_at,s.reauthenticated_at,u.id,u.email,u.role,u.status,u.created_at,u.full_name FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=?1 AND s.revoked_at IS NULL LIMIT 1"
   ).bind(tokenHash).first();
 
   if (!row || row.status !== "active" || Date.parse(row.expires_at) <= Date.now()) {
@@ -182,8 +177,7 @@ export async function authenticateSession(env, token) {
       id: row.id,
       email: row.email,
       fullName: row.full_name || null,
-      phone: row.phone || null,
-      role: row.role,
+        role: row.role,
       status: row.status,
       createdAt: row.created_at
     }
