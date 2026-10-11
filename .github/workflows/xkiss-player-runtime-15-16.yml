@@ -5,6 +5,7 @@ on:
     paths:
       - "index.html"
       - "player.html"
+      - "videos.html"
       - "js/player.js"
       - "js/video-data.js"
       - "js/player/*.js"
