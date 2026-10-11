@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08090d">
-<title>XKiss — Register or Sign In</title>
+<title>X4Kiss — Register or Sign In</title>
 <style>
 :root{color-scheme:dark;--bg:#08090d;--panel:#11131a;--line:#292c36;--text:#f5f5f7;--muted:#a0a4b1;--pink:#ff2d75;--purple:#bf5af2}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 0%,#35162b 0,transparent 35%),radial-gradient(circle at 100% 20%,#25163a 0,transparent 35%),var(--bg);font:16px/1.5 Arial,Helvetica,sans-serif;color:var(--text);display:grid;place-items:center;padding:22px}
@@ -16,7 +16,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
   <div class="brand"><span>X</span><b>Kiss</b></div>
   <section class="card">
     <div class="eyebrow">MEMBER ACCESS · 18+</div>
-    <h1 class="title" id="heading">Create your XKiss account</h1>
+    <h1 class="title" id="heading">Create your X4Kiss account</h1>
     <p class="intro" id="intro">Complete the required details to enter the platform. Your password is stored as a secure hash, not as plain text.</p>
     <div class="tabs" role="tablist" aria-label="Account access">
       <button type="button" class="active" id="show-register" aria-selected="true">Register</button>
@@ -76,14 +76,14 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     loginForm.classList.toggle("hidden",isRegister);
     registerTab.classList.toggle("active",isRegister);loginTab.classList.toggle("active",!isRegister);
     registerTab.setAttribute("aria-selected",String(isRegister));loginTab.setAttribute("aria-selected",String(!isRegister));
-    heading.textContent=isRegister?"Create your XKiss account":"Welcome back";
+    heading.textContent=isRegister?"Create your X4Kiss account":"Welcome back";
     intro.textContent=isRegister?"Complete the required details to enter the platform.":"Sign in with the email and password for your existing account.";
     message.className="message";
   }
   async function call(path,body){
     var response;
     try{response=await fetch(API+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store"});}
-    catch(_){throw new Error("Could not reach the XKiss account service. Please try again later.");}
+    catch(_){throw new Error("Could not reach the X4Kiss account service. Please try again later.");}
     var data={};try{data=await response.json();}catch(_){}
     if(!response.ok||data.ok!==true){
       if(data.status==="already_exists") throw new Error("This email already has an account. Choose Sign in. If you do not know that password, account recovery is not available yet.");
@@ -149,7 +149,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     try{await call("/api/auth/login",{email:document.getElementById("login-email").value.trim(),password:document.getElementById("login-password").value});}
     catch(error){showMessage(error.message,"error");button.disabled=false;button.textContent="Sign in and enter";}
   });
-  if(params.get("reason")==="required") showMessage("Register or sign in is required before entering XKiss.","error");
+  if(params.get("reason")==="required") showMessage("Register or sign in is required before entering X4Kiss.","error");
   if(params.get("reason")==="session") showMessage("Your session expired or is no longer valid. Please sign in again.","error");
 })();
 </script>
