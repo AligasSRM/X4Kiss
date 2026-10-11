@@ -11,6 +11,7 @@ on:
       - "home/*.js"
       - "player/runtime/*.js"
       - ".github/workflows/xkiss-player-runtime-15-16.yml"
+      - ".github/workflows/xkiss-final-review.yml"
   workflow_dispatch:
 
 jobs:
