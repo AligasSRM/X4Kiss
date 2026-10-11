@@ -18,8 +18,9 @@
       return [];
     }
 
+    // Public discovery must not expose drafts, test records, or unreviewed uploads.
     return Object.values(XKISS_VIDEOS).filter(
-      video => video && video.id
+      video => video && video.id && video.status === "published" && video.publishedAt
     );
   }
 
