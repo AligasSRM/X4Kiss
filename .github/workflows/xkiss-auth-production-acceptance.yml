@@ -79,13 +79,13 @@ jobs:
             method: "POST",
             body: JSON.stringify({ email: `invalid-${process.env.RUN_ID}@example.com`, password, ageConfirmed: true, termsAccepted: true })
           });
-          assert(missingProfile.status === 201 && missingProfile.body?.ok === false && missingProfile.body?.status === "invalid_input", "registration requires full profile fields");
+          assert(missingProfile.status === 400 && missingProfile.body?.ok === false && missingProfile.body?.status === "invalid_input", "registration requires full profile fields");
 
           const duplicate = await call("/api/auth/register", {
             method: "POST",
             body: JSON.stringify(registration)
           });
-          assert(duplicate.status === 201 && duplicate.body?.ok === false && duplicate.body?.status === "already_exists", "duplicate registration rejected");
+          assert(duplicate.status === 409 && duplicate.body?.ok === false && duplicate.body?.status === "already_exists", "duplicate registration rejected");
           
           const badLogin = await call("/api/auth/login", {
             method: "POST",
