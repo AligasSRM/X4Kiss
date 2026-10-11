@@ -68,6 +68,27 @@ function json(data, status = 200) {
   });
 }
 
+async function ensureCreatorVideoIndex(db) {
+  await db.prepare(`
+    CREATE TABLE IF NOT EXISTS creator_videos (
+      id TEXT PRIMARY KEY,
+      creator_id TEXT NOT NULL,
+      storage_key TEXT NOT NULL UNIQUE,
+      file_name TEXT NOT NULL,
+      content_type TEXT NOT NULL,
+      file_size INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL DEFAULT '',
+      category TEXT NOT NULL,
+      visibility TEXT NOT NULL DEFAULT 'private',
+      download_policy TEXT NOT NULL DEFAULT 'disabled',
+      status TEXT NOT NULL DEFAULT 'uploading',
+      storage TEXT NOT NULL DEFAULT 'ElasticLake',
+      created_at TEXT NOT NULL
+    )
+  `).run();
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1267,31 +1288,53 @@ export default {
         }, 400);
       }
 
+      const title = request.headers.get("X-XKiss-Title") || "";
+      const description = request.headers.get("X-XKiss-Description") || "";
+      const category = request.headers.get("X-XKiss-Category") || "";
       const key = createVideoKey(fileName);
+      const videoId = crypto.randomUUID();
+      const createdAt = new Date().toISOString();
+
+      try {
+        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
+        await env.XKISS_AUTH_DB.prepare(
+          "INSERT INTO creator_videos (id,creator_id,storage_key,file_name,content_type,file_size,title,description,category,visibility,download_policy,status,storage,created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,'private','disabled','uploading','ElasticLake',?10)"
+        ).bind(videoId, session.user.id, key, fileName, contentType, fileSize, title, description, category, createdAt).run();
+      } catch {
+        return json({ ok: false, storageReady: true, status: "index_unavailable", message: "The private video library is not ready. No video was uploaded; please try again later." }, 503);
+      }
 
       try {
         const stored = await storeVideo(env, key, request.body, {
-          fileName,
-          contentType,
-          title: request.headers.get("X-XKiss-Title") || "",
-          description: request.headers.get("X-XKiss-Description") || "",
-          category: request.headers.get("X-XKiss-Category") || "",
+          fileName, contentType, title, description, category,
           creatorId: session.user.id,
           downloadPolicy: "disabled",
           visibility: "private"
         });
+        await env.XKISS_AUTH_DB.prepare(
+          "UPDATE creator_videos SET status='stored' WHERE id=?1 AND creator_id=?2"
+        ).bind(videoId, session.user.id).run();
 
         return json({
           ...stored,
+          id: videoId,
+          title,
+          category,
           visibility: "private",
-          message: "Video uploaded to private storage. Public publishing and playback are not enabled yet."
+          status: "stored",
+          storage: "ElasticLake",
+          createdAt,
+          message: "Video uploaded to private storage and added to My Videos. Public publishing and playback are not enabled yet."
         }, 201);
       } catch {
+        await env.XKISS_AUTH_DB.prepare(
+          "UPDATE creator_videos SET status='failed' WHERE id=?1 AND creator_id=?2"
+        ).bind(videoId, session.user.id).run().catch(() => {});
         return json({
           ok: false,
           storageReady: true,
           status: "failed",
-          message: "Video storage failed."
+          message: "Video storage failed. No completed upload is available in My Videos."
         }, 500);
       }
     }
@@ -1302,15 +1345,20 @@ export default {
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const session = await authenticateSession(env, token);
       if (!session.ok) return json({ ok: false, message: "Sign in to access your creator library." }, 401);
-      // Do not expose a bucket-wide listing. The object-list adapter does not yet
-      // provide a trustworthy owner-scoped index, so fail closed for every account.
-      return json({
-        ok: false,
-        storageReady,
-        videos: [],
-        status: "owner_index_pending",
-        message: "Private uploads are accepted, but the creator library stays disabled until an owner-scoped index is available."
-      }, 503);
+      try {
+        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
+        const result = await env.XKISS_AUTH_DB.prepare(
+          "SELECT id,storage_key AS key,file_name AS fileName,content_type AS contentType,file_size AS size,title,description,category,visibility,download_policy AS downloadPolicy,status,storage,created_at AS uploaded FROM creator_videos WHERE creator_id=?1 ORDER BY created_at DESC LIMIT 100"
+        ).bind(session.user.id).all();
+        return json({
+          ok: true,
+          storageReady,
+          videos: result.results || [],
+          status: "ready"
+        });
+      } catch {
+        return json({ ok: false, storageReady, videos: [], status: "library_unavailable", message: "Your private video library is temporarily unavailable." }, 503);
+      }
     }
 
     return json({
