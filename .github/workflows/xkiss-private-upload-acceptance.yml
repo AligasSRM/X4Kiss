@@ -1,0 +1,130 @@
+name: XKiss Private Upload Live Acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/xkiss-private-upload-acceptance.yml"
+      - "worker.js"
+      - "storage/elasticlake-adapter.js"
+      - "security/xkiss-auth-backend.js"
+      - "upload/upload-api.js"
+      - "upload/upload-core.js"
+      - "creator-upload.html"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-private-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Wait for the latest Worker deployment
+        env:
+          BASE_URL: https://xkiss.srourr-ali73.workers.dev
+        run: |
+          node <<'NODE'
+          const base = process.env.BASE_URL;
+          let ready = false;
+          for (let i = 0; i < 36; i++) {
+            try {
+              const r = await fetch(base + "/api/creator/videos");
+              if (r.status === 401) { ready = true; break; }
+            } catch {}
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
+          if (!ready) {
+            console.error("Worker did not expose the protected creator-library route within 3 minutes.");
+            process.exit(1);
+          }
+          console.log("PASS: latest privacy gate is deployed.");
+          NODE
+
+      - name: Test real authenticated private upload
+        env:
+          BASE_URL: https://xkiss.srourr-ali73.workers.dev
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          node <<'NODE'
+          const base = process.env.BASE_URL;
+          const email = `xkiss-upload-${process.env.RUN_ID}@example.com`;
+          const password = "XKiss-Upload-Acceptance-2026!";
+          const assert = (condition, message, details) => {
+            if (!condition) {
+              console.error("FAIL:", message, details ?? "");
+              process.exit(1);
+            }
+            console.log("PASS:", message);
+          };
+          async function call(path, options = {}) {
+            const response = await fetch(base + path, {
+              ...options,
+              headers: { "content-type": "application/json", ...(options.headers || {}) }
+            });
+            let body = null;
+            try { body = await response.json(); } catch {}
+            return { status: response.status, body };
+          }
+
+          const unauth = await call("/api/upload/prepare", {
+            method: "POST",
+            body: JSON.stringify({ fileName: "no-auth.mp4", fileSize: 24, contentType: "video/mp4", title: "Unauthorized", category: "test" })
+          });
+          assert(unauth.status === 401, "upload preparation rejects unauthenticated requests");
+
+          const registration = await call("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+          });
+          assert(registration.status === 201 && registration.body?.ok === true, "temporary acceptance creator account registered");
+
+          const login = await call("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+          });
+          assert(login.status === 200 && login.body?.ok === true && typeof login.body?.token === "string", "creator login returns a session");
+          const token = login.body.token;
+
+          const prepare = await call("/api/upload/prepare", {
+            method: "POST",
+            headers: { authorization: `Bearer ${token}` },
+            body: JSON.stringify({ fileName: `xkiss-acceptance-${process.env.RUN_ID}.mp4`, fileSize: 24, contentType: "video/mp4", title: "Private upload acceptance test", category: "test" })
+          });
+          assert(prepare.status === 200 && prepare.body?.ok === true && prepare.body?.uploadReady === true, "authenticated upload preparation passes");
+
+          // Minimal 24-byte ISO-BMFF ftyp test payload. It is private test data,
+          // not a publishable video; this verifies transfer and object-store write only.
+          const payload = Buffer.from("00000018667479706d7034320000000069736f6d00000000", "hex");
+          assert(payload.length === 24, "acceptance payload size is exact");
+          const upload = await fetch(base + "/api/upload", {
+            method: "POST",
+            headers: {
+              authorization: `Bearer ${token}`,
+              "content-type": "video/mp4",
+              "x-xkiss-file-name": `xkiss-acceptance-${process.env.RUN_ID}.mp4`,
+              "x-xkiss-file-size": String(payload.length),
+              "x-xkiss-title": "Private upload acceptance test",
+              "x-xkiss-category": "test"
+            },
+            body: payload
+          });
+          let result = null;
+          try { result = await upload.json(); } catch {}
+          assert(upload.status === 201 && result?.ok === true && result?.status === "stored" && result?.visibility === "private" && typeof result?.key === "string", "video bytes transferred and stored as a private ElasticLake object", { status: upload.status, body: result });
+
+          const library = await call("/api/creator/videos", {
+            headers: { authorization: `Bearer ${token}` }
+          });
+          assert(library.status === 503 && library.body?.status === "owner_index_pending" && Array.isArray(library.body?.videos) && library.body.videos.length === 0, "creator library fails closed rather than leaking other creators' files");
+
+          const logout = await call("/api/auth/logout", {
+            method: "POST",
+            headers: { authorization: `Bearer ${token}` },
+            body: "{}"
+          });
+          assert(logout.status === 200 && logout.body?.ok === true, "acceptance session revoked");
+          console.log("XKISS_PRIVATE_UPLOAD_ACCEPTANCE=GREEN");
+          console.log("PRIVATE_TEST_OBJECT_KEY=" + result.key);
+          NODE
