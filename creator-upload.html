@@ -26,11 +26,23 @@
   <section class="upload-hero">
     <span class="eyebrow">XKISS CREATOR</span>
     <h1>Upload Video</h1>
-    <p>Check creator upload readiness. Actual transfer and publishing remain disabled until secure authorization and processing are verified.</p>
+    <p>Sign in, select a video up to 100 MB, and transfer it to private storage. Public publishing and playback are not yet enabled.</p>
   </section>
 
   <section class="upload-section">
     <div class="upload-card">
+      <div class="architecture-note">
+        <strong>Creator account</strong>
+        <div class="upload-grid">
+          <label><span>Email</span><input id="creator-email" type="email" autocomplete="username" placeholder="you@example.com"></label>
+          <label><span>Password (minimum 10 characters)</span><input id="creator-password" type="password" autocomplete="current-password" minlength="10"></label>
+        </div>
+        <div class="upload-actions">
+          <button id="creator-login" class="primary" type="button">Sign in</button>
+          <button id="creator-register" class="secondary" type="button">Create account</button>
+        </div>
+        <p id="creator-auth-status" aria-live="polite">Sign in or create an account before uploading.</p>
+      </div>
       <div class="section-head">
         <div>
           <h2>Video file</h2>
@@ -101,7 +113,7 @@
       </div>
 
       <div class="upload-actions">
-        <button id="prepare-upload" class="primary" type="button">Check Upload Readiness</button>
+        <button id="prepare-upload" class="primary" type="button">Upload Video Privately</button>
         <button id="reset-upload" class="secondary" type="button">Reset</button>
       </div>
 
@@ -109,7 +121,7 @@
 
       <div class="architecture-note">
         <strong>Storage architecture</strong>
-        <span>ElasticLake object storage has passed a direct write/read/delete test. This page currently checks metadata and server readiness only; it does not transfer the selected file. Actual uploads require authenticated creator sessions, server-side ownership checks, a secure upload pipeline, processing, and playback authorization.</span>
+        <span>ElasticLake object storage has passed a direct write/read/delete test. Uploads require a creator session and are stored privately. Public publishing, processing, and playback remain disabled until their secure paths are completed.</span>
       </div>
     </div>
   </section>
