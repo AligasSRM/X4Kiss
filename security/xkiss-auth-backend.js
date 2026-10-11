@@ -165,7 +165,7 @@ export async function authenticateSession(env, token) {
 
   const tokenHash = await hashToken(token);
   const row = await env.XKISS_AUTH_DB.prepare(
-    "SELECT s.id AS session_id,s.expires_at,s.mfa_verified_at,s.reauthenticated_at,u.id,u.email,u.role,u.status,u.created_at FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=?1 AND s.revoked_at IS NULL LIMIT 1"
+    "SELECT s.id AS session_id,s.expires_at,s.mfa_verified_at,s.reauthenticated_at,u.id,u.email,u.role,u.status,u.created_at,u.full_name,u.phone FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=?1 AND s.revoked_at IS NULL LIMIT 1"
   ).bind(tokenHash).first();
 
   if (!row || row.status !== "active" || Date.parse(row.expires_at) <= Date.now()) {
@@ -181,6 +181,8 @@ export async function authenticateSession(env, token) {
     user: {
       id: row.id,
       email: row.email,
+      fullName: row.full_name || null,
+      phone: row.phone || null,
       role: row.role,
       status: row.status,
       createdAt: row.created_at
