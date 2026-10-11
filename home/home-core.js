@@ -90,6 +90,31 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.dataset.xkissHome = "ready";
   }
 
+  async function updateAccountNavigation() {
+    const token = window.sessionStorage.getItem("xkiss_session_token") || "";
+    const accountLink = document.querySelector("[data-auth-nav]");
+    const quickAuthLink = document.querySelector("[data-auth-quick]");
+    if (!token) return;
+    try {
+      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/auth/me", {
+        headers: { "Authorization": "Bearer " + token, "Accept": "application/json" },
+        cache: "no-store"
+      });
+      const data = await response.json();
+      if (!response.ok || data.ok !== true || data.status !== "authenticated") {
+        window.sessionStorage.removeItem("xkiss_session_token");
+        return;
+      }
+      if (accountLink) {
+        accountLink.href = "creator-dashboard.html";
+        accountLink.textContent = "My Account";
+      }
+      if (quickAuthLink) quickAuthLink.hidden = true;
+    } catch (_) {
+      // Keep the current Home usable if the account service is temporarily offline.
+    }
+  }
+
   window.XKissHome = {
     version: HOME.version,
     qs,
@@ -103,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindGlobalClick();
   bindKeyboardNavigation();
   markHomeReady();
+  updateAccountNavigation();
 
   console.log("XKiss Home Core loaded.");
 });
