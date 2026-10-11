@@ -1,6 +1,9 @@
 name: XKiss AUDIT-07 Integration Verification
 
 on:
+  push:
+    paths:
+      - ".github/workflows/xkiss-audit-07-integration-verification.yml"
   workflow_dispatch:
 
 jobs:
