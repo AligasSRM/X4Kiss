@@ -54,7 +54,7 @@ import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-XKiss-Upload-Key, X-XKiss-File-Name, X-XKiss-Title, X-XKiss-Description, X-XKiss-Category, X-XKiss-Download-Policy, X-XKiss-Visibility",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-XKiss-Upload-Key, X-XKiss-File-Name, X-XKiss-File-Size, X-XKiss-Title, X-XKiss-Description, X-XKiss-Category, X-XKiss-Download-Policy, X-XKiss-Visibility",
   "Vary": "Origin"
 };
 
@@ -1281,10 +1281,10 @@ export default {
         }, 415);
       }
 
-      if (!request.body) {
+      if (!request.body || !Number.isSafeInteger(fileSize) || fileSize < 1 || fileSize > 100 * 1024 * 1024) {
         return json({
           ok: false,
-          message: "Video request body is empty."
+          message: "Video must be present and no larger than 100 MB."
         }, 400);
       }
 
