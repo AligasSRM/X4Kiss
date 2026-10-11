@@ -127,7 +127,17 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     if(!document.getElementById("age-confirm").checked||!document.getElementById("terms-confirm").checked){showMessage("Confirm the 18+ declaration and accept the terms to continue.","error");return;}
     var button=document.getElementById("register-submit");button.disabled=true;button.textContent="Creating account…";
     try{await call("/api/auth/register",{fullName:fullName,email:email,password:password,ageConfirmed:true,termsAccepted:true});}
-    catch(error){showMessage(error.message,"error");button.disabled=false;button.textContent="Create account and enter";}
+    catch(error){
+      button.disabled=false;
+      button.textContent="Create account and enter";
+      if(error.message.indexOf("This email already has an account.")===0){
+        document.getElementById("login-email").value=email;
+        setMode("login");
+        showMessage("This email already has an account. Enter the password originally set for it. If you do not remember that password, secure email-verified recovery is required before it can be reset.", "error");
+      } else {
+        showMessage(error.message,"error");
+      }
+    }
   });
   loginForm.addEventListener("submit",async function(event){
     event.preventDefault();
