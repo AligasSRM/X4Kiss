@@ -1295,23 +1295,20 @@ export default {
     }
 
     if (url.pathname === "/api/creator/videos" && request.method === "GET") {
-      try {
-        const result = await listVideos(env);
-
-        return json({
-          ...result,
-          message: storageReady
-            ? "Creator library is connected."
-            : "Creator library is ready. Production storage is not activated yet."
-        });
-      } catch {
-        return json({
-          ok: false,
-          storageReady,
-          videos: [],
-          message: "Creator storage could not be read."
-        }, 500);
-      }
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      const authorization = request.headers.get("Authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      const session = await authenticateSession(env, token);
+      if (!session.ok) return json({ ok: false, message: "Sign in to access your creator library." }, 401);
+      // Do not expose a bucket-wide listing. The object-list adapter does not yet
+      // provide a trustworthy owner-scoped index, so fail closed for every account.
+      return json({
+        ok: false,
+        storageReady,
+        videos: [],
+        status: "owner_index_pending",
+        message: "Private uploads are accepted, but the creator library stays disabled until an owner-scoped index is available."
+      }, 503);
     }
 
     return json({
