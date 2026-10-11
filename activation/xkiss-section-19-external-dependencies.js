@@ -5,10 +5,10 @@ export const XKISS_SECTION_19_EXTERNAL_DEPENDENCIES=Object.freeze({
   verifiedIntegrationKeys:Object.freeze([
     "workerProductionEnvironment",
     "authDatabaseAndSessionStore",
+    "videoObjectStorage",
     "viewEventPersistence"
   ]),
   externalProviderKeys:Object.freeze([
-    "videoObjectStorage",
     "uploadProcessingPipeline",
     "walletLedgerPersistence",
     "settlementProvider",
@@ -24,7 +24,7 @@ export const XKISS_SECTION_19_EXTERNAL_DEPENDENCIES=Object.freeze({
   dependencies:{
     workerProductionEnvironment:true,
     authDatabaseAndSessionStore:true,
-    videoObjectStorage:false,
+    videoObjectStorage:true,
     uploadProcessingPipeline:false,
     viewEventPersistence:true,
     walletLedgerPersistence:false,
