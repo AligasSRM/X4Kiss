@@ -8,6 +8,10 @@ on:
       - ".github/workflows/xkiss-auth-production-acceptance.yml"
       - "worker.js"
       - "security/xkiss-auth-backend.js"
+      - "auth/route-guard.js"
+      - "register.html"
+      - "upload/upload-api.js"
+      - "migrations/0003_member_registration_profile.sql"
       - "wrangler.toml"
 
 jobs:
@@ -71,6 +75,12 @@ jobs:
           });
           assert(register.status === 201 && register.body?.ok === true && register.body?.status === "created" && typeof register.body?.token === "string" && register.body?.user?.fullName === registration.fullName && register.body?.user?.phone === registration.phone, "register with profile and session");
           
+          const missingProfile = await call("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({ email: `invalid-${process.env.RUN_ID}@example.com`, password, ageConfirmed: true, termsAccepted: true })
+          });
+          assert(missingProfile.status === 201 && missingProfile.body?.ok === false && missingProfile.body?.status === "invalid_input", "registration requires full profile fields");
+
           const duplicate = await call("/api/auth/register", {
             method: "POST",
             body: JSON.stringify(registration)
@@ -89,6 +99,11 @@ jobs:
           });
           assert(login.status === 200 && login.body?.ok === true && login.body?.status === "authenticated" && typeof login.body?.token === "string", "login");
           
+          const registeredSession = await call("/api/auth/me", {
+            headers: { Authorization: `Bearer ${register.body.token}` }
+          });
+          assert(registeredSession.status === 200 && registeredSession.body?.ok === true && registeredSession.body?.user?.fullName === registration.fullName && registeredSession.body?.user?.phone === registration.phone, "registration creates a usable authenticated session with profile");
+
           const token = login.body.token;
           const me = await call("/api/auth/me", {
             headers: { Authorization: `Bearer ${token}` }
