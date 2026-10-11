@@ -1,24 +1,30 @@
 export const XKISS_PRODUCTION_POLICY_CONTRACT = {
   stage: "AUDIT-06",
   name: "XKiss Production Policy Contract",
-  version: "1.0.0",
+  version: "1.1.0",
   failClosed: true,
   monetization: {
-    required: ["creatorSharePercent","platformSharePercent","providerFeePolicy"],
+    required: ["creatorSharePercent", "platformSharePercent", "providerFeePolicy"],
     rule: "shares must be explicitly configured and total 100"
   },
   viewsRevenue: {
-    required: ["minimumWatchSeconds","minimumWatchPercent"],
+    required: ["minimumWatchSeconds", "minimumWatchPercent"],
     rule: "qualified-view thresholds must be explicitly configured"
   },
   walletPayout: {
-    required: ["minimumPayoutAmount","payoutProvider"],
+    required: ["minimumPayoutAmount", "payoutProvider"],
     rule: "payout policy and provider must be explicitly configured"
   }
 };
 
+function configuredNumber(value) {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string" && value.trim().length === 0) return false;
+  return Number.isFinite(Number(value));
+}
+
 function finitePercent(value) {
-  return Number.isFinite(Number(value)) && Number(value) >= 0 && Number(value) <= 100;
+  return configuredNumber(value) && Number(value) >= 0 && Number(value) <= 100;
 }
 
 export function evaluateProductionPolicyConfiguration(config = {}) {
@@ -30,19 +36,21 @@ export function evaluateProductionPolicyConfiguration(config = {}) {
     finitePercent(monetization.creatorSharePercent) &&
     finitePercent(monetization.platformSharePercent) &&
     Number(monetization.creatorSharePercent) + Number(monetization.platformSharePercent) === 100 &&
-    String(monetization.providerFeePolicy || "").trim().length > 0;
+    typeof monetization.providerFeePolicy === "string" &&
+    monetization.providerFeePolicy.trim().length > 0;
 
   const viewsReady =
-    Number.isFinite(Number(viewsRevenue.minimumWatchSeconds)) &&
+    configuredNumber(viewsRevenue.minimumWatchSeconds) &&
     Number(viewsRevenue.minimumWatchSeconds) >= 0 &&
-    Number.isFinite(Number(viewsRevenue.minimumWatchPercent)) &&
+    configuredNumber(viewsRevenue.minimumWatchPercent) &&
     Number(viewsRevenue.minimumWatchPercent) >= 0 &&
     Number(viewsRevenue.minimumWatchPercent) <= 100;
 
   const walletReady =
-    Number.isFinite(Number(walletPayout.minimumPayoutAmount)) &&
+    configuredNumber(walletPayout.minimumPayoutAmount) &&
     Number(walletPayout.minimumPayoutAmount) > 0 &&
-    String(walletPayout.payoutProvider || "").trim().length > 0;
+    typeof walletPayout.payoutProvider === "string" &&
+    walletPayout.payoutProvider.trim().length > 0;
 
   const checks = { monetization: monetizationReady, viewsRevenue: viewsReady, walletPayout: walletReady };
   const missing = Object.keys(checks).filter((key) => !checks[key]);
