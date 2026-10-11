@@ -140,3 +140,58 @@ These are patterns to adapt, not designs to copy. XKiss must retain its own iden
 - PR #24 stays Draft and unmerged until the visual preview has been inspected and accepted by Ali.
 - No production deployment or production activation is authorized by this document.
 - Do not change the locked ElasticLake storage configuration as part of this homepage work.
+
+## 7. Ali's required workflow — visual approval BEFORE functionality work
+**Recorded 2026-10-11 from Ali's explicit instruction.** This is the active execution gate for homepage work, not merely a general note.
+
+### Phase A — complete the visual design first (current phase)
+- Finish the full page inventory and decide what belongs, what is redundant, what is missing, and what must not appear.
+- Prepare a complete, realistic visual preview for mobile and desktop. The preview must show the intended layout and hierarchy before any new button activation work starts.
+- Include the visitor journey screens/states in the visual design: (1) 18+ / age-assurance entry state where applicable; (2) Register/create account; (3) Login; (4) homepage after successful authentication; and (5) public browsing behavior for signed-out visitors, where permitted by the product's age/safety policy.
+- Registration and login are distinct screens/states. Do not depict login as completed before account creation/verification requirements are met.
+- Show all major homepage sections in their intended final arrangement: header/navigation, search, hero, featured-video state, latest videos, categories, creators, creator invitation, account-related destinations, and footer/legal/safety links.
+- Show both populated and empty-content states without fake published videos, fake creator profiles, fake counts, or fabricated verification.
+- Define mobile navigation explicitly; desktop-only navigation that disappears on mobile is not an accepted design.
+- Mark each planned item as KEEP, ADD, REMOVE, or DEFER, with a short reason. In particular, remove redundant Quick Access/account shortcut grids unless the visual review demonstrates a distinct user need; do not show the Test category to public visitors; do not present demo cards as genuine published content.
+- Provide Ali a preview link and ask for visual/design approval. No feature implementation or button-by-button activation begins until Ali explicitly approves the visual design.
+
+### Phase B — freeze the approved design
+- Record the accepted preview/revision and approval date in this document and the development PR.
+- Keep changes in the development branch and draft PR until approval and the required checks are complete.
+- Do not merge to main, publish production, change hosting configuration, or modify the locked ElasticLake storage setup as part of design approval.
+
+### Phase C — activate one control at a time (only after approval)
+For each individual button, link, tab, category, form, or account action:
+1. Define the expected behavior and authorized destination.
+2. Implement that one control end-to-end.
+3. Test it in the deployed preview, including relevant signed-out/signed-in and error states.
+4. Record evidence and mark GREEN only after the test passes.
+5. Fix failures before moving to the next control.
+6. Do not mark a section complete because its UI merely looks clickable. No dead links, decorative controls pretending to work, or client-only authorization.
+
+### Homepage inventory for design sign-off
+| Item | Design decision before approval | Gate |
+|---|---|---|
+| XKiss logo + Home | Keep; one clear route to homepage | Visual placement first |
+| Videos / Categories / Creators navigation | Keep only with a defined destination; ensure mobile access | Visual placement first |
+| Search field + submit | Keep; show its intended placement and result state | Visual placement first |
+| Register / Sign in | Keep as distinct account states; avoid duplicate shortcut tiles | Design both screens first |
+| 18+ / age assurance | Design a clear, accessible entry/blocked state; a label alone is not age verification | Safety design review |
+| Hero headline + primary CTA | Keep one primary discovery action and one secondary creator/upload action | Visual hierarchy first |
+| Featured video | Conditional section only for real, published featured content; define the empty state | No fake content |
+| Latest video cards | Define poster, title, creator, duration/metadata, and card action | Real published data only |
+| Categories | Derive public categories from valid metadata; remove Test from the public taxonomy | Approve final taxonomy |
+| Creator cards/profile | Design public profile destinations; no links to private dashboards as public profiles | Trusted profile data |
+| Follow creator | Defer from visible UI until persistence and authorization exist | No decorative follow control |
+| Upload video | Show a clear entry point and sign-in return journey | Design first; activate later |
+| My Account / My Videos | Define what each destination contains and how signed-out users are handled | Design first |
+| Go Live | Defer or visibly mark unavailable unless the real live workflow is ready | Do not imply readiness |
+| Quick Access duplicate grid | Remove by default because it repeats main navigation and CTA links | Reconsider only with evidence |
+| Help / Contact / Privacy / Terms / Safety | Include in layout, but only link to real maintained pages | No placeholder routes |
+| Loading / empty / error states | Design these as part of the page, not as afterthoughts | Include in preview |
+| Mobile and desktop layouts | Produce both views; test overflow, touch targets, menu and content hierarchy | Required for approval |
+
+### Current status
+- **🟡 Design and inventory only.** The page preview has not been accepted by Ali yet.
+- **🔴 Button-by-button implementation phase has not been authorized to start.**
+- **🟢 Existing production/storage locks remain untouched.**
