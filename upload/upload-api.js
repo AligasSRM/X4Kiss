@@ -2,7 +2,7 @@
   "use strict";
 
   const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
-  let sessionToken = "";
+  let sessionToken = window.sessionStorage.getItem("xkiss_session_token") || "";
 
   async function request(path, options = {}) {
     const response = await fetch(API_BASE + path, {
@@ -48,9 +48,9 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
-    if (createAccount) return result;
-    if (!result.token) throw new Error("Sign-in did not return a session token.");
+    if (!result.token) throw new Error("Authentication did not return a session token.");
     sessionToken = result.token;
+    window.sessionStorage.setItem("xkiss_session_token", sessionToken);
     return result;
   }
 
@@ -80,5 +80,7 @@
     });
   }
 
-  window.XKissUploadAPI = { getStorageStatus, authenticate, prepareUpload, uploadFile };
+  function setSessionToken(token) { sessionToken = token || ""; if (sessionToken) window.sessionStorage.setItem("xkiss_session_token", sessionToken); else window.sessionStorage.removeItem("xkiss_session_token"); }
+
+  window.XKissUploadAPI = { getStorageStatus, authenticate, prepareUpload, uploadFile, setSessionToken };
 })();
