@@ -196,6 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
         '<button class="watch-btn" type="button" data-video-id="' + esc(video.id) + '">Watch video</button></div></article>';
     }).join("");
     empty.hidden = true;
+    if (window.XKissHomeVideos?.bindVideoCards) window.XKissHomeVideos.bindVideoCards();
     const featuredVideo = published.find(video => video.featured === true);
     if (featuredVideo) {
       document.getElementById("featured-title").textContent = featuredVideo.title || "Featured video";
@@ -226,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
       '<article class="creator-card"><div class="creator-avatar">' + esc(initial(video.creator)) + '</div><div class="creator-name">' + esc(video.creator || "Creator") + ' <span aria-label="Verified creator">✓</span></div><div class="creator-role">Verified creator</div><a class="follow-btn" href="creator-dashboard.html">View creator area</a></article>'
     ).join("");
     creatorEmpty.hidden = true;
+    if (window.XKissHomeCreators?.bindCreatorCards) window.XKissHomeCreators.bindCreatorCards();
   } else {
     creatorGrid.hidden = true;
     creatorEmpty.hidden = false;
