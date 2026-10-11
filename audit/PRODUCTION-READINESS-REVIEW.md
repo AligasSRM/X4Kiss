@@ -10,7 +10,7 @@ Last updated: 2026-10-11.
 - AUDIT-05 Backend Provider Contract — GREEN / LOCKED for contract validation. Four provider groups and all 21 required capabilities are covered by regression tests; live provider readiness is not implied.
 - AUDIT-06 Production Policy Contract — GREEN / LOCKED for policy validation. Invalid monetization, qualified-view, and payout policies fail closed.
 - AUDIT-07 Integration Verification — GREEN / LOCKED for live endpoint semantic checks. All 12 production endpoints returned HTTP 200 and passed configured assertions.
-- Section 14 Security Tests — GREEN. Latest run: https://github.com/AligasSRM/XKiss/actions/runs/38137164604.
+- Section 14 Security Tests — GREEN. Latest run: https://github.com/AligasSRM/XKiss/actions/runs/38137879699.
 - Live authentication acceptance — GREEN. Latest run: https://github.com/AligasSRM/XKiss/actions/runs/38137164581. It verified registration, duplicate rejection, incorrect-password rejection, login, authenticated session lookup, logout, revoked-token rejection, and rejection of caller-supplied Super Admin identity.
 
 ## Live integration evidence
@@ -21,9 +21,10 @@ Last updated: 2026-10-11.
 - The authentication acceptance run passed against `https://xkiss.srourr-ali73.workers.dev`.
 - Worker health: online; storage ready.
 - Settings runtime: connected; `activationAllowed=false`.
-- Safety status/self-test: contract checks pass; enforcement remains disabled because real safety, age/creator verification, moderation, reporting, and audit providers are not connected.
+- Safety status/self-test: contract checks pass; enforcement remains disabled because live age assurance, creator verification, moderation, reporting, and durable safety-audit enforcement are not all connected and verified.
+- Didit account inspection found a production-named application with an API key configured, plus a webhook endpoint targeting the XKiss Worker. However, the available KYC workflows are still in **draft** state, none of the inspected workflows was identified as age assurance, and the configured webhooks have **zero deliveries**. This is provider-account configuration evidence, not proof of a working live verification path. No paid live verification session was created as part of this audit.
 - Durable view-event storage: live write → read → delete passed; returned event matched; cleanup succeeded; verified=true.
-- ElasticLake object storage — GREEN by live production Worker write/read/delete test. Latest successful workflow: https://github.com/AligasSRM/XKiss/actions/runs/38137851409. The workflow calls the production Worker self-test and does not duplicate storage credentials into GitHub Actions.
+- ElasticLake object storage — GREEN by live production Worker write/read/delete test. Latest successful workflow: https://github.com/AligasSRM/XKiss/actions/runs/38137879706. The workflow calls the production Worker self-test and does not duplicate storage credentials into GitHub Actions.
 - Views/revenue: persistence reports connected and server-side rules are configured.
 - Wallet ledger and settlement: status endpoints report ready; end-to-end financial transaction/provider verification is still required.
 - Payout lifecycle/security: tests pass; real payouts remain disabled; client-side authorization is forbidden and secrets remain server-side.
@@ -31,7 +32,7 @@ Last updated: 2026-10-11.
 ## Remaining production activation blockers
 
 1. Authorized video upload, processing, playback delivery, and creator ownership checks end-to-end. ElasticLake object storage itself is verified; upload authorization is not configured (the Worker has no `XKISS_UPLOAD_KEY` binding), and the current upload page only prepares metadata rather than sending the selected file.
-2. Real safety and age/creator verification providers, with enforcement enabled only after verified configuration.
+2. Publish and configure a compliant, actual age-assurance/creator-verification workflow; securely connect the server-side provider credentials; then run a controlled live end-to-end verification and confirm the signed webhook is delivered and durably recorded. Existing draft workflows and zero webhook deliveries do not satisfy this gate.
 3. Real moderation, user reporting, and durable safety-audit enforcement.
 4. Settings authorization and audit verification before enabling any production activation control.
 5. Final monetization/payment-provider integration and approval of the fee/share policy.
@@ -42,6 +43,6 @@ Last updated: 2026-10-11.
 
 ## Gate semantics
 
-A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Current Cloudflare Worker bindings include ElasticLake secrets, D1 auth/admin bindings, the auth-session KV namespace, and the Super Admin MFA key; no Veriff/Didit, AWS Rekognition, payment, payout, or notification-provider bindings were present in the inspected Worker settings. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until the real provider integrations and end-to-end paths are independently verified.
+A GREEN audit means its bounded software contract or integration checks passed. It does not mean every external provider is production-enabled. No mock credentials or simulated provider responses count as live verification. Current Cloudflare Worker bindings include ElasticLake secrets, D1 auth/admin bindings, the auth-session KV namespace, and the Super Admin MFA key; the inspected Worker settings did not show the required live identity-provider credentials, moderation, payment, payout, or notification-provider bindings. Keep production activation, safety enforcement, monetization activation, and real payouts disabled until the real provider integrations and end-to-end paths are independently verified.
 
 No existing 15.23–15.31 GREEN / LOCKED runtime work was reopened or changed.
