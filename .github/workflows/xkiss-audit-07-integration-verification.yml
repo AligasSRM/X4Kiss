@@ -10,32 +10,43 @@ jobs:
   integration-verification:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify all production integration endpoints
+      - name: Verify production endpoint responses and fail-closed integration gates
         shell: bash
         run: |
           set -euo pipefail
           BASE="https://xkiss.srourr-ali73.workers.dev"
-          endpoints=(
-            "/api/health"
-            "/api/settings/status"
-            "/api/safety/status"
-            "/api/safety/self-test"
-            "/api/views/storage/status"
-            "/api/views/status"
-            "/api/views/storage/self-test"
-            "/api/wallet/ledger/status"
-            "/api/wallet/settlement/status"
-            "/api/wallet/payout/status"
-            "/api/wallet/payout/security/status"
-            "/api/wallet/payout/self-test"
-          )
-          failed=0
-          for path in "${endpoints[@]}"; do
+
+          check_json() {
+            local path="$1"
+            local filter="$2"
+            local body status payload
             echo "=== $path ==="
-            body="$(curl --fail-with-body --silent --show-error --max-time 30 -w '\nHTTP_STATUS:%{http_code}' "$BASE$path")" || failed=1
-            printf '%s\n' "$body"
+            body="$(curl --fail-with-body --silent --show-error --max-time 30 -w '\nHTTP_STATUS:%{http_code}' "$BASE$path")"
             status="$(printf '%s\n' "$body" | sed -n 's/^HTTP_STATUS://p' | tail -1)"
-            [ "$status" = "200" ] || failed=1
-          done
-          [ "$failed" -eq 0 ]
-          echo "AUDIT-07: GREEN"
+            payload="$(printf '%s\n' "$body" | sed '/^HTTP_STATUS:/d')"
+            printf '%s\n' "$payload"
+            test "$status" = "200"
+            printf '%s\n' "$payload" | jq -e "$filter" >/dev/null
+            echo "PASS: HTTP 200 and semantic assertion"
+          }
+
+          # The safety and settings gates must remain fail-closed until their
+          # real providers, authorization and audit dependencies are verified.
+          check_json "/api/health" '.status == "online" and .storageReady == true'
+          check_json "/api/settings/status" '.ok == true and .activationAllowed == false'
+          check_json "/api/safety/status" '.ok == true and .enabled == false'
+          check_json "/api/safety/self-test" '.ok == true and .enforcementEnabled == false and all(.checks[]; .ok == true)'
+
+          # Verify durable view-event storage with a real write/read/delete.
+          check_json "/api/views/storage/status" '.ok == true and .storageReady == true and .storage == "ElasticLake"'
+          check_json "/api/views/status" '.ok == true and .rules.persistence == "connected"'
+          check_json "/api/views/storage/self-test" '.ok == true and .verified == true and .write.status == "stored" and .read.status == "found" and .cleanup.status == "deleted"'
+
+          # Ledger and settlement can be connected while real payouts stay disabled.
+          check_json "/api/wallet/ledger/status" '.ok == true and .storageReady == true'
+          check_json "/api/wallet/settlement/status" '.ok == true and .walletLedgerReady == true and .settlementReady == true'
+          check_json "/api/wallet/payout/status" '.ok == true and .lifecycleReady == true and .payoutEnabled == false'
+          check_json "/api/wallet/payout/security/status" '.ok == true and .securityReady == true and .payoutEnabled == false and .clientCannotAuthorize == true and .secretsServerSideOnly == true'
+          check_json "/api/wallet/payout/self-test" '.ok == true and .verified == true and .payoutEnabled == false'
+
+          echo "AUDIT-07: GREEN — endpoint semantics verified; production activation remains blocked by independent gates."
