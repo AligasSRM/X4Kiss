@@ -21,7 +21,15 @@
     }
 
     if (!response.ok) {
-      const error = new Error(data.message || "XKiss request failed.");
+      let message = data.message;
+      if (!message && response.status === 401 && data.status === "invalid_credentials") {
+        message = "Email or password was not accepted. This email already has an account; use its original password. If you no longer know it, password recovery must be set up before you can sign in.";
+      } else if (!message && response.status === 503 && data.status === "backend_not_configured") {
+        message = "Sign-in service is temporarily unavailable because its authentication backend is not configured.";
+      } else if (!message) {
+        message = "XKiss request failed (HTTP " + response.status + ").";
+      }
+      const error = new Error(message);
       error.status = response.status;
       error.data = data;
       throw error;
