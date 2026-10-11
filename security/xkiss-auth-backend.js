@@ -50,7 +50,7 @@ async function hashToken(token) {
 }
 
 function validPassword(password) {
-  return typeof password === "string" && password.length >= 10 && password.length <= 200;
+  return typeof password === "string" && password.length >= 8 && password.length <= 200;
 }
 
 function validEmail(email) {
