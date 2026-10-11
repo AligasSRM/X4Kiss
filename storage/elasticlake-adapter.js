@@ -99,6 +99,7 @@ export async function storeVideo(env, key, body, metadata = {}) {
     "content-type": String(metadata.contentType || "application/octet-stream"),
     "x-amz-meta-originalfilename": String(metadata.fileName || "video"),
     "x-amz-meta-title": String(metadata.title || ""),
+    "x-amz-meta-creatorid": String(metadata.creatorId || ""),
     "x-amz-meta-description": String(metadata.description || ""),
     "x-amz-meta-category": String(metadata.category || ""),
     "x-amz-meta-downloadpolicy": String(metadata.downloadPolicy || "disabled"),
