@@ -1,6 +1,7 @@
 name: XKiss Auth Production Acceptance
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
