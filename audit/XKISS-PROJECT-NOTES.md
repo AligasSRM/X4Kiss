@@ -288,3 +288,68 @@ For each button, link, menu item, form, and preference:
 - Do not merge PRs, change production configuration, or claim end-to-end readiness without the evidence and approval required by the project operating rules.
 
 **Current disposition:** 🟡 Recorded as important work to review. No new implementation stage is marked GREEN by this note.
+
+
+### N-008 — Screenshot-by-screenshot checklist (do not omit reference details)
+
+**Reference A — Cookie preferences dialog**
+- Record the four categories exactly as concepts: Essential Cookies (always active), Functional Cookies, Analytics Cookies, and Targeting/Advertising Cookies.
+- Record the visible actions: back navigation, Accept All Cookies, Accept Only Essential Cookies, and Save And Apply.
+- Preserve the requirement that essential cookies remain active, while optional categories obey valid consent and the saved choice can be changed later.
+- Text fragments such as “FOR Z DAYS”, “Windows Activation”, and device/date/time overlays appear to be advertisements, operating-system watermarks, or browser/device chrome, not part of XKiss's intended website interface. Do not reproduce them as site UI.
+
+**Reference B — Main video discovery page**
+- Header/site identity and HOME entry.
+- Search field.
+- Primary discovery/navigation concepts shown in the reference: videos, categories, live cams, sites, shop, performers/creators, AI-related content, community, and photos/GIFs.
+- A responsive list/grid of video cards with thumbnail, title, and relevant metadata.
+- Featured/trending topic chips or category shortcuts may be included if they serve real content discovery.
+- The reference includes third-party brand names, logos, thumbnails, titles, and explicit search terms. Do not copy those assets or brand identity; use XKiss branding and only authorized, legally permitted content. Do not create a fake live catalog from the screenshot.
+- Optional modules (live cams, shop, AI content, community, photos/GIFs, subscriptions) are reference candidates, not automatically approved live features. Each requires its own scope, safety/privacy review, backend/data contract, and real test.
+
+**Reference C — Bottom of homepage**
+- Pagination with page numbers (reference shows 1, 2, 3, 4, 5, 10) and a Next action. Implement functional pagination appropriate to the actual catalog; do not hardcode page numbers that do not exist.
+- A short original XKiss site description below the content, written for this product rather than copied from another site.
+- Footer links and support/navigation options should be reviewed against the second navigation reference.
+
+**Reference D — Account / navigation menu**
+- Sign Up and Log In.
+- Liked Videos.
+- Subscriptions.
+- Upload.
+- Language selection (English is the language shown in the reference).
+- Worldwide/region selection.
+- Feed.
+- FAQ.
+- Contact Support.
+- Account-specific items must be permission-aware and display the right state for signed-out and signed-in visitors.
+
+**Reference-to-requirement completeness review**
+| Reference item | Recorded in this notes file? | Required follow-up |
+|---|---|---|
+| Age assurance before restricted adult content | Yes (N-002) | Select compliant method, enforce server-side, and test blocked/allowed paths |
+| Cookie categories and three decision actions | Yes (N-002 and N-008) | Build UI, persistence, consent enforcement, and preference revisit |
+| Home/header/search/category navigation | Yes (N-001 and N-008) | Approve visual blueprint and map every nav item to a real route/feature |
+| Video thumbnails/titles and discovery grid | Yes (N-001 and N-008) | Connect only authorized catalog data; test empty/error/loading states |
+| Bottom pagination, including page 10 in the screenshot | Yes (N-008) | Pagination must reflect real catalog pages; support Next/Previous as applicable |
+| Short original site description/footer | Yes (N-001 and N-008) | Draft original XKiss copy and add reviewed policy/support links |
+| Sign Up / Log In | Yes (N-003 and N-004) | End-to-end register → session → account → logout test |
+| Liked Videos / Subscriptions / Feed | Yes (N-004 and N-008) | Define real backend/data/permission contracts; no fake completion |
+| Upload and personal video library | Yes (N-005) | Real device-file upload, storage verification, owner-only retrieval |
+| Language / worldwide preference | Yes (N-004 and N-008) | Define what each preference changes and persist safely |
+| FAQ / Contact Support | Yes (N-001, N-004 and N-008) | Implement reachable destinations and verify contact handling |
+| Third-party ads/watermarks/device chrome | Classified as reference noise | Do not reproduce as XKiss page elements |
+| Third-party brands/content assets | Explicitly not for copying | Use original branding and authorized content only |
+
+**Repository inventory cross-check (based on the existing comprehensive audit; not a fresh live test):**
+- Home and video discovery: UI foundation/local demo data; not yet verified as a populated production catalog.
+- Search/categories: local catalog behavior; live authoritative catalog not verified.
+- Live streams: provider/data connection not verified.
+- Account/auth: existing UI and backend pieces require end-to-end integration and acceptance testing.
+- Upload/library: real upload and owner-scoped retrieval require a device-to-storage-to-library acceptance test; do not claim complete from UI or deployment alone.
+- Age gate/safety: existing audit records this as a release blocker; an 18+ badge alone is not an age gate.
+- Cookies: requirements are now recorded; actual consent UI, persistence, and enforcement still need source review and tests.
+- Liked Videos, Subscriptions, Feed, language/region settings, FAQ, and Contact Support: presence in a menu is not evidence of working end-to-end functionality; verify each independently.
+- Existing audit covers 20 project sections and records critical/high findings. This screenshot inventory supplements it; it does not replace the full source/CI/runtime audit.
+
+**Status:** 🟡 Checklist recorded. Each item remains a requirement until source inspection and its acceptance test provide evidence. No new feature is declared GREEN by this record.
