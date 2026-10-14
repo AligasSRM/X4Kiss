@@ -1,14 +1,14 @@
-import {installXKissModuleLifecycle} from "./xkiss-module-lifecycle-integration.js";
-import {installXKissModuleContractRegistry} from "./xkiss-module-contract-integration.js";
-import {installXKissModuleHealth} from "./xkiss-module-health-integration.js";
-import {installXKissModuleDiagnostics} from "./xkiss-module-diagnostics-integration.js";
-import {installXKissModuleRecovery} from "./xkiss-module-recovery-integration.js";
-export async function runXKissModuleRecoverySelfCheck(){
+import {installX4KissModuleLifecycle} from "./xkiss-module-lifecycle-integration.js";
+import {installX4KissModuleContractRegistry} from "./xkiss-module-contract-integration.js";
+import {installX4KissModuleHealth} from "./xkiss-module-health-integration.js";
+import {installX4KissModuleDiagnostics} from "./xkiss-module-diagnostics-integration.js";
+import {installX4KissModuleRecovery} from "./xkiss-module-recovery-integration.js";
+export async function runX4KissModuleRecoverySelfCheck(){
   const core={modules:{},registerModule(n,s="ready"){this.modules[n]=s;},getModuleStatus(){return{...this.modules}}};
-  const lifecycle=installXKissModuleLifecycle(core); const contracts=installXKissModuleContractRegistry(core);
+  const lifecycle=installX4KissModuleLifecycle(core); const contracts=installX4KissModuleContractRegistry(core);
   const reg=lifecycle.lifecycle.register("repairable"); lifecycle.lifecycle.initialize("repairable"); lifecycle.lifecycle.activate("repairable");
   contracts.registry.register("repairable",{version:"1.0.0",dependencies:[],capabilities:["repair"]});
-  const health=installXKissModuleHealth(core); const diagnostics=installXKissModuleDiagnostics(core); const recovery=installXKissModuleRecovery(core);
+  const health=installX4KissModuleHealth(core); const diagnostics=installX4KissModuleDiagnostics(core); const recovery=installX4KissModuleRecovery(core);
   const handler=recovery.recovery.registerRepair("repairable",async()=>({ok:true}));
   health.health.report({module:"repairable",status:"FAULT",severity:"HIGH",timestamp:Date.now(),reason:"test"});
   const recovered=await recovery.recovery.recover({module:"repairable",reason:"test"});
