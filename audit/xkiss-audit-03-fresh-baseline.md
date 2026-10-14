@@ -1,4 +1,4 @@
-# XKiss — AUDIT-03 Storage Provider Closure
+# X4Kiss — AUDIT-03 Storage Provider Closure
 
 Status: GREEN / LOCKED
 Date: 2026-10-11
@@ -14,7 +14,7 @@ Branch: main
 - Repository searches on 2026-10-11 returned no matches for retired-provider references.
 
 ## Verified live evidence
-The production-readiness review records the live XKiss Worker storage self-test on 2026-10-08:
+The production-readiness review records the live X4Kiss Worker storage self-test on 2026-10-08:
 - Endpoint: `/api/views/storage/self-test`
 - HTTP 200; provider ElasticLake
 - Write: stored
