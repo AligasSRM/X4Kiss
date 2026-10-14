@@ -57,7 +57,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
 <script>
 (function(){
   "use strict";
-  var API="https://xkiss.srourr-ali73.workers.dev";
+  var API="https://x4kiss.srourr-ali73.workers.dev";
   var params=new URLSearchParams(location.search);
   // Registration and sign-in always return to the public Home page.
   // Do not honor ?next=creator-upload.html: the user must land on Home first.
@@ -112,7 +112,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     if(!verified.ok || sessionData.ok!==true || sessionData.status!=="authenticated") {
       throw new Error("The account service returned a session that could not be verified. Your account may already exist. Keep this page open and try Sign in; do not register repeatedly.");
     }
-    sessionStorage.setItem("xkiss_session_token",data.token);
+    sessionStorage.setItem("x4kiss_session_token",data.token);
     location.replace(next);
   }
   document.querySelectorAll(".password-toggle").forEach(function(button){button.addEventListener("click",function(){var input=document.getElementById(button.getAttribute("data-password-target"));if(!input)return;var reveal=input.type==="password";input.type=reveal?"text":"password";button.setAttribute("aria-pressed",String(reveal));var label=button.getAttribute("data-password-target")==="confirm-password"?(reveal?"Hide confirmation password":"Show confirmation password"):(reveal?"Hide password":"Show password");button.setAttribute("aria-label",label);button.setAttribute("title",label);input.focus({preventScroll:true});});});
