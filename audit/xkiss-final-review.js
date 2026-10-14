@@ -97,7 +97,7 @@ const section18 = await import(path.join(root,"control/xkiss-control-section-sel
 const section18Result = await section18.runControlSectionSelfTest();
 
 const section15 = await import(path.join(root,"settings/xkiss-platform-settings-section-self-test.js").replaceAll(path.sep,"/"));
-const section15Result = section15.runXKissPlatformSettingsSectionSelfTest();
+const section15Result = section15.runX4KissPlatformSettingsSectionSelfTest();
 const section19 = await import(path.join(root,"activation/xkiss-production-activation-readiness-self-test.js").replaceAll(path.sep,"/"));
 const section19Result = section19.runSection19SelfTest();
 const section20 = await import(path.join(root,"release/xkiss-final-master-release-self-test.js").replaceAll(path.sep,"/"));
