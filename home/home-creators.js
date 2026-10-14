@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const HOME = window.XKissHome;
 
   if (!HOME) {
-    console.warn("XKiss Home Creators: Home Core not loaded.");
+    console.warn("X4Kiss Home Creators: Home Core not loaded.");
     return;
   }
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return (
       card.querySelector(".video-creator-name")?.textContent.trim() ||
       card.querySelector(".creator-name")?.textContent.trim() ||
-      "XKiss Creator"
+      "X4Kiss Creator"
     );
   }
 
