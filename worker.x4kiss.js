@@ -44,12 +44,12 @@ import { getSafetyBackendStatus, runSafetyBackendSelfTest, recordSafetyBackendEv
 import { verifyDiditWebhook, mapDiditVerificationState } from "./safety/didit-kyc-provider.js";
 import { verifyVeriffWebhook, mapVeriffVerificationState } from "./safety/veriff-kyc-provider.js";
 import { createVeriffSession } from "./safety/veriff-session-provider.js";
-import { registerMember, loginMember, authenticateSession, logoutMember, reauthenticateMemberSession, AUTH_SECURITY_INVARIANTS } from "./security/xkiss-auth-backend.js";
+import { registerMember, loginMember, authenticateSession, logoutMember, reauthenticateMemberSession, AUTH_SECURITY_INVARIANTS } from "./security/x4kiss-auth-backend.js";
 import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuperAdminMfaForSession } from "./security/super-admin-mfa.js";
-import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
+import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/x4kiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
