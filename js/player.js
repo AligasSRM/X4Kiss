@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Player Core remains the single lifecycle authority.
    */
   import("../player/runtime/xkiss-module-lifecycle-integration.js")
-    .then(({ installXKissModuleLifecycle }) => {
-      const result = installXKissModuleLifecycle(window.XKissPlayerCore);
+    .then(({ installX4KissModuleLifecycle }) => {
+      const result = installX4KissModuleLifecycle(window.X4KissPlayerCore);
       if (!result.ok) {
         console.error("X4Kiss: Module lifecycle installation failed:", result.error);
         return;
@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Player Core remains the single contract authority.
    */
   import("../player/runtime/xkiss-module-contract-integration.js")
-    .then(({ installXKissModuleContractRegistry }) => {
-      const result = installXKissModuleContractRegistry(window.XKissPlayerCore);
+    .then(({ installX4KissModuleContractRegistry }) => {
+      const result = installX4KissModuleContractRegistry(window.X4KissPlayerCore);
       if (!result.ok) {
         console.error("X4Kiss: Module contract registry installation failed:", result.error);
         return;
@@ -69,55 +69,55 @@ document.addEventListener("DOMContentLoaded", () => {
     import("../player/runtime/xkiss-module-recovery-guard-integration.js")
   ])
     .then(([lifecycleModule, contractModule, orchestrationModule, securityModule, healthModule, diagnosticsModule, recoveryModule, recoveryGuardModule]) => {
-      const lifecycle = lifecycleModule.installXKissModuleLifecycle(window.XKissPlayerCore);
-      const contracts = contractModule.installXKissModuleContractRegistry(window.XKissPlayerCore);
+      const lifecycle = lifecycleModule.installX4KissModuleLifecycle(window.X4KissPlayerCore);
+      const contracts = contractModule.installX4KissModuleContractRegistry(window.X4KissPlayerCore);
       if (!lifecycle.ok || !contracts.ok) {
         console.error("X4Kiss: Module orchestration prerequisites failed.");
         return;
       }
 
-      const orchestration = orchestrationModule.installXKissModuleOrchestrator(window.XKissPlayerCore);
+      const orchestration = orchestrationModule.installX4KissModuleOrchestrator(window.X4KissPlayerCore);
       if (!orchestration.ok) {
         console.error("X4Kiss: Module orchestration installation failed:", orchestration.error);
         return;
       }
 
-      const security = securityModule.installXKissModuleSecurity(window.XKissPlayerCore);
+      const security = securityModule.installX4KissModuleSecurity(window.X4KissPlayerCore);
       if (!security.ok) {
         console.error("X4Kiss: Security installation failed:", security.error);
         return;
       }
 
       console.log("X4Kiss Module Dependency Orchestration 15.26 ready.");
-      console.log("XKiss Security & Attack Protection 15.27 ready.");
+      console.log("X4Kiss Security & Attack Protection 15.27 ready.");
 
-      const health = healthModule.installXKissModuleHealth(window.XKissPlayerCore);
+      const health = healthModule.installX4KissModuleHealth(window.X4KissPlayerCore);
       if (!health.ok) {
         console.error("X4Kiss: Module Health installation failed:", health.error);
         return;
       }
       console.log("X4Kiss Module Health & Fault Detection 15.28 ready.");
 
-      const diagnostics = diagnosticsModule.installXKissModuleDiagnostics(window.XKissPlayerCore);
+      const diagnostics = diagnosticsModule.installX4KissModuleDiagnostics(window.X4KissPlayerCore);
       if (!diagnostics.ok) {
         console.error("X4Kiss: Module Diagnostics installation failed:", diagnostics.error);
         return;
       }
       console.log("X4Kiss Module Diagnostics & Fault Locator 15.29 ready.");
 
-      const recovery = recoveryModule.installXKissModuleRecovery(window.XKissPlayerCore);
+      const recovery = recoveryModule.installX4KissModuleRecovery(window.X4KissPlayerCore);
       if (!recovery.ok) {
         console.error("X4Kiss: Module Recovery installation failed:", recovery.error);
         return;
       }
       console.log("X4Kiss Module Self-Healing & Auto-Recovery 15.30 ready.");
 
-      const recoveryGuard = recoveryGuardModule.installXKissModuleRecoveryGuard(window.XKissPlayerCore);
+      const recoveryGuard = recoveryGuardModule.installX4KissModuleRecoveryGuard(window.X4KissPlayerCore);
       if (!recoveryGuard.ok) {
         console.error("X4Kiss: Recovery Guard installation failed:", recoveryGuard.error);
         return;
       }
-      console.log("XKiss Recovery Guard & Anti-Loop Protection 15.31 ready.");
+      console.log("X4Kiss Recovery Guard & Anti-Loop Protection 15.31 ready.");
     })
     .catch(error => {
       console.error("X4Kiss: Runtime security/orchestration load failed:", error);
@@ -136,10 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let videoData = null;
 
-  if (typeof getXKissVideo === "function") {
+  if (typeof getX4KissVideo === "function") {
     videoData =
-      getXKissVideo(requestedId) ||
-      getXKissVideo("video-001");
+      getX4KissVideo(requestedId) ||
+      getX4KissVideo("video-001");
   } else if (typeof XKISS_VIDEOS !== "undefined") {
     videoData =
       XKISS_VIDEOS[requestedId] ||
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (videoTitle) {
     videoTitle.textContent =
-      videoData.title || "XKiss Video";
+      videoData.title || "X4Kiss Video";
   }
 
   if (videoDuration) {
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (creatorName) {
     creatorName.textContent =
-      videoData.creator || "XKiss Creator";
+      videoData.creator || "X4Kiss Creator";
   }
 
   /*
@@ -303,17 +303,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let viewEventSent = false;
 
   async function sendViewEventOnce() {
-    if (viewEventSent || !window.XKissViews) {
+    if (viewEventSent || !window.X4KissViews) {
       return;
     }
 
     viewEventSent = true;
 
     try {
-      const event = window.XKissViews.createViewEvent(videoData.id, videoData.creatorId);
-      const result = await window.XKissViews.validateViewEvent(event);
+      const event = window.X4KissViews.createViewEvent(videoData.id, videoData.creatorId);
+      const result = await window.X4KissViews.validateViewEvent(event);
 
-      console.log("XKiss View Event:", result);
+      console.log("X4Kiss View Event:", result);
     } catch (error) {
       viewEventSent = false;
       console.error("X4Kiss: View event failed:", error);
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * Public player state
    */
 
-  window.XKissPlayer = {
+  window.X4KissPlayer = {
     id: videoData.id,
     data: videoData,
     video,
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.dispatchEvent(new CustomEvent("xkiss:player-ready"));
 
   console.log(
-    "XKiss Player loaded:",
+    "X4Kiss Player loaded:",
     videoData.id,
     videoData.title
   );
