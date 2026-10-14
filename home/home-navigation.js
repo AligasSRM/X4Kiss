@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const HOME = window.XKissHome;
 
   if (!HOME) {
-    console.warn("XKiss Home Navigation: Home Core not loaded.");
+    console.warn("X4Kiss Home Navigation: Home Core not loaded.");
     return;
   }
 
