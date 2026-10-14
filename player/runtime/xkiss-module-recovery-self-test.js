@@ -17,3 +17,5 @@ export async function runX4KissModuleRecoverySelfCheck(){
   const failed=await recovery.recovery.recover({module:"broken"});
   return{ok: lifecycle.ok&&contracts.ok&&reg.ok&&health.ok&&diagnostics.ok&&recovery.ok&&handler.ok&&recovered.ok&&recovered.status==="RECOVERED"&&brokenContract.ok&&failed.ok===false&&failed.requiresManualIntervention===true,stage:"15.30",recovered,failed};
 }
+// Backward-compatible alias for established recovery workflow commands.
+export const runXKissModuleRecoverySelfCheck = runX4KissModuleRecoverySelfCheck;
