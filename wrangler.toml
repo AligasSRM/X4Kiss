@@ -5,7 +5,7 @@ compatibility_date = "2026-09-25"
 [vars]
 ELASTICLAKE_ENDPOINT = "https://app.elasticlake.com"
 ELASTICLAKE_REGION = "auto"
-ELASTICLAKE_BUCKET = "x4kiss-storage--x4kiss-production--x4kiss-midea"
+ELASTICLAKE_BUCKET = "x4kiss-storage--x4kiss-production--x4kiss-media"
 
 
 [[d1_databases]]
