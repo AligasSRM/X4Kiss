@@ -1,4 +1,4 @@
-# XKiss AUDIT-02 — Production Readiness Checkpoint
+# X4Kiss AUDIT-02 — Production Readiness Checkpoint
 
 Status: IN PROGRESS
 Base: main @ 48f5a4b2fab5a446dcd992b2a7fd5fb40be0bc78
