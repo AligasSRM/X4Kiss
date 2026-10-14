@@ -1,7 +1,7 @@
-# XKiss Production Readiness Audit — AUDIT-01
+# X4Kiss Production Readiness Audit — AUDIT-01
 
 Date: 2026-09-26
-Repository: AligasSRM/XKiss
+Repository: AligasSRM/X4Kiss
 Branch: main
 
 ## Leadership status
