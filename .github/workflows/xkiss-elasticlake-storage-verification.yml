@@ -27,7 +27,7 @@ jobs:
       - name: Test real ElasticLake access
         env:
           ELASTICLAKE_ENDPOINT: https://app.elasticlake.com
-          ELASTICLAKE_BUCKET: xkiss-storage--xkiss-production--xkiss-midea
+          ELASTICLAKE_BUCKET: xkiss-storage--xkiss-production--xkiss-media
           ELASTICLAKE_REGION: auto
           ELASTICLAKE_ACCESS_KEY_ID: ${{ secrets.ELASTICLAKE_ACCESS_KEY_ID }}
           ELASTICLAKE_SECRET_ACCESS_KEY: ${{ secrets.ELASTICLAKE_SECRET_ACCESS_KEY }}
