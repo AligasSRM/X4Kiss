@@ -1,4 +1,4 @@
-import { getXKissSettingsRuntimeStatus } from "./settings/xkiss-settings-runtime-core.js";
+import { getXKissSettingsRuntimeStatus } from "./settings/x4kiss-settings-runtime-core.js";
 import {
   createVideoKey,
   isStorageReady,
@@ -44,17 +44,17 @@ import { getSafetyBackendStatus, runSafetyBackendSelfTest, recordSafetyBackendEv
 import { verifyDiditWebhook, mapDiditVerificationState } from "./safety/didit-kyc-provider.js";
 import { verifyVeriffWebhook, mapVeriffVerificationState } from "./safety/veriff-kyc-provider.js";
 import { createVeriffSession } from "./safety/veriff-session-provider.js";
-import { registerMember, loginMember, authenticateSession, logoutMember, reauthenticateMemberSession, AUTH_SECURITY_INVARIANTS } from "./security/xkiss-auth-backend.js";
+import { registerMember, loginMember, authenticateSession, logoutMember, reauthenticateMemberSession, AUTH_SECURITY_INVARIANTS } from "./security/x4kiss-auth-backend.js";
 import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuperAdminMfaForSession } from "./security/super-admin-mfa.js";
-import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
+import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/x4kiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-XKiss-Upload-Key, X-XKiss-File-Name, X-XKiss-File-Size, X-XKiss-Title, X-XKiss-Description, X-XKiss-Category, X-XKiss-Download-Policy, X-XKiss-Visibility",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-X4Kiss-Upload-Key, X-X4Kiss-File-Name, X-X4Kiss-File-Size, X-X4Kiss-Title, X-X4Kiss-Description, X-X4Kiss-Category, X-X4Kiss-Download-Policy, X-X4Kiss-Visibility",
   "Vary": "Origin"
 };
 
@@ -102,11 +102,11 @@ export default {
     }
 
     if (url.pathname === "/api/auth/security" && request.method === "GET") {
-      return json({ ok: true, service: "XKiss Authentication Security", invariants: AUTH_SECURITY_INVARIANTS });
+      return json({ ok: true, service: "X4Kiss Authentication Security", invariants: AUTH_SECURITY_INVARIANTS });
     }
 
     if (url.pathname === "/api/auth/register" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_input" }, 400); }
       const result = await registerMember(env, body);
@@ -115,7 +115,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/login" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_credentials" }, 401); }
       const result = await loginMember(env, body);
@@ -123,7 +123,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/me" && request.method === "GET") {
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const result = await authenticateSession(env, token);
@@ -131,7 +131,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/logout" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       return json(await logoutMember(env, token));
@@ -142,7 +142,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/reauth" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -151,7 +151,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/enroll" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
       const session=await authenticateSession(env,token);
@@ -161,7 +161,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/enable" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -172,7 +172,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/verify" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -183,7 +183,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/authorize" && request.method === "POST") {
-      if (!env.XKISS_AUTH_DB) {
+      if (!env.X4KISS_AUTH_DB) {
         return json({ ok: false, allowed: false, status: "auth_backend_not_configured" }, 503);
       }
 
@@ -200,7 +200,7 @@ export default {
       const session = await authenticateSession(env, token);
       const requestId = request.headers.get("cf-ray") || request.headers.get("x-request-id") || null;
 
-      if (!env.XKISS_DB || !env.XKISS_ADMIN_AUDIT) {
+      if (!env.X4KISS_DB || !env.X4KISS_ADMIN_AUDIT) {
         return json({ ok: false, allowed: false, status: "admin_security_providers_not_configured" }, 503);
       }
 
@@ -250,7 +250,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security" && request.method === "GET") {
-      return json({ok:true,service:"XKiss Admin Security",security:ADMIN_BACKEND_SECURITY});
+      return json({ok:true,service:"X4Kiss Admin Security",security:ADMIN_BACKEND_SECURITY});
     }
 
     if (url.pathname === "/api/settings/backend/status" && request.method === "GET") {
@@ -263,16 +263,16 @@ export default {
     }
 
     if (url.pathname === "/api/settings/backend/security" && request.method === "GET") {
-      return json({ok:true,service:"XKiss Settings Backend Security",security:SETTINGS_BACKEND_SECURITY});
+      return json({ok:true,service:"X4Kiss Settings Backend Security",security:SETTINGS_BACKEND_SECURITY});
     }
 
     if (url.pathname === "/api/settings/status" && request.method === "GET") {
-      return json(getXKissSettingsRuntimeStatus());
+      return json(getX4KissSettingsRuntimeStatus());
     }
 
     if (url.pathname === "/api/health") {
       return json({
-        service: "XKiss Worker",
+        service: "X4Kiss Worker",
         status: "online",
         storageReady,
         uploadEndpoint: true
@@ -293,7 +293,7 @@ export default {
       if (!result.ok) {
         return json({
           ok: false,
-          service: "XKiss Didit KYC Webhook",
+          service: "X4Kiss Didit KYC Webhook",
           status: result.status,
           reason: result.reason
         }, result.status === "provider_not_configured" ? 503 : 401);
@@ -313,7 +313,7 @@ export default {
       if (!audit.ok) {
         return json({
           ok: false,
-          service: "XKiss Didit KYC Webhook",
+          service: "X4Kiss Didit KYC Webhook",
           status: "storage-not-ready",
           reason: "Verified Didit event could not be durably recorded."
         }, 503);
@@ -321,7 +321,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Didit KYC Webhook",
+        service: "X4Kiss Didit KYC Webhook",
         provider: "didit",
         sessionId: result.sessionId,
         vendorData: result.vendorData,
@@ -339,7 +339,7 @@ export default {
       } catch {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Session",
+          service: "X4Kiss Veriff KYC Session",
           status: "invalid_input"
         }, 400);
       }
@@ -355,7 +355,7 @@ export default {
       } catch (error) {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Session",
+          service: "X4Kiss Veriff KYC Session",
           status: "provider_not_configured",
           reason: String(error?.message || error || "Veriff session creation failed.")
         }, 503);
@@ -364,7 +364,7 @@ export default {
       if (!result.ok) {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Session",
+          service: "X4Kiss Veriff KYC Session",
           status: result.status,
           providerHttpStatus: result.providerHttpStatus || null,
           providerStatus: result.providerStatus || null
@@ -373,7 +373,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Veriff KYC Session",
+        service: "X4Kiss Veriff KYC Session",
         provider: "veriff",
         verificationId: result.verificationId,
         verificationUrl: result.verificationUrl,
@@ -391,7 +391,7 @@ export default {
       } catch (error) {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Webhook",
+          service: "X4Kiss Veriff KYC Webhook",
           status: "provider_not_configured",
           reason: String(
             error?.message ||
@@ -404,7 +404,7 @@ export default {
       if (!result.ok) {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Webhook",
+          service: "X4Kiss Veriff KYC Webhook",
           status: result.error || "verification_failed"
         }, 401);
       }
@@ -423,7 +423,7 @@ export default {
       if (!audit.ok) {
         return json({
           ok: false,
-          service: "XKiss Veriff KYC Webhook",
+          service: "X4Kiss Veriff KYC Webhook",
           status: "storage-not-ready",
           reason: "Verified Veriff event could not be durably recorded."
         }, 503);
@@ -431,7 +431,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Veriff KYC Webhook",
+        service: "X4Kiss Veriff KYC Webhook",
         provider: "veriff",
         verificationId: result.verificationId,
         vendorData: result.vendorData,
@@ -452,7 +452,7 @@ export default {
     if (url.pathname === "/api/views/storage/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Durable View Event Store",
+        service: "X4Kiss Durable View Event Store",
         storageReady: isViewEventStoreReady(env),
         storage: "ElasticLake",
         message: isViewEventStoreReady(env)
@@ -475,7 +475,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss View Count Decision Engine",
+        service: "X4Kiss View Count Decision Engine",
         result: await evaluateViewCountDecision(env, body)
       });
     }
@@ -494,7 +494,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss View Qualification Pipeline",
+        service: "X4Kiss View Qualification Pipeline",
         result: evaluateViewPipeline(body)
       });
     }
@@ -502,7 +502,7 @@ export default {
     if (url.pathname === "/api/wallet/payout/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Payout Lifecycle",
+        service: "X4Kiss Payout Lifecycle",
         lifecycleReady: PAYOUT_LIFECYCLE_RULES.enabled,
         rulesVersion: PAYOUT_LIFECYCLE_RULES.version,
         status: PAYOUT_LIFECYCLE_RULES.status,
@@ -516,7 +516,7 @@ export default {
     if (url.pathname === "/api/wallet/payout/security/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Payout Security",
+        service: "X4Kiss Payout Security",
         securityReady: PAYOUT_SECURITY_RULES.enabled,
         rulesVersion: PAYOUT_SECURITY_RULES.version,
         status: PAYOUT_SECURITY_RULES.status,
@@ -564,7 +564,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Lifecycle & Security",
+        service: "X4Kiss Payout Lifecycle & Security",
         test: "request-transition-authorization-audit",
         payoutEnabled: false,
         request: requestResult,
@@ -597,7 +597,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Authorization",
+        service: "X4Kiss Payout Authorization",
         result: evaluatePayoutAuthorization(body)
       });
     }
@@ -616,7 +616,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Audit",
+        service: "X4Kiss Payout Audit",
         result: createPayoutAuditEvent(body)
       });
     }
@@ -635,7 +635,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout History",
+        service: "X4Kiss Payout History",
         result: buildPayoutHistory(body.events)
       });
     }
@@ -654,7 +654,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Request",
+        service: "X4Kiss Payout Request",
         result: createPayoutRequest(body)
       });
     }
@@ -673,7 +673,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Status",
+        service: "X4Kiss Payout Status",
         result: transitionPayoutStatus(body)
       });
     }
@@ -692,7 +692,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Payout Eligibility",
+        service: "X4Kiss Payout Eligibility",
         result: evaluatePayoutEligibility(body)
       });
     }
@@ -711,7 +711,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Wallet Reversal",
+        service: "X4Kiss Wallet Reversal",
         result: evaluateWalletReversal(body)
       });
     }
@@ -730,7 +730,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Wallet Settlement",
+        service: "X4Kiss Wallet Settlement",
         result: evaluatePendingSettlement(body)
       });
     }
@@ -749,7 +749,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Revenue To Wallet",
+        service: "X4Kiss Revenue To Wallet",
         result: evaluateRevenueToWallet(body)
       });
     }
@@ -757,7 +757,7 @@ export default {
     if (url.pathname === "/api/wallet/settlement/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Wallet Settlement",
+        service: "X4Kiss Wallet Settlement",
         walletLedgerReady: isWalletLedgerReady(env),
         settlementReady: isWalletLedgerReady(env) && WALLET_SETTLEMENT_RULES.enabled,
         rulesVersion: WALLET_SETTLEMENT_RULES.version,
@@ -780,7 +780,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Wallet Settlement",
+        service: "X4Kiss Wallet Settlement",
         test: "qualification-check",
         result,
         verified: Boolean(
@@ -796,9 +796,9 @@ export default {
     if (url.pathname === "/api/wallet/ledger/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Wallet Ledger",
+        service: "X4Kiss Wallet Ledger",
         storageReady: isWalletLedgerReady(env),
-        storage: "XKISS_WALLET_LEDGER",
+        storage: "X4KISS_WALLET_LEDGER",
         message: isWalletLedgerReady(env)
           ? "Wallet ledger storage is connected and ready."
           : "Wallet ledger storage is prepared but not connected yet."
@@ -827,7 +827,7 @@ export default {
 
         return json({
           ok: true,
-          service: "XKiss Wallet Ledger",
+          service: "X4Kiss Wallet Ledger",
           test: "write-read",
           write,
           read,
@@ -836,7 +836,7 @@ export default {
       } catch {
         return json({
           ok: false,
-          service: "XKiss Wallet Ledger",
+          service: "X4Kiss Wallet Ledger",
           test: "write-read",
           verified: false
         }, 500);
@@ -868,7 +868,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Wallet Ledger",
+        service: "X4Kiss Wallet Ledger",
         result
       });
     }
@@ -897,7 +897,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Wallet Ledger",
+        service: "X4Kiss Wallet Ledger",
         result
       });
     }
@@ -905,7 +905,7 @@ export default {
     if (url.pathname === "/api/views/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Views & Revenue",
+        service: "X4Kiss Views & Revenue",
         rules: VIEWS_REVENUE_RULES,
         message: isViewEventStoreReady(env)
           ? "Views and revenue event storage is connected and active."
@@ -938,7 +938,7 @@ export default {
 
         return json({
           ok: true,
-          service: "XKiss Durable View Event Store",
+          service: "X4Kiss Durable View Event Store",
           storage: "ElasticLake",
           test: "write-read-delete",
           write,
@@ -949,7 +949,7 @@ export default {
       } catch (error) {
         return json({
           ok: false,
-          service: "XKiss Durable View Event Store",
+          service: "X4Kiss Durable View Event Store",
           storage: "ElasticLake",
           test: "write-read-delete",
           verified: false,
@@ -983,7 +983,7 @@ export default {
       if (!validation.valid) {
         return json({
           ok: true,
-          service: "XKiss Durable View Event Store",
+          service: "X4Kiss Durable View Event Store",
           result: validation
         });
       }
@@ -992,7 +992,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Durable View Event Store",
+        service: "X4Kiss Durable View Event Store",
         result
       });
     }
@@ -1011,7 +1011,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss View Event Validator",
+        service: "X4Kiss View Event Validator",
         result: validateViewEvent(body)
       });
     }
@@ -1030,7 +1030,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss View Count Check",
+        service: "X4Kiss View Count Check",
         result: evaluateViewCount(body)
       });
     }
@@ -1049,7 +1049,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Traffic Quality Check",
+        service: "X4Kiss Traffic Quality Check",
         result: evaluateTrafficQuality(body)
       });
     }
@@ -1068,7 +1068,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Qualified View Check",
+        service: "X4Kiss Qualified View Check",
         result: evaluateQualifiedView(body)
       });
     }
@@ -1087,7 +1087,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Revenue Event Validator",
+        service: "X4Kiss Revenue Event Validator",
         result: validateRevenueEvent(body)
       });
     }
@@ -1095,7 +1095,7 @@ export default {
     if (url.pathname === "/api/monetization/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Monetization",
+        service: "X4Kiss Monetization",
         enabled: MONETIZATION_RULES.enabled,
         status: MONETIZATION_RULES.status,
         version: MONETIZATION_RULES.version,
@@ -1109,7 +1109,7 @@ export default {
     if (url.pathname === "/api/monetization/rules" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Monetization Rules",
+        service: "X4Kiss Monetization Rules",
         rules: MONETIZATION_RULES
       });
     }
@@ -1117,7 +1117,7 @@ export default {
     if (url.pathname === "/api/monetization/eligibility/rules" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Creator Eligibility",
+        service: "X4Kiss Creator Eligibility",
         rules: CREATOR_ELIGIBILITY_RULES
       });
     }
@@ -1125,7 +1125,7 @@ export default {
     if (url.pathname === "/api/monetization/activation/rules" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Creator Monetization Activation",
+        service: "X4Kiss Creator Monetization Activation",
         rules: CREATOR_ACTIVATION_RULES
       });
     }
@@ -1144,7 +1144,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Creator Monetization Activation",
+        service: "X4Kiss Creator Monetization Activation",
         result: evaluateCreatorActivation(body)
       });
     }
@@ -1152,7 +1152,7 @@ export default {
     if (url.pathname === "/api/monetization/policy/rules" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Monetization Policy",
+        service: "X4Kiss Monetization Policy",
         rules: MONETIZATION_POLICY_RULES
       });
     }
@@ -1171,7 +1171,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Monetization Policy",
+        service: "X4Kiss Monetization Policy",
         result: evaluateMonetizationPolicy(body)
       });
     }
@@ -1190,7 +1190,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Revenue Calculation",
+        service: "X4Kiss Revenue Calculation",
         result: calculateRevenue(body)
       });
     }
@@ -1209,7 +1209,7 @@ export default {
 
       return json({
         ok: true,
-        service: "XKiss Creator Eligibility",
+        service: "X4Kiss Creator Eligibility",
         result: evaluateCreatorEligibility(body)
       });
     }
@@ -1217,7 +1217,7 @@ export default {
     if (url.pathname === "/api/upload/status" && request.method === "GET") {
       return json({
         ok: true,
-        service: "XKiss Upload",
+        service: "X4Kiss Upload",
         storageReady,
         uploadEndpoint: true,
         message: storageReady
@@ -1228,7 +1228,7 @@ export default {
 
     if (url.pathname === "/api/upload/prepare" && request.method === "POST") {
       if (!storageReady) return json({ ok: false, storageReady: false, message: "Production storage is not ready. No file was uploaded." }, 503);
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const session = await authenticateSession(env, token);
@@ -1253,7 +1253,7 @@ export default {
         }, 503);
       }
 
-      if (!env.XKISS_AUTH_DB) {
+      if (!env.X4KISS_AUTH_DB) {
         return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       }
       const authorization = request.headers.get("Authorization") || "";
@@ -1263,14 +1263,14 @@ export default {
         return json({ ok: false, message: "Sign in with your creator account before uploading." }, 401);
       }
 
-      const fileName = request.headers.get("X-XKiss-File-Name");
+      const fileName = request.headers.get("X-X4Kiss-File-Name");
       const contentType = request.headers.get("Content-Type") || "application/octet-stream";
-      const fileSize = Number(request.headers.get("X-XKiss-File-Size") || 0);
+      const fileSize = Number(request.headers.get("X-X4Kiss-File-Size") || 0);
 
       if (!fileName) {
         return json({
           ok: false,
-          message: "X-XKiss-File-Name is required."
+          message: "X-X4Kiss-File-Name is required."
         }, 400);
       }
 
@@ -1288,16 +1288,16 @@ export default {
         }, 400);
       }
 
-      const title = request.headers.get("X-XKiss-Title") || "";
-      const description = request.headers.get("X-XKiss-Description") || "";
-      const category = request.headers.get("X-XKiss-Category") || "";
+      const title = request.headers.get("X-X4Kiss-Title") || "";
+      const description = request.headers.get("X-X4Kiss-Description") || "";
+      const category = request.headers.get("X-X4Kiss-Category") || "";
       const key = createVideoKey(fileName);
       const videoId = crypto.randomUUID();
       const createdAt = new Date().toISOString();
 
       try {
-        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
-        await env.XKISS_AUTH_DB.prepare(
+        await ensureCreatorVideoIndex(env.X4KISS_AUTH_DB);
+        await env.X4KISS_AUTH_DB.prepare(
           "INSERT INTO creator_videos (id,creator_id,storage_key,file_name,content_type,file_size,title,description,category,visibility,download_policy,status,storage,created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,'private','disabled','uploading','ElasticLake',?10)"
         ).bind(videoId, session.user.id, key, fileName, contentType, fileSize, title, description, category, createdAt).run();
       } catch {
@@ -1311,7 +1311,7 @@ export default {
           downloadPolicy: "disabled",
           visibility: "private"
         });
-        await env.XKISS_AUTH_DB.prepare(
+        await env.X4KISS_AUTH_DB.prepare(
           "UPDATE creator_videos SET status='stored' WHERE id=?1 AND creator_id=?2"
         ).bind(videoId, session.user.id).run();
 
@@ -1327,7 +1327,7 @@ export default {
           message: "Video uploaded to private storage and added to My Videos. Public publishing and playback are not enabled yet."
         }, 201);
       } catch {
-        await env.XKISS_AUTH_DB.prepare(
+        await env.X4KISS_AUTH_DB.prepare(
           "UPDATE creator_videos SET status='failed' WHERE id=?1 AND creator_id=?2"
         ).bind(videoId, session.user.id).run().catch(() => {});
         return json({
@@ -1340,14 +1340,14 @@ export default {
     }
 
     if (url.pathname === "/api/creator/videos" && request.method === "GET") {
-      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      if (!env.X4KISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const session = await authenticateSession(env, token);
       if (!session.ok) return json({ ok: false, message: "Sign in to access your creator library." }, 401);
       try {
-        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
-        const result = await env.XKISS_AUTH_DB.prepare(
+        await ensureCreatorVideoIndex(env.X4KISS_AUTH_DB);
+        const result = await env.X4KISS_AUTH_DB.prepare(
           "SELECT id,storage_key AS key,file_name AS fileName,content_type AS contentType,file_size AS size,title,description,category,visibility,download_policy AS downloadPolicy,status,storage,created_at AS uploaded FROM creator_videos WHERE creator_id=?1 ORDER BY created_at DESC LIMIT 100"
         ).bind(session.user.id).all();
         return json({
@@ -1362,7 +1362,7 @@ export default {
     }
 
     return json({
-      service: "XKiss Worker",
+      service: "X4Kiss Worker",
       status: "online",
       path: url.pathname
     });
