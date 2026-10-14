@@ -20,7 +20,7 @@ const XKISS_VIDEOS = {
 
     delivery: {
       mode: "adaptive",
-      provider: "cloudflare-stream",
+      provider: "self-hosted",
       hlsManifest: "",
       dashManifest: "",
       liveInputId: "",
