@@ -1,4 +1,4 @@
-# XKiss Section 16 — Enterprise Content & Partners
+# X4Kiss Section 16 — Enterprise Content & Partners
 
 ## Status
 - Section: 16
