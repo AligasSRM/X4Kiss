@@ -1,4 +1,4 @@
-# XKiss — AUDIT-05 Backend Provider Contract
+# X4Kiss — AUDIT-05 Backend Provider Contract
 
 Status: GREEN / LOCKED (contract and self-test scope)
 Date: 2026-10-11
@@ -22,9 +22,9 @@ The contract requires all four backend provider groups and their full capability
 - `activationAllowed` remains false for every case.
 
 ## Evidence
-- Backend Provider Contract GitHub Actions run #3: https://github.com/AligasSRM/XKiss/actions/runs/38136628226 — SUCCESS.
-- Section 14 Security Tests on the same commit: https://github.com/AligasSRM/XKiss/actions/runs/38136628348 — SUCCESS.
-- Test-strengthening commit: https://github.com/AligasSRM/XKiss/commit/095159e6d01f5633b8b448871550e756f860821c.
+- Backend Provider Contract GitHub Actions run #3: https://github.com/AligasSRM/X4Kiss/actions/runs/38136628226 — SUCCESS.
+- Section 14 Security Tests on the same commit: https://github.com/AligasSRM/X4Kiss/actions/runs/38136628348 — SUCCESS.
+- Test-strengthening commit: https://github.com/AligasSRM/X4Kiss/commit/095159e6d01f5633b8b448871550e756f860821c.
 - The initial expanded test exposed a faulty test expectation (it treated boolean true as invalid); the test expectation was corrected, and the subsequent workflow passed.
 
 ## Lock rules and limitations
