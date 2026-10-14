@@ -72,6 +72,14 @@ for (const file of htmlFiles) {
   }
 }
 
+const relativeApiErrors = [];
+for (const file of jsFiles) {
+  const content = read(file);
+  if (/fetch\\s*\\(\\s*["']\\/api\\//.test(content)) {
+    relativeApiErrors.push({ file, issue: "API fetch uses a same-origin relative path instead of the configured backend base URL" });
+  }
+}
+
 const sectionPresence = Object.fromEntries(
   sections.map(([id,name,files]) => [id,{
     name,
@@ -115,6 +123,7 @@ const result = {
   syntaxErrors,
   importErrors,
   htmlAssetErrors,
+  relativeApiErrors,
   qualityOk,
   lockStateOk,
   section15: section15Result,
@@ -131,6 +140,7 @@ const ok =
   syntaxErrors.length === 0 &&
   importErrors.length === 0 &&
   htmlAssetErrors.length === 0 &&
+  relativeApiErrors.length === 0 &&
   qualityOk &&
   lockStateOk &&
   section15Result.ok === true &&
