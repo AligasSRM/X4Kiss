@@ -1,14 +1,14 @@
-import { createXKissModuleContractRegistry } from "./xkiss-module-contract-core.js";
-import { validateXKissModuleContractRules } from "./xkiss-module-contract-rules.js";
+import { createX4KissModuleContractRegistry } from "./xkiss-module-contract-core.js";
+import { validateX4KissModuleContractRules } from "./xkiss-module-contract-rules.js";
 
-export function installXKissModuleContractRegistry(core) {
+export function installX4KissModuleContractRegistry(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
   if (core.moduleContracts) return { ok: true, reused: true, registry: core.moduleContracts };
 
-  const rules = validateXKissModuleContractRules();
+  const rules = validateX4KissModuleContractRules();
   if (!rules.ok) return { ok: false, error: "contract-rules-invalid" };
 
-  const registry = createXKissModuleContractRegistry(core);
+  const registry = createX4KissModuleContractRegistry(core);
   core.moduleContracts = registry;
 
   return {
