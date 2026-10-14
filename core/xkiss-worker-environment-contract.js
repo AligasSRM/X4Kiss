@@ -10,7 +10,7 @@ export const XKISS_WORKER_ENVIRONMENT_CONTRACT = {
     { name: "ELASTICLAKE_ACCESS_KEY_ID", purpose: "video_storage_access_key", requiredFor: "storage" },
     { name: "ELASTICLAKE_SECRET_ACCESS_KEY", purpose: "video_storage_secret_key", requiredFor: "storage" }
   ],
-  providerBoundary: "Cloudflare Worker environment",
+  providerBoundary: "Node.js server environment on Render",
   secretsPolicy: "backend_only"
 };
 
