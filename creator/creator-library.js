@@ -20,7 +20,7 @@
     }
 
     try {
-      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/creator/videos", {
+      const response = await fetch("https://x4kiss-backend-neon.onrender.com/api/creator/videos", {
         headers: {"Accept":"application/json", "Authorization":"Bearer " + token},
         cache: "no-store"
       });
