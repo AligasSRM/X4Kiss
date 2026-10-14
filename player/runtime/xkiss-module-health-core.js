@@ -99,3 +99,6 @@ export function createXKissModuleHealth(core) {
     getEvents: () => events.map(event => ({ ...event, detail: { ...event.detail } }))
   });
 }
+
+// Backward-compatible product-name alias for health integration.
+export const createX4KissModuleHealth = createXKissModuleHealth;
