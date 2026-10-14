@@ -18,4 +18,4 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 The current implementation accepts TOTP only. It uses AES-GCM encrypted secret storage, a 30-second TOTP period, one-step clock tolerance, replay prevention, five-failure lockout for 15 minutes, and requires fresh MFA (five minutes) for super-admin authorization. WebAuthn and recovery codes are not implemented.
 
 ## Release gate
-Do not mark Section 14 GREEN until GitHub Actions tests pass, the PR is merged, the Worker bindings are verified, the Worker is deployed, and live tests prove both a valid MFA flow and fail-closed behavior. Never enable privileged access merely because the secret exists.
+Do not mark Section 14 GREEN until GitHub Actions tests pass, the PR is merged, Render environment configuration is verified, the Render service is deployed, and live tests prove both a valid MFA flow and fail-closed behavior. Never enable privileged access merely because the secret exists.
