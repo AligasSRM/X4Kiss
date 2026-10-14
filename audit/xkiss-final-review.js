@@ -74,6 +74,7 @@ for (const file of htmlFiles) {
 
 const relativeApiErrors = [];
 for (const file of jsFiles) {
+  if (file.startsWith("audit/")) continue;
   const content = read(file);
   if (content.includes('fetch("/api/') || content.includes("fetch('/api/")) {
     relativeApiErrors.push({ file, issue: "API fetch uses a same-origin relative path instead of the configured backend base URL" });
