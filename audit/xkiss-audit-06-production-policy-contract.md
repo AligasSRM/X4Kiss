@@ -1,4 +1,4 @@
-# XKiss — AUDIT-06 Production Policy Contract
+# X4Kiss — AUDIT-06 Production Policy Contract
 
 Status: GREEN / LOCKED (policy contract and automated tests)
 Date: 2026-10-11
@@ -19,11 +19,11 @@ Verified commit: 38b4e4c820beb51f843ad3c4c21d16fe1d1fd1ad
 - Every invalid case remains blocked and keeps activation disabled.
 
 ## Evidence
-- Production Policy Contract GitHub Actions run: https://github.com/AligasSRM/XKiss/actions/runs/38136687252 — SUCCESS.
-- Final Review on the same commit: https://github.com/AligasSRM/XKiss/actions/runs/38136687248 — SUCCESS.
-- Section 14 Security Tests on the same commit: https://github.com/AligasSRM/XKiss/actions/runs/38136687246 — SUCCESS.
-- Implementation commit: https://github.com/AligasSRM/XKiss/commit/a0d44d692c1e21763a9b3e7104e35244e58a8719.
-- Regression matrix commit: https://github.com/AligasSRM/XKiss/commit/38b4e4c820beb51f843ad3c4c21d16fe1d1fd1ad.
+- Production Policy Contract GitHub Actions run: https://github.com/AligasSRM/X4Kiss/actions/runs/38136687252 — SUCCESS.
+- Final Review on the same commit: https://github.com/AligasSRM/X4Kiss/actions/runs/38136687248 — SUCCESS.
+- Section 14 Security Tests on the same commit: https://github.com/AligasSRM/X4Kiss/actions/runs/38136687246 — SUCCESS.
+- Implementation commit: https://github.com/AligasSRM/X4Kiss/commit/a0d44d692c1e21763a9b3e7104e35244e58a8719.
+- Regression matrix commit: https://github.com/AligasSRM/X4Kiss/commit/38b4e4c820beb51f843ad3c4c21d16fe1d1fd1ad.
 
 ## Lock rules and limitations
 - AUDIT-06 is GREEN / LOCKED for production policy contract validation and its automated regression suite.
