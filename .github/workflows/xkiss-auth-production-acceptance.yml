@@ -61,7 +61,15 @@ jobs:
             spoofedAdmin.body?.ok === false &&
             spoofedAdmin.body?.allowed === false &&
             spoofedAdmin.body?.status === "unauthenticated",
-            "caller-supplied Super Admin identity cannot authorize an admin action"
+            "caller-supplied Super Admin identity cannot authorize an admin action",
+            {
+              httpStatus: spoofedAdmin.status,
+              ok: spoofedAdmin.body?.ok,
+              allowed: spoofedAdmin.body?.allowed,
+              status: spoofedAdmin.body?.status,
+              service: spoofedAdmin.body?.service,
+              path: spoofedAdmin.body?.path
+            }
           );
 
           const security = await call("/api/auth/security");
