@@ -42,19 +42,19 @@ const server = createServer(async (req, res) => {
 
     Readable.fromWeb(response.body).pipe(res);
   } catch (error) {
-    console.error("XKiss server error:", error);
+    console.error("X4Kiss server error:", error);
     if (!res.headersSent) {
       res.statusCode = 500;
       res.setHeader("content-type", "application/json; charset=UTF-8");
     }
     res.end(JSON.stringify({
       ok: false,
-      service: "XKiss Node Server",
+      service: "X4Kiss Node Server",
       message: "Internal server error."
     }));
   }
 });
 
 server.listen(port, host, () => {
-  console.log(`XKiss server running on http://${host}:${port}`);
+  console.log(`X4Kiss server running on http://${host}:${port}`);
 });
