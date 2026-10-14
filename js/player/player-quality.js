@@ -11,7 +11,7 @@
     const currentQuality = document.getElementById("currentQuality");
 
     if (!video || !videoSource) {
-      console.error("XKiss: Quality system elements not found.");
+      console.error("X4Kiss: Quality system elements not found.");
       return;
     }
 
@@ -20,14 +20,14 @@
 
     let videoData = null;
 
-    if (typeof getXKissVideo === "function") {
-      videoData = getXKissVideo(requestedId) || getXKissVideo("video-001");
+    if (typeof getX4KissVideo === "function") {
+      videoData = getX4KissVideo(requestedId) || getX4KissVideo("video-001");
     } else if (typeof XKISS_VIDEOS !== "undefined") {
       videoData = XKISS_VIDEOS[requestedId] || XKISS_VIDEOS["video-001"];
     }
 
     if (!videoData) {
-      console.error("XKiss: Video data not found.");
+      console.error("X4Kiss: Video data not found.");
       return;
     }
 
@@ -52,7 +52,7 @@
       lastError: null
     };
 
-    window.XKissPlayerQualityRuntime = runtime;
+    window.X4KissPlayerQualityRuntime = runtime;
 
     function updateQualityDisplay(value = currentQualityValue) {
       currentQualityValue = value;
@@ -204,7 +204,7 @@
         hls.on(Hls.Events.ERROR, (_, data) => {
           runtime.lastError = data || null;
           if (!data || !data.fatal) return;
-          console.error("XKiss HLS fatal error:", data);
+          console.error("X4Kiss HLS fatal error:", data);
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             hls.startLoad();
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
@@ -251,8 +251,8 @@
 
     if (adaptiveStarted) populateAdaptiveMenu();
 
-    window.XKissPlayerCore?.registerModule("quality", currentQualityValue);
-    console.log("XKiss Player Quality loaded:", currentQualityValue, adaptiveStarted ? "adaptive" : "progressive");
+    window.X4KissPlayerCore?.registerModule("quality", currentQualityValue);
+    console.log("X4Kiss Player Quality loaded:", currentQualityValue, adaptiveStarted ? "adaptive" : "progressive");
   }
 
   if (document.readyState === "loading") {
