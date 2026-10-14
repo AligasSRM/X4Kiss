@@ -1,4 +1,4 @@
-import { getXKissSettingsRuntimeStatus } from "./settings/x4kiss-settings-runtime-core.js";
+import { getX4KissSettingsRuntimeStatus } from "./settings/x4kiss-settings-runtime-core.js";
 import {
   createVideoKey,
   isStorageReady,
