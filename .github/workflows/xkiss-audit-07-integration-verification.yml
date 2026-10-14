@@ -14,7 +14,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE="https://xkiss.srourr-ali73.workers.dev"
+          BASE="https://x4kiss-backend-neon.onrender.com"
 
           check_json() {
             local path="$1"
