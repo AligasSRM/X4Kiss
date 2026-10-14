@@ -25,3 +25,6 @@ export function getX4KissReleaseLockStatus() {
     lockBypass: XKISS_RELEASE_LOCK.lockPolicy.lockBypass
   };
 }
+
+// Backward-compatible export for existing self-tests and consumers.
+export const getXKissReleaseLockStatus = getX4KissReleaseLockStatus;
