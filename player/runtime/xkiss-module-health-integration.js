@@ -1,12 +1,12 @@
-import { createXKissModuleHealth } from "./xkiss-module-health-core.js";
+import { createX4KissModuleHealth } from "./xkiss-module-health-core.js";
 
-export function installXKissModuleHealth(core) {
+export function installX4KissModuleHealth(core) {
   if (!core) return { ok: false, error: "player-core-required", stage: "15.28" };
   if (!core.moduleLifecycle || !core.moduleContracts) return { ok: false, error: "health-prerequisites-missing", stage: "15.28" };
   if (core.moduleHealth) return { ok: true, stage: "15.28", coreControlled: true, reused: true, health: core.moduleHealth };
 
   try {
-    const health = createXKissModuleHealth(core);
+    const health = createX4KissModuleHealth(core);
     core.moduleHealth = health;
     core.registerModule("module-health", "active");
     return { ok: true, stage: "15.28", coreControlled: core.moduleHealth === health, health };
