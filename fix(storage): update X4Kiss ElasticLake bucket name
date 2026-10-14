@@ -1,3 +1,4 @@
+
 const VIDEO_PREFIX = "videos/";
 
 import { AwsClient } from "aws4fetch";
@@ -11,9 +12,10 @@ function getConfig(env) {
   let endpoint = cleanEnvValue(env?.ELASTICLAKE_ENDPOINT, "https://app.elasticlake.com");
   if (endpoint && !/^https?:\/\//i.test(endpoint)) endpoint = "https://" + endpoint;
   endpoint = endpoint.replace(/\/$/, "");
+
   return {
     endpoint,
-    bucket: cleanEnvValue(env?.ELASTICLAKE_BUCKET, "xkiss-storage--xkiss-production--xkiss-midea"),
+    bucket: cleanEnvValue(env?.ELASTICLAKE_BUCKET, "x4kiss-storage--x4kiss-production--x4kiss-media"),
     region: cleanEnvValue(env?.ELASTICLAKE_REGION, "auto"),
     accessKey: cleanEnvValue(env?.ELASTICLAKE_ACCESS_KEY_ID || env?.ELASTICLAKE_ACCESS_KEY),
     secretKey: cleanEnvValue(env?.ELASTICLAKE_SECRET_ACCESS_KEY || env?.ELASTICLAKE_SECRET_KEY)
@@ -53,6 +55,7 @@ async function signedRequest(env, method, key = "", body = null, extraHeaders = 
     service: "s3",
     region: c.region
   });
+
   const signed = await client.sign(url, { method, headers, body });
   return fetch(signed);
 }
@@ -65,25 +68,31 @@ async function throwStorageError(action, response) {
 
 export async function storeJsonObject(env, key, value) {
   if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
+
   const response = await signedRequest(env, "PUT", key, JSON.stringify(value), {
     "content-type": "application/json; charset=UTF-8"
   });
+
   await throwStorageError("JSON object store", response);
   return { ok: true, storageReady: true, status: "stored", key, storage: "ElasticLake" };
 }
 
 export async function getJsonObject(env, key) {
   if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready", value: null };
+
   const response = await signedRequest(env, "GET", key);
   if (response.status === 404) return { ok: true, storageReady: true, status: "not-found", value: null };
+
   await throwStorageError("JSON object read", response);
   return { ok: true, storageReady: true, status: "found", value: await response.json() };
 }
 
 export async function deleteJsonObject(env, key) {
   if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
+
   const response = await signedRequest(env, "DELETE", key);
   if (!response.ok && response.status !== 404) await throwStorageError("JSON object delete", response);
+
   return {
     ok: true,
     storageReady: true,
@@ -95,6 +104,7 @@ export async function deleteJsonObject(env, key) {
 
 export async function storeVideo(env, key, body, metadata = {}) {
   if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
+
   const headers = {
     "content-type": String(metadata.contentType || "application/octet-stream"),
     "x-amz-meta-originalfilename": String(metadata.fileName || "video"),
@@ -106,8 +116,10 @@ export async function storeVideo(env, key, body, metadata = {}) {
     "x-amz-meta-visibility": String(metadata.visibility || "private"),
     "x-amz-meta-status": "Ready"
   };
+
   const response = await signedRequest(env, "PUT", key, body, headers);
   await throwStorageError("upload", response);
+
   return { ok: true, storageReady: true, status: "stored", key, storage: "ElasticLake" };
 }
 
@@ -118,13 +130,17 @@ function xmlTag(xml, tag) {
 
 export async function listVideos(env) {
   if (!isStorageReady(env)) return { ok: true, storageReady: false, videos: [] };
+
   const response = await signedRequest(env, "GET");
   await throwStorageError("list", response);
+
   const xml = await response.text();
   const blocks = xml.match(/<Contents>[\s\S]*?<\/Contents>/g) || [];
+
   const videos = blocks.map((block) => {
     const key = xmlTag(block, "Key");
     if (!key || !key.startsWith(VIDEO_PREFIX)) return null;
+
     return {
       key,
       size: Number(xmlTag(block, "Size") || 0),
@@ -139,5 +155,6 @@ export async function listVideos(env) {
       storage: "ElasticLake"
     };
   }).filter(Boolean);
+
   return { ok: true, storageReady: true, videos };
 }
