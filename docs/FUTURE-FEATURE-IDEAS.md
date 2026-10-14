@@ -1,6 +1,6 @@
-# XKiss Future Feature Ideas
+# X4Kiss Future Feature Ideas
 
-## 🟡 HIGH INTEREST — XKiss Connect
+## 🟡 HIGH INTEREST — X4Kiss Connect
 
 **Status:** IDEA / UNDER FUTURE REVIEW  
 **Priority:** HIGH INTEREST  
@@ -9,7 +9,7 @@
 
 ### Concept
 
-Add a small, self-contained **18+ social / dating / connection module** inside XKiss as an optional feature, rather than creating a separate website.
+Add a small, self-contained **18+ social / dating / connection module** inside X4Kiss as an optional feature, rather than creating a separate website.
 
 Initial concept:
 
@@ -31,12 +31,12 @@ This idea must be re-examined from the beginning before any code is added:
 5. Privacy and personal-data handling.
 6. Messaging and live-video architecture.
 7. Payment-provider and monetization constraints.
-8. XKiss production-readiness impact.
+8. X4Kiss production-readiness impact.
 9. Full technical design and isolated module boundary.
 10. Build → real test → regression → GREEN → LOCK.
 
 ### Important rule
 
-This is a **recorded future development idea only**. It does not authorize implementation, monetization, deployment, or changes to existing GREEN/LOCKED XKiss sections.
+This is a **recorded future development idea only**. It does not authorize implementation, monetization, deployment, or changes to existing GREEN/LOCKED X4Kiss sections.
 
-When revisited, inspect the real XKiss repository/runtime state first and perform a fresh feasibility and compliance review before implementation.
+When revisited, inspect the real X4Kiss repository/runtime state first and perform a fresh feasibility and compliance review before implementation.
