@@ -52,3 +52,8 @@ export function validateX4KissPlatformCore() {
     activationAllowed: false
   };
 }
+// Backward-compatible names used by the settings integration workflow.
+export {
+  getX4KissPlatformCoreStatus as getXKissPlatformCoreStatus,
+  validateX4KissPlatformCore as validateXKissPlatformCore
+};
