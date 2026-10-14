@@ -3,6 +3,48 @@
 Status: ACTIVE — production activation remains BLOCKED / fail-closed.
 Last updated: 2026-10-11.
 
+## Current review delta — 2026-10-14
+
+**Current decision: RED / BLOCKED — do not activate production.** The latest automated final review is run #509, commit `b31b3cd28f3231b75e0d6ddf4017a0d9ec1e219d`, and concluded `failure`:
+https://github.com/AligasSRM/X4Kiss/actions/runs/38640800031
+
+The latest run supersedes older statements below wherever they conflict. Historical GREEN results remain evidence only for the bounded tests that passed at that time; they do not override current failures.
+
+### Current failures with direct evidence
+
+- **Section 18 live operational check — FAILED / fail-closed.** GitHub Pages returned HTTP 200, but the production Worker health endpoint returned HTTP 404. The Section 18 live check and health aggregate consequently reported `ok=false`; production activation remained `false`.
+- **12 production Worker endpoints returned HTTP 404** when the final-review workflow expected HTTP 200:
+  1. `GET /api/health`
+  2. `GET /api/settings/status`
+  3. `GET /api/safety/status`
+  4. `GET /api/safety/self-test`
+  5. `GET /api/views/storage/status`
+  6. `GET /api/views/status`
+  7. `GET /api/views/storage/self-test`
+  8. `GET /api/wallet/ledger/status`
+  9. `GET /api/wallet/settlement/status`
+  10. `GET /api/wallet/payout/status`
+  11. `GET /api/wallet/payout/security/status`
+  12. `GET /api/wallet/payout/self-test`
+- The run reported `failedCount: 12`, `result: BLOCKED_FAIL_CLOSED`, and `productionActivationAllowed: false`. HTTP 404 indicates these paths were not served at the checked Worker URL; it does **not**, by itself, prove the underlying providers are broken.
+- The Section 18 local/control contract, policy, lock, and regression checks reported passing, but its live Worker health check failed. Therefore Section 18 must not be described as operationally GREEN based on the local checks alone.
+- The current repository-wide audit also identified missing imports from `worker.js` for `security/x4kiss-auth-backend.js` and `admin/x4kiss-admin-backend.js` on `main`; the admin authorization test fails during module loading. Treat this as a separate code/test blocker and verify the files against the intended branch before changing imports or copying files.
+
+### Updated status interpretation
+
+- **GREEN / LOCKED:** retain only for bounded checks that currently pass and are not contradicted by current evidence.
+- **YELLOW:** external provider workflows, large-file video/playback, age/creator verification, moderation/reporting, settings authorization, notifications/observability, and domain/TLS/routing remain unverified or incomplete.
+- **RED:** final review and live Worker endpoint regression; wallet/settlement/payout readiness remains unproven. Real payouts and production activation must stay disabled.
+- **ElasticLake connection:** **0 / DEFERRED**, per project decision. Do not spend this review cycle on credential repair or reopen the storage-provider decision. Revisit later; no secret values should be pasted into chat.
+
+### Required remediation sequence
+
+1. Inspect the production Worker route table and deployment/version, then reconcile why all 12 checked paths return 404. Do not add placeholder endpoints just to satisfy the test.
+2. Compare the missing auth/admin backend imports with existing branches and tests; make a minimal repair on a non-production branch first.
+3. Re-run the focused auth/admin tests and final review; retain the exact run URLs and endpoint status evidence.
+4. Only after those pass, resume the remaining real-provider gates listed below.
+5. Update this review again only from new test/live evidence. Do not mark GREEN based on file presence or a successful local self-test alone.
+
 ## Completed audit gates
 
 - AUDIT-03 Storage Provider Closure — GREEN / LOCKED. Live durable view-event storage write/read/delete verified.
