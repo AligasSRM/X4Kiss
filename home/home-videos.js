@@ -96,5 +96,5 @@ document.addEventListener("DOMContentLoaded", () => {
   bindVideoCards();
   bindVideoLinks();
 
-  console.log("XKiss Home Videos loaded.");
+  console.log("X4Kiss Home Videos loaded.");
 });
