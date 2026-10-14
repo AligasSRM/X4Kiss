@@ -2,15 +2,6 @@ name: XKiss ElasticLake Storage Verification
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/xkiss-elasticlake-storage-verification.yml"
-      - "storage-setup/ELASTICLAKE-GITHUB-SETUP.md"
-      - "storage/elasticlake-adapter.js"
-      - "storage/xkiss-storage-production-gate.js"
-      - "storage/xkiss-storage-production-gate-self-test.js"
-      - "security/xkiss-secret-management-monitor.js"
-      - "audit/PRODUCTION-READINESS-REVIEW.md"
 
 permissions:
   contents: read
@@ -21,15 +12,61 @@ concurrency:
 
 jobs:
   elasticlake-write-read-delete:
-    name: Live ElasticLake write-read-delete through production Worker
+    name: Direct ElasticLake write-read-delete using repository secrets
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
-      - name: Run live storage integration test
-        shell: bash
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install project dependencies
+        run: npm install --ignore-scripts
+
+      - name: Test real ElasticLake access
+        env:
+          ELASTICLAKE_ENDPOINT: https://app.elasticlake.com
+          ELASTICLAKE_BUCKET: xkiss-storage--xkiss-production--xkiss-midea
+          ELASTICLAKE_REGION: auto
+          ELASTICLAKE_ACCESS_KEY_ID: ${{ secrets.ELASTICLAKE_ACCESS_KEY_ID }}
+          ELASTICLAKE_SECRET_ACCESS_KEY: ${{ secrets.ELASTICLAKE_SECRET_ACCESS_KEY }}
         run: |
-          set -euo pipefail
-          response="$(curl --fail --silent --show-error --max-time 30 \
-            "https://xkiss.srourr-ali73.workers.dev/api/views/storage/self-test")"
-          printf '%s\n' "$response"
-          python -c 'import json,sys; d=json.load(sys.stdin); assert d.get("ok") is True, "Worker storage self-test returned ok=false"; assert d.get("verified") is True, "ElasticLake write/read/delete verification failed"; assert d.get("cleanup",{}).get("ok") is True, "ElasticLake cleanup failed"; print("PASS: Production Worker completed real ElasticLake write, read-back, and delete.")' <<< "$response"
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          import { storeJsonObject, getJsonObject, deleteJsonObject } from "./storage/elasticlake-adapter.js";
+
+          const env = process.env;
+          if (!env.ELASTICLAKE_ACCESS_KEY_ID || !env.ELASTICLAKE_SECRET_ACCESS_KEY) {
+            throw new Error("Missing GitHub Actions secrets: ELASTICLAKE_ACCESS_KEY_ID and/or ELASTICLAKE_SECRET_ACCESS_KEY.");
+          }
+
+          const key = `diagnostics/github-actions-${Date.now()}-${crypto.randomUUID()}.json`;
+          const expected = { service: "X4Kiss", test: "write-read-delete", nonce: crypto.randomUUID() };
+          let stored = false;
+
+          try {
+            const put = await storeJsonObject(env, key, expected);
+            assert.equal(put.ok, true, "ElasticLake write did not return ok=true");
+            stored = true;
+
+            const read = await getJsonObject(env, key);
+            assert.equal(read.ok, true, "ElasticLake read did not return ok=true");
+            assert.equal(read.status, "found", "Temporary test object was not found");
+            assert.deepEqual(read.value, expected, "Read-back data did not match written data");
+
+            const removed = await deleteJsonObject(env, key);
+            assert.equal(removed.ok, true, "ElasticLake delete did not return ok=true");
+            stored = false;
+
+            console.log("PASS: ElasticLake write, read-back comparison, and delete succeeded.");
+          } finally {
+            if (stored) {
+              await deleteJsonObject(env, key);
+              console.log("Cleanup attempted for temporary test object.");
+            }
+          }
+          NODE
