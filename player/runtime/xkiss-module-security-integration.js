@@ -1,6 +1,6 @@
-import { createXKissModuleSecurity } from "./xkiss-module-security-core.js";
+import { createX4KissModuleSecurity } from "./xkiss-module-security-core.js";
 
-export function installXKissModuleSecurity(core) {
+export function installX4KissModuleSecurity(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
   if (core.moduleSecurity) {
     return { ok: true, reused: true, stage: "15.27", coreControlled: true, security: core.moduleSecurity };
@@ -10,7 +10,7 @@ export function installXKissModuleSecurity(core) {
     return { ok: false, error: "required-core-controls-missing" };
   }
 
-  const security = createXKissModuleSecurity(core);
+  const security = createX4KissModuleSecurity(core);
   core.moduleSecurity = security;
   security.captureIntegritySnapshot();
 
