@@ -1,4 +1,4 @@
-import { getX4KissSettingsRuntimeStatus, validateX4KissSettingsRuntimeCore } from "../settings/xkiss-settings-runtime-core.js";
+import { getXKissSettingsRuntimeStatus as getX4KissSettingsRuntimeStatus, validateXKissSettingsRuntimeCore as validateX4KissSettingsRuntimeCore } from "../settings/xkiss-settings-runtime-core.js";
 import { getSystemSettingsRuntimeActivationStatus } from "../settings/system-settings-runtime-activation-core.js";
 
 export const XKISS_PLATFORM_CORE = {
@@ -52,3 +52,8 @@ export function validateX4KissPlatformCore() {
     activationAllowed: false
   };
 }
+// Backward-compatible names used by the settings integration workflow.
+export {
+  getX4KissPlatformCoreStatus as getXKissPlatformCoreStatus,
+  validateX4KissPlatformCore as validateXKissPlatformCore
+};
