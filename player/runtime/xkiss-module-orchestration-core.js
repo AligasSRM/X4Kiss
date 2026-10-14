@@ -78,3 +78,6 @@ export function createXKissModuleOrchestrator(core) {
     activate
   });
 }
+
+// Backward-compatible product-name alias for orchestration integration.
+export const createX4KissModuleOrchestrator = createXKissModuleOrchestrator;
