@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.XKissHome = {
+  window.X4KissHome = {
     version: HOME.version,
     qs,
     qsa,
@@ -130,5 +130,5 @@ document.addEventListener("DOMContentLoaded", () => {
   markHomeReady();
   updateAccountNavigation();
 
-  console.log("XKiss Home Core loaded.");
+  console.log("X4Kiss Home Core loaded.");
 });
