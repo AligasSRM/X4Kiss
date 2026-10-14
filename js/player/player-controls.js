@@ -1,5 +1,5 @@
 /* =========================================================
-   XKiss Player Controls
+   X4Kiss Player Controls
 
    Responsible for:
    - Play / Pause
@@ -15,7 +15,7 @@
 
   "use strict";
 
-  function initXKissPlayerControls() {
+  function initX4KissPlayerControls() {
 
     const video =
       document.getElementById("video");
@@ -44,7 +44,7 @@
     if (!video) {
 
       console.error(
-        "XKiss Controls: Video element not found."
+        "X4Kiss Controls: Video element not found."
       );
 
       return;
@@ -400,9 +400,9 @@
     updateMuteButton();
 
 
-    window.XKissPlayerCore?.registerModule("controls");
+    window.X4KissPlayerCore?.registerModule("controls");
     console.log(
-      "XKiss Player Controls loaded."
+      "X4Kiss Player Controls loaded."
     );
 
   }
@@ -419,12 +419,12 @@
 
     document.addEventListener(
       "DOMContentLoaded",
-      initXKissPlayerControls
+      initX4KissPlayerControls
     );
 
   } else {
 
-    initXKissPlayerControls();
+    initX4KissPlayerControls();
 
   }
 
