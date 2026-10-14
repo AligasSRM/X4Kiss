@@ -58,6 +58,27 @@ for (const file of jsFiles) {
   }
 }
 
+const workerBindingErrors = [];
+const workerSource = exists("worker.js") ? read("worker.js") : "";
+const wranglerSource = exists("wrangler.toml") ? read("wrangler.toml") : "";
+const d1Blocks = wranglerSource.split(/\[\[d1_databases\]\]/).slice(1);
+const configuredD1Bindings = d1Blocks.map(block => {
+  const match = block.match(/\bbinding\s*=\s*["']([^"']+)["']/);
+  return match ? match[1] : null;
+}).filter(Boolean);
+const runtimeD1Bindings = [...workerSource.matchAll(/\benv\.((?:XKISS|X4KISS)_[A-Z0-9_]+)\b/g)]
+  .map(match => match[1])
+  .filter((name, index, all) => all.indexOf(name) === index && !name.endsWith("_AUTH_SESSIONS"));
+for (const binding of runtimeD1Bindings) {
+  if (!configuredD1Bindings.includes(binding)) workerBindingErrors.push({ type: "runtime_binding_missing_from_wrangler", binding });
+}
+for (const binding of configuredD1Bindings) {
+  if (!runtimeD1Bindings.includes(binding)) workerBindingErrors.push({ type: "wrangler_d1_binding_not_used_by_worker", binding });
+}
+if (new Set(configuredD1Bindings).size !== configuredD1Bindings.length) {
+  workerBindingErrors.push({ type: "duplicate_wrangler_d1_binding" });
+}
+
 const htmlAssetErrors = [];
 const assetRe = /(?:src|href)\s*=\s*["']([^"']+)["']/gi;
 for (const file of htmlFiles) {
@@ -115,6 +136,7 @@ const result = {
   syntaxErrors,
   importErrors,
   htmlAssetErrors,
+  workerBindingErrors,
   qualityOk,
   lockStateOk,
   section15: section15Result,
@@ -131,6 +153,7 @@ const ok =
   syntaxErrors.length === 0 &&
   importErrors.length === 0 &&
   htmlAssetErrors.length === 0 &&
+  workerBindingErrors.length === 0 &&
   qualityOk &&
   lockStateOk &&
   section15Result.ok === true &&
