@@ -19,3 +19,6 @@ export function installX4KissModuleContractRegistry(core) {
     registry
   };
 }
+
+// Backward-compatible alias for existing contract workflows.
+export const installXKissModuleContractRegistry = installX4KissModuleContractRegistry;

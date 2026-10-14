@@ -14,3 +14,6 @@ export function installX4KissModuleHealth(core) {
     return { ok: false, error: String(error?.message || error), stage: "15.28" };
   }
 }
+
+// Backward-compatible alias for existing health workflows.
+export const installXKissModuleHealth = installX4KissModuleHealth;

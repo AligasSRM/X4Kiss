@@ -19,3 +19,6 @@ export function installX4KissModuleLifecycle(core) {
     lifecycle
   };
 }
+
+// Backward-compatible alias for existing lifecycle workflows.
+export const installXKissModuleLifecycle = installX4KissModuleLifecycle;
