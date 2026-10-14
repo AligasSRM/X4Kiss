@@ -1,11 +1,11 @@
-import{installXKissModuleRecoveryGuard}from"./xkiss-module-recovery-guard-integration.js";
-export async function runXKissModuleRecoveryGuardSelfCheck(){
+import{installX4KissModuleRecoveryGuard}from"./xkiss-module-recovery-guard-integration.js";
+export async function runX4KissModuleRecoveryGuardSelfCheck(){
 const calls=[];
 const core={moduleRecovery:{recover:async r=>{calls.push(r.module);return calls.length<4?{ok:false,status:"FAILED"}:{ok:true,status:"RECOVERED",module:r.module};}},registerModule(){return{ok:true}}};
-const installed=installXKissModuleRecoveryGuard(core),g=core.moduleRecoveryGuard;
+const installed=installX4KissModuleRecoveryGuard(core),g=core.moduleRecoveryGuard;
 const a=await g.recover({module:"loop-test"}),b=await g.recover({module:"loop-test"}),c=await g.recover({module:"loop-test"}),d=await g.recover({module:"loop-test"});
 const exceptionCore={moduleRecovery:{recover:async()=>{throw new Error("simulated-recovery-exception");}},registerModule(){return{ok:true}}};
-const exceptionGuard=installXKissModuleRecoveryGuard(exceptionCore).recoveryGuard;
+const exceptionGuard=installX4KissModuleRecoveryGuard(exceptionCore).recoveryGuard;
 const exceptionResult=await exceptionGuard.recover({module:"exception-test"});
 const checks={
 installed:installed.ok&&installed.coreControlled===true,
