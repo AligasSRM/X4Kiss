@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const HOME = window.XKissHome;
+  const HOME = window.X4KissHome;
 
   if (!HOME) {
     console.warn("X4Kiss Home Creators: Home Core not loaded.");
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  window.XKissHomeCreators = {
+  window.X4KissHomeCreators = {
     bindCreatorCards,
     getCreatorName,
     getCreatorId
@@ -46,5 +46,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   bindCreatorCards();
 
-  console.log("XKiss Home Creators loaded.");
+  console.log("X4Kiss Home Creators loaded.");
 });
