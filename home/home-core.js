@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const quickAuthLink = document.querySelector("[data-auth-quick]");
     if (!token) return;
     try {
-      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/auth/me", {
+      const response = await fetch("https://x4kiss-backend-neon.onrender.com/api/auth/me", {
         headers: { "Authorization": "Bearer " + token, "Accept": "application/json" },
         cache: "no-store"
       });
