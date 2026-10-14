@@ -1,28 +1,28 @@
-name = "xkiss"
+name = "x4kiss"
 main = "worker.js"
 compatibility_date = "2026-09-25"
 
 [vars]
 ELASTICLAKE_ENDPOINT = "https://app.elasticlake.com"
 ELASTICLAKE_REGION = "auto"
-ELASTICLAKE_BUCKET = "xkiss-storage--xkiss-production--xkiss-midea"
+ELASTICLAKE_BUCKET = "x4kiss-storage--x4kiss-production--x4kiss-midea"
 
 
 [[d1_databases]]
-binding = "XKISS_AUTH_DB"
-database_name = "xkiss-production"
+binding = "X4KISS_AUTH_DB"
+database_name = "x4kiss-production"
 database_id = "c45d63ea-7c54-4364-a119-199c69147457"
 
 [[d1_databases]]
-binding = "XKISS_DB"
-database_name = "xkiss-production"
+binding = "X4KISS_DB"
+database_name = "x4kiss-production"
 database_id = "c45d63ea-7c54-4364-a119-199c69147457"
 
 [[d1_databases]]
-binding = "XKISS_ADMIN_AUDIT"
-database_name = "xkiss-production"
+binding = "X4KISS_ADMIN_AUDIT"
+database_name = "x4kiss-production"
 database_id = "c45d63ea-7c54-4364-a119-199c69147457"
 
 [[kv_namespaces]]
-binding = "XKISS_AUTH_SESSIONS"
+binding = "X4KISS_AUTH_SESSIONS"
 id = "447b28e53e4e48a0b9d3d974f829e1f6"
