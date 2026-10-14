@@ -1,4 +1,4 @@
-const LIVE_BASE = "https://xkiss.srourr-ali73.workers.dev";
+const LIVE_BASE = "https://x4kiss-backend-neon.onrender.com";
 
 const ENDPOINTS = [
   ["/api/health", "GET", 200],
