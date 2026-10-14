@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const HOME = window.XKissHome;
+  const HOME = window.X4KissHome;
 
   if (!HOME) {
     console.warn("X4Kiss Home Navigation: Home Core not loaded.");
@@ -63,10 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
   bindNavigationLinks();
   bindHeroButtons();
 
-  window.XKissHomeNavigation = {
+  window.X4KissHomeNavigation = {
     bindNavigationLinks,
     bindHeroButtons
   };
 
-  console.log("XKiss Home Navigation loaded.");
+  console.log("X4Kiss Home Navigation loaded.");
 });
