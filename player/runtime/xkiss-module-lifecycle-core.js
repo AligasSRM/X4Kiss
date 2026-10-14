@@ -124,3 +124,6 @@ export function createXKissModuleLifecycle(core) {
     getStatus
   });
 }
+
+// Keep the new product-name export available alongside the established API.
+export const createX4KissModuleLifecycle = createXKissModuleLifecycle;
