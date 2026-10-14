@@ -42,3 +42,5 @@ export function createXKissModuleRecovery(core){
   function getStatus(){const failed=history.filter(e=>e.type==="recovery-failed").length;return{stage:"15.30",status:failed?"WARNING":"HEALTHY",repairHandlers:repairs.size,events:history.length,recoveryReady:true};}
   return Object.freeze({stage:"15.30",rules:XKISS_MODULE_RECOVERY_RULES,registerRepair,recover,getStatus,getEvents:()=>history.map(e=>({...e,detail:{...e.detail}}))});
 }
+// Backward-compatible product-name alias for recovery integration.
+export const createX4KissModuleRecovery = createXKissModuleRecovery;
