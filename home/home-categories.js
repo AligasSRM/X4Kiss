@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const HOME = window.XKissHome;
+  const HOME = window.X4KissHome;
 
   if (!HOME) {
     console.warn("X4Kiss Home Categories: Home Core not loaded.");
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  window.XKissHomeCategories = {
+  window.X4KissHomeCategories = {
     bindCategoryChips,
     filterVideoCards,
     getCategoryName
@@ -84,5 +84,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   bindCategoryChips();
 
-  console.log("XKiss Home Categories loaded.");
+  console.log("X4Kiss Home Categories loaded.");
 });
