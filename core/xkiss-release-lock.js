@@ -1,6 +1,6 @@
 export const XKISS_RELEASE_LOCK = {
   stage: "RELEASE-LOCK",
-  name: "XKiss Code Release Lock",
+  name: "X4Kiss Code Release Lock",
   version: "1.0.0",
   locked: true,
   failClosed: true,
@@ -14,7 +14,7 @@ export const XKISS_RELEASE_LOCK = {
   }
 };
 
-export function getXKissReleaseLockStatus() {
+export function getX4KissReleaseLockStatus() {
   return {
     stage: XKISS_RELEASE_LOCK.stage,
     locked: XKISS_RELEASE_LOCK.locked,
