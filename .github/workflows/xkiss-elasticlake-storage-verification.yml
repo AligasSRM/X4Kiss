@@ -2,6 +2,13 @@ name: XKiss ElasticLake Storage Verification
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main, "chore/x4kiss-worker-draft"]
+    paths:
+      - ".github/workflows/xkiss-elasticlake-storage-verification.yml"
+      - "storage/elasticlake-adapter.js"
+      - "wrangler.toml"
+      - "storage-setup/**"
 
 permissions:
   contents: read
