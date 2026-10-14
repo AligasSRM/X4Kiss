@@ -1,4 +1,4 @@
-name: XKiss Auth Production Acceptance
+name: X4Kiss Render Auth Production Acceptance
 
 on:
   workflow_dispatch:
@@ -12,7 +12,6 @@ on:
       - "register.html"
       - "upload/upload-api.js"
       - "migrations/0003_member_registration_profile.sql"
-      - "wrangler.toml"
 
 jobs:
   auth-acceptance:
@@ -22,7 +21,7 @@ jobs:
     steps:
       - name: Run production auth acceptance
         env:
-          BASE_URL: https://xkiss.srourr-ali73.workers.dev
+          BASE_URL: https://x4kiss-backend-neon.onrender.com
           RUN_ID: ${{ github.run_id }}
         run: |
           node <<'NODE'
