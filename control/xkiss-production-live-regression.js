@@ -34,7 +34,10 @@ async function check(path, method, expectedStatus) {
       okField: body?.ok,
       verified: body?.verified,
       status: body?.status,
-      service: body?.service
+      service: body?.service,
+      diagnostic: body?.diagnostic
+        ? String(body.diagnostic).replace(/(access[_-]?key|secret|token|authorization)\s*[:=]\s*[^,\s]+/gi, "$1=[REDACTED]").slice(0, 300)
+        : undefined
     };
   } catch (error) {
     return {
