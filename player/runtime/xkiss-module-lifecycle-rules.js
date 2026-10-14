@@ -30,3 +30,6 @@ export function validateXKissModuleLifecycleRules() {
     failClosed: XKISS_MODULE_LIFECYCLE_RULES.failClosed
   };
 }
+
+// Backward-compatible product-name alias for lifecycle integration.
+export const validateX4KissModuleLifecycleRules = validateXKissModuleLifecycleRules;
