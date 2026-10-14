@@ -1,7 +1,7 @@
 # Section 14 — Super Admin MFA Operations
 
 ## Runtime configuration
-The Worker secret `XKISS_MFA_ENCRYPTION_KEY` must be a base64-encoded, cryptographically random 32-byte key. It is configured as a Cloudflare Worker secret and must never be committed or returned by a status endpoint. Rotating it without re-encrypting existing MFA secrets will make existing enrolled factors unverifiable.
+The server environment variable `XKISS_MFA_ENCRYPTION_KEY` must be a base64-encoded, cryptographically random 32-byte key. Configure it only in Render's private environment settings; never commit it or return it from a status endpoint. Rotating it without re-encrypting existing MFA secrets will make existing enrolled factors unverifiable.
 
 Generate a key locally with Node.js (do not paste it into GitHub):
 ```powershell
