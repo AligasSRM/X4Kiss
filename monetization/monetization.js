@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const API_BASE = "https://x4kiss-backend-neon.onrender.com";
+
   function setSystemStatus(online) {
     const status = document.getElementById("system-status");
     status.innerHTML = "<span></span>" + (online ? "Core online" : "Core unavailable");
@@ -10,11 +12,11 @@
 
   async function checkSystem() {
     try {
-      const response = await fetch("/api/health", {
+      const response = await fetch(API_BASE + "/api/health", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
-      if (!response.ok) throw new Error("Worker unavailable.");
+      if (!response.ok) throw new Error("Backend unavailable.");
       setSystemStatus(data.status === "online");
     } catch {
       setSystemStatus(false);
@@ -23,7 +25,7 @@
 
   async function loadEligibilityRules() {
     try {
-      const response = await fetch("/api/monetization/eligibility/rules", {
+      const response = await fetch(API_BASE + "/api/monetization/eligibility/rules", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
@@ -53,7 +55,7 @@
 
   async function loadPolicyRules() {
     try {
-      const response = await fetch("/api/monetization/policy/rules", {
+      const response = await fetch(API_BASE + "/api/monetization/policy/rules", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
@@ -81,7 +83,7 @@
 
   async function loadActivationRules() {
     try {
-      const response = await fetch("/api/monetization/activation/rules", {
+      const response = await fetch(API_BASE + "/api/monetization/activation/rules", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
@@ -108,7 +110,7 @@
     const message = document.getElementById("rules-message");
 
     try {
-      const response = await fetch("/api/monetization/status", {
+      const response = await fetch(API_BASE + "/api/monetization/status", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
@@ -130,7 +132,7 @@
     }
 
     try {
-      const response = await fetch("/api/monetization/rules", {
+      const response = await fetch(API_BASE + "/api/monetization/rules", {
         headers: { "Accept": "application/json" }
       });
       const data = await response.json();
