@@ -1,7 +1,7 @@
-# XKiss Section 20 — Final Master Release Lock
+# X4Kiss Section 20 — Final Master Release Lock
 
 ## Purpose
-Section 20 is the final software release gate for XKiss. It closes the staged build after Sections 1–19 have passed their established verification chain.
+Section 20 is the final software release gate for X4Kiss. It closes the staged build after Sections 1–19 have passed their established verification chain.
 
 ## Rules
 - Final master state is GREEN_CLOSED and LOCKED.
