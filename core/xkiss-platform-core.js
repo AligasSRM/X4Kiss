@@ -1,9 +1,9 @@
-import { getXKissSettingsRuntimeStatus, validateXKissSettingsRuntimeCore } from "../settings/xkiss-settings-runtime-core.js";
+import { getX4KissSettingsRuntimeStatus, validateX4KissSettingsRuntimeCore } from "../settings/xkiss-settings-runtime-core.js";
 import { getSystemSettingsRuntimeActivationStatus } from "../settings/system-settings-runtime-activation-core.js";
 
 export const XKISS_PLATFORM_CORE = {
   section: "XKISS-PLATFORM-CORE",
-  name: "XKiss Platform Core",
+  name: "X4Kiss Platform Core",
   version: "1.0.0",
   status: "connected",
   backendOnly: true,
@@ -13,9 +13,9 @@ export const XKISS_PLATFORM_CORE = {
   activationStage: "15.15"
 };
 
-export function getXKissPlatformCoreStatus() {
-  const settings = getXKissSettingsRuntimeStatus();
-  const settingsValidation = validateXKissSettingsRuntimeCore();
+export function getX4KissPlatformCoreStatus() {
+  const settings = getX4KissSettingsRuntimeStatus();
+  const settingsValidation = validateX4KissSettingsRuntimeCore();
   const activation = getSystemSettingsRuntimeActivationStatus();
 
   return {
@@ -36,8 +36,8 @@ export function getXKissPlatformCoreStatus() {
   };
 }
 
-export function validateXKissPlatformCore() {
-  const status = getXKissPlatformCoreStatus();
+export function validateX4KissPlatformCore() {
+  const status = getX4KissPlatformCoreStatus();
 
   return {
     ok:
