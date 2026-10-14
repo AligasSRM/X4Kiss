@@ -1,24 +1,24 @@
-# XKiss Homepage Design Concepts — 2026-10-12
+# X4Kiss Homepage Design Concepts — 2026-10-12
 
 ## Purpose
 Preserve the current homepage design directions as an independent design checkpoint. This document is notes only; it does not change production UI, application code, deployment settings, or the original Figma design.
 
 ## Known Figma design files
-1. **XKiss Homepage - Design Prototype** — existing concept; visual review pending.
-2. **XKiss - Premium Homepage V2** — newer concept; visual review pending.
-3. **XKiss - Modern Video Platform V3** — video-platform direction; visual review pending.
+1. **X4Kiss Homepage - Design Prototype** — existing concept; visual review pending.
+2. **X4Kiss - Premium Homepage V2** — newer concept; visual review pending.
+3. **X4Kiss - Modern Video Platform V3** — video-platform direction; visual review pending.
 
 > The exact Figma URLs and source assets have not yet been recorded here. Do not assume these designs were inspected or exported.
 
 ## Proposed independent V4 concept
 - Desktop-first video platform homepage, not a marketing/landing page.
-- Top navigation bar: XKiss logo, primary navigation, search, language, location, and account controls.
+- Top navigation bar: X4Kiss logo, primary navigation, search, language, location, and account controls.
 - Second navigation bar: categories, sorting, filters, and view controls.
 - Compact settings/navigation area on the left side of the desktop layout.
 - Settings expand/collapse with a chevron; when expanded, grouped settings appear below the settings heading.
 - Main content area: four-column video grid with video cards and save/bookmark controls.
 - Pagination and help/settings links.
-- Current thumbnail imagery in concept designs is placeholder-only and must not be represented as actual XKiss video content.
+- Current thumbnail imagery in concept designs is placeholder-only and must not be represented as actual X4Kiss video content.
 
 ## Editing and approval workflow
 - Keep the original Figma design unchanged as the reference.
