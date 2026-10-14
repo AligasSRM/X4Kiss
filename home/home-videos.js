@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const HOME = window.XKissHome;
 
   if (!HOME) {
-    console.warn("XKiss Home Videos: Home Core not loaded.");
+    console.warn("X4Kiss Home Videos: Home Core not loaded.");
     return;
   }
 
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function openVideo(videoId, fallbackTitle = "XKiss Video") {
+  function openVideo(videoId, fallbackTitle = "X4Kiss Video") {
     if (videoId) {
       window.location.href =
         `player.html?id=${encodeURIComponent(videoId)}`;
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     console.warn(
-      "XKiss Home Videos: Video ID not found.",
+      "X4Kiss Home Videos: Video ID not found.",
       fallbackTitle
     );
   }
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const title =
             card.querySelector(".video-title")?.textContent.trim() ||
-            "XKiss Video";
+            "X4Kiss Video";
 
           openVideo(videoId, title);
         });
