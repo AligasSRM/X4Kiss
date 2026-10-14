@@ -13,7 +13,7 @@ function getConfig(env) {
   endpoint = endpoint.replace(/\/$/, "");
   return {
     endpoint,
-    bucket: cleanEnvValue(env?.ELASTICLAKE_BUCKET, "xkiss-storage--xkiss-production--xkiss-midea"),
+    bucket: cleanEnvValue(env?.ELASTICLAKE_BUCKET, "x4kiss-storage--x4kiss-production--x4kiss-media"),
     region: cleanEnvValue(env?.ELASTICLAKE_REGION, "auto"),
     accessKey: cleanEnvValue(env?.ELASTICLAKE_ACCESS_KEY_ID || env?.ELASTICLAKE_ACCESS_KEY),
     secretKey: cleanEnvValue(env?.ELASTICLAKE_SECRET_ACCESS_KEY || env?.ELASTICLAKE_SECRET_KEY)
