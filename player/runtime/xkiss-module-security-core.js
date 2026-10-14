@@ -203,3 +203,6 @@ export function createXKissModuleSecurity(core) {
     getEvents
   });
 }
+
+// Backward-compatible product-name alias for security integration.
+export const createX4KissModuleSecurity = createXKissModuleSecurity;
