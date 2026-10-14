@@ -1,4 +1,4 @@
-# XKiss — AUDIT-07 Integration Verification
+# X4Kiss — AUDIT-07 Integration Verification
 
 Status: GREEN / LOCKED (live endpoint semantics and fail-closed integration checks)
 Date: 2026-10-11
@@ -6,7 +6,7 @@ Branch: main
 Verified commit: 5374b66ac07a68bff5816a472f19748163313cc6
 
 ## Evidence
-- AUDIT-07 GitHub Actions run #4: https://github.com/AligasSRM/XKiss/actions/runs/38136807474 — SUCCESS.
+- AUDIT-07 GitHub Actions run #4: https://github.com/AligasSRM/X4Kiss/actions/runs/38136807474 — SUCCESS.
 - Every checked production endpoint returned HTTP 200 and passed a JSON semantic assertion.
 - Live durable view-event self-test completed write -> read -> delete, verified the returned event, and cleaned up the test object.
 - Wallet ledger and settlement status checks passed.
