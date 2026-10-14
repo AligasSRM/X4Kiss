@@ -1,6 +1,6 @@
-# XKiss Storage Setup (S3-compatible)
+# X4Kiss Storage Setup (S3-compatible)
 
-This folder is a **safe setup workspace** for connecting XKiss to its S3-compatible storage provider.
+This folder is a **safe setup workspace** for connecting X4Kiss to its S3-compatible storage provider.
 
 ## Security rules
 - Never commit real access keys, secret keys, tokens, or downloaded `.env` files.
@@ -20,11 +20,11 @@ Copy `.env.example` to a private local `.env` file only if your local workflow r
 ## Before connecting
 1. Confirm the provider's exact endpoint and region.
 2. Confirm the key is limited to the required bucket and operations.
-3. Configure secrets in the XKiss server/Worker environment, not in browser code.
+3. Configure secrets in the X4Kiss server/Worker environment, not in browser code.
 4. Run a private test upload, read-back, and delete using a non-sensitive test object.
 5. Verify unauthorized requests fail closed.
 
 ## Important architecture rule
-S3 credentials must only be used by trusted server-side code (for example, the XKiss Worker). **Never put S3 secrets in frontend JavaScript or a public website.**
+S3 credentials must only be used by trusted server-side code (for example, the X4Kiss Worker). **Never put S3 secrets in frontend JavaScript or a public website.**
 
 This guide is documentation only. It does not prove that storage is connected or tested.
