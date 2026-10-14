@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const HOME = window.XKissHome;
+  const HOME = window.X4KissHome;
 
   if (!HOME) {
     console.warn("X4Kiss Home Videos: Home Core not loaded.");
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `player.html?id=${encodeURIComponent(videoId)}`;
   }
 
-  window.XKissHomeVideos = {
+  window.X4KissHomeVideos = {
     bindVideoCards,
     bindVideoLinks,
     openVideo,
