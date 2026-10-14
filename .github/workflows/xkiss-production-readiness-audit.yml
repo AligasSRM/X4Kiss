@@ -6,7 +6,6 @@ on:
       - "core/xkiss-production-readiness-*.js"
       - "activation/xkiss-section-19-*.js"
       - "activation/xkiss-production-activation-readiness-*.js"
-      - "audit/PRODUCTION-READINESS-REVIEW.md"
       - ".github/workflows/xkiss-production-readiness-audit.yml"
   workflow_dispatch:
 
