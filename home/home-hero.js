@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const HOME = window.XKissHome;
+  const HOME = window.X4KissHome;
 
   if (!HOME) {
     console.warn("X4Kiss Home Hero: Home Core not loaded.");
@@ -50,10 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (
-      window.XKissHomeVideos &&
-      typeof window.XKissHomeVideos.openVideo === "function"
+      window.X4KissHomeVideos &&
+      typeof window.X4KissHomeVideos.openVideo === "function"
     ) {
-      window.XKissHomeVideos.openVideo(
+      window.X4KissHomeVideos.openVideo(
         videoId,
         getHeroTitle(hero)
       );
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindHeroFeatured();
   }
 
-  window.XKissHomeHero = {
+  window.X4KissHomeHero = {
     getHero,
     getFeaturedVideoId,
     getHeroTitle,
@@ -113,5 +113,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   bindHeroFeatured();
 
-  console.log("XKiss Home Hero loaded.");
+  console.log("X4Kiss Home Hero loaded.");
 });
