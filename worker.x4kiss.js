@@ -54,7 +54,7 @@ import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-XKiss-Upload-Key, X-XKiss-File-Name, X-XKiss-File-Size, X-XKiss-Title, X-XKiss-Description, X-XKiss-Category, X-XKiss-Download-Policy, X-XKiss-Visibility",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-X4Kiss-Upload-Key, X-X4Kiss-File-Name, X-X4Kiss-File-Size, X-X4Kiss-Title, X-X4Kiss-Description, X-X4Kiss-Category, X-X4Kiss-Download-Policy, X-X4Kiss-Visibility, X-XKiss-Upload-Key, X-XKiss-File-Name, X-XKiss-File-Size, X-XKiss-Title, X-XKiss-Description, X-XKiss-Category, X-XKiss-Download-Policy, X-XKiss-Visibility",
   "Vary": "Origin"
 };
 
@@ -1263,14 +1263,14 @@ export default {
         return json({ ok: false, message: "Sign in with your creator account before uploading." }, 401);
       }
 
-      const fileName = request.headers.get("X-XKiss-File-Name");
+      const fileName = request.headers.get("X-X4Kiss-File-Name") || request.headers.get("X-XKiss-File-Name");
       const contentType = request.headers.get("Content-Type") || "application/octet-stream";
-      const fileSize = Number(request.headers.get("X-XKiss-File-Size") || 0);
+      const fileSize = Number(request.headers.get("X-X4Kiss-File-Size") || request.headers.get("X-XKiss-File-Size") || 0);
 
       if (!fileName) {
         return json({
           ok: false,
-          message: "X-XKiss-File-Name is required."
+          message: "X-X4Kiss-File-Name is required (legacy X-XKiss-File-Name is also accepted)."
         }, 400);
       }
 
@@ -1288,9 +1288,9 @@ export default {
         }, 400);
       }
 
-      const title = request.headers.get("X-XKiss-Title") || "";
-      const description = request.headers.get("X-XKiss-Description") || "";
-      const category = request.headers.get("X-XKiss-Category") || "";
+      const title = request.headers.get("X-X4Kiss-Title") || request.headers.get("X-XKiss-Title") || "";
+      const description = request.headers.get("X-X4Kiss-Description") || request.headers.get("X-XKiss-Description") || "";
+      const category = request.headers.get("X-X4Kiss-Category") || request.headers.get("X-XKiss-Category") || "";
       const key = createVideoKey(fileName);
       const videoId = crypto.randomUUID();
       const createdAt = new Date().toISOString();
