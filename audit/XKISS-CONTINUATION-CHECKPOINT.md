@@ -1,17 +1,17 @@
-# XKiss — Continuation Checkpoint
+# X4Kiss — Continuation Checkpoint
 
 Status: SUPERSEDED / REPLACED BY AUDIT-03 FRESH BASELINE
 Date: 2026-10-01
 
 ## Project
-- Repository: AligasSRM/XKiss
+- Repository: AligasSRM/X4Kiss
 - Branch: main
 - Production activation: BLOCKED / fail-closed
 
 ## Locked
 - Sections 15.23–15.31: GREEN / FINAL LOCKED.
 - Do not reopen locked runtime/security code without a real reason.
-- XKiss must remain independent from AC projects.
+- X4Kiss must remain independent from AC projects.
 
 ## Completed just before this checkpoint
 - AUDIT-02 storage contract alignment completed.
@@ -59,7 +59,7 @@ AUDIT-04 Worker Environment
 -> Production Activation Readiness
 
 ## Resume instruction
-Load `audit/xkiss-audit-03-fresh-baseline.md` first. Do not restart completed locked stages and do not mix XKiss with AC.
+Load `audit/xkiss-audit-03-fresh-baseline.md` first. Do not restart completed locked stages and do not mix X4Kiss with AC.
 
 ## Last known main commit
 8b63820202f2658fa1176570af82bbe767fdf954
