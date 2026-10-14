@@ -35,3 +35,6 @@ export function validateXKissModuleContractRules() {
     ...XKISS_MODULE_CONTRACT_RULES
   };
 }
+
+// Backward-compatible product-name alias for contract integration.
+export const validateX4KissModuleContractRules = validateXKissModuleContractRules;
