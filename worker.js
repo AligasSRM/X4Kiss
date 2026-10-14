@@ -864,13 +864,22 @@ export default {
         }, 400);
       }
 
+      const authorization = request.headers.get("Authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      const session = await authenticateSession(env, token);
+      if (!session.ok) return json({ ok: false, status: "unauthenticated" }, 401);
+      if (body.creatorId !== session.user.id) {
+        return json({ ok: false, status: "forbidden", message: "A creator may only record entries for their own wallet." }, 403);
+      }
+
       const result = await storeWalletEntry(env, body);
+      const statusCode = result.ok ? 200 : result.status === "invalid-input" ? 400 : 503;
 
       return json({
-        ok: true,
+        ok: result.ok,
         service: "X4Kiss Wallet Ledger",
         result
-      });
+      }, statusCode);
     }
 
     if (url.pathname === "/api/wallet/ledger/get" && request.method === "POST") {
@@ -893,13 +902,22 @@ export default {
         }, 400);
       }
 
+      const authorization = request.headers.get("Authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      const session = await authenticateSession(env, token);
+      if (!session.ok) return json({ ok: false, status: "unauthenticated" }, 401);
+      if (body.creatorId !== session.user.id) {
+        return json({ ok: false, status: "forbidden", message: "A creator may only read their own wallet." }, 403);
+      }
+
       const result = await getWalletEntry(env, body);
+      const statusCode = result.ok ? 200 : result.status === "invalid-input" ? 400 : 503;
 
       return json({
-        ok: true,
+        ok: result.ok,
         service: "X4Kiss Wallet Ledger",
         result
-      });
+      }, statusCode);
     }
 
     if (url.pathname === "/api/views/status" && request.method === "GET") {
