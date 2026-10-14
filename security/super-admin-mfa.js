@@ -4,7 +4,7 @@ export const SUPER_ADMIN_MFA_RULES = Object.freeze({
   version:"2.0", status:"implemented_pending_secret", enabled:false,
   requiredForRole:SUPER_ADMIN_SECURITY_RULES.superAdminRole,
   allowedMethods:["totp"], verificationWindowSeconds:90, maxAttempts:5,
-  lockoutMinutes:15, provider:"Cloudflare D1 + WebCrypto AES-GCM/TOTP",
+  lockoutMinutes:15, provider:"PostgreSQL on Render + WebCrypto AES-GCM/TOTP",
   secretStorage:"encrypted_at_rest"
 });
 const b64 = a => btoa(String.fromCharCode(...a));
