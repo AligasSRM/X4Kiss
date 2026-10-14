@@ -1,4 +1,4 @@
-# XKiss — AUDIT-04 Worker Environment Contract
+# X4Kiss — AUDIT-04 Worker Environment Contract
 
 Status: GREEN / LOCKED
 Date: 2026-10-11
@@ -20,11 +20,11 @@ Verified commit: 8c9e1feaf7b227c2ca7c9e075a85d56f7dd9d269
 - Contract validation checks pass for the test cases.
 
 ## Evidence
-- AUDIT-04 GitHub Actions run #2: https://github.com/AligasSRM/XKiss/actions/runs/38136493809 — SUCCESS.
-- Worker Environment Contract run #9: https://github.com/AligasSRM/XKiss/actions/runs/38136493799 — SUCCESS.
+- AUDIT-04 GitHub Actions run #2: https://github.com/AligasSRM/X4Kiss/actions/runs/38136493809 — SUCCESS.
+- Worker Environment Contract run #9: https://github.com/AligasSRM/X4Kiss/actions/runs/38136493799 — SUCCESS.
 - AUDIT-04 job steps: setup, Node 22, syntax checks, and environment contract self-test all completed successfully.
 - Local Node 22-compatible syntax checks and self-test: PASS; result `ok: true`, all six reported cases true.
-- Test-strengthening commit: https://github.com/AligasSRM/XKiss/commit/8c9e1feaf7b227c2ca7c9e075a85d56f7dd9d269.
+- Test-strengthening commit: https://github.com/AligasSRM/X4Kiss/commit/8c9e1feaf7b227c2ca7c9e075a85d56f7dd9d269.
 
 ## Lock rules
 - AUDIT-04 is GREEN / LOCKED for the Worker environment contract and its automated tests.
