@@ -30,11 +30,9 @@ The live endpoint `GET /api/views/storage/self-test` returns HTTP 500. Its sanit
 This is an external Render/ElasticLake configuration problem, not a reason to delete the test or weaken the gate. The active ElasticLake access-key ID and secret must be refreshed together in Render's private environment settings, then the service must be redeployed and the write/read/delete test rerun. Do not paste credentials into GitHub or this report.
 
 ## Unreferenced binary candidates not removed
-- `20260923_230154.mp4`
-- `20260923_234200-1.mp4`
 - `20260923_234200-2.mp4`
 
-Search found no source references to those three files; however, the file-deletion operation was blocked by the safety layer, so they remain in the cleanup branch. `20260923_234200-3.mp4` was retained because `js/video-data.js` references it as the 720p video source.
+Search found no source references to this remaining file. The deletion operation was partially blocked by the safety layer, so this one unreferenced candidate remains in the cleanup branch. `20260923_234200-3.mp4` was retained because `js/video-data.js` references it as the 720p video source; the other two unreferenced MP4s were removed.
 
 ## Final status
 - Repository source integrity checks: **GREEN for the checks listed above**.
