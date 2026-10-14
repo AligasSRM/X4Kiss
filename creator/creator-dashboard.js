@@ -19,19 +19,19 @@
     return data;
   }
 
-  function setSystemReady(ready) {
+  function setSystemReady(verified) {
     const pill = document.getElementById("system-status");
     const roadmap = document.getElementById("roadmap-storage");
     if (!pill || !roadmap) return;
 
-    if (ready) {
+    if (verified) {
       pill.classList.add("ready");
-      pill.innerHTML = "<span></span> Storage connected";
-      roadmap.textContent = "Connected";
+      pill.innerHTML = "<span></span> Storage verified";
+      roadmap.textContent = "Verified";
     } else {
       pill.classList.remove("ready");
-      pill.innerHTML = "<span></span> ElasticLake pending verification";
-      roadmap.textContent = "Pending verification";
+      pill.innerHTML = "<span></span> ElasticLake verification pending";
+      roadmap.textContent = "Verification pending";
     }
   }
 
@@ -54,12 +54,12 @@
   async function loadWallet() {
     try {
       const ledger = await getJSON("/api/wallet/ledger/status");
-      if (ledger.storageReady) {
+      if (ledger.verified === true) {
         const values = {
-          "wallet-pending-detail": "Ledger connected",
-          "wallet-available-detail": "Ledger connected",
+          "wallet-pending-detail": "Ledger verified",
+          "wallet-available-detail": "Ledger verified",
           "payout-detail": "Eligibility layer ready",
-          "roadmap-wallet": "Connected"
+          "roadmap-wallet": "Verified"
         };
         for (const [id, value] of Object.entries(values)) {
           const element = document.getElementById(id);
@@ -80,19 +80,27 @@
         getJSON("/api/health")
       ]);
       const videos = Array.isArray(library.videos) ? library.videos : [];
+      const storageVerified = health.storageVerified === true;
+      const storageConfigured = health.storageConfigured === true || health.storageReady === true;
       const values = {
         "video-count": String(videos.length),
         "live-count": "0",
-        "storage-state": health.storageReady ? "Ready" : "Pending",
-        "storage-detail": health.storageReady
-          ? "Production storage connected"
-          : "ElasticLake credentials or verification pending"
+        "storage-state": storageVerified
+          ? "Verified"
+          : storageConfigured
+            ? "Configured — unverified"
+            : "Not configured",
+        "storage-detail": storageVerified
+          ? "ElasticLake live verification passed"
+          : storageConfigured
+            ? "Credentials are configured; live write/read/delete verification is still required"
+            : "ElasticLake configuration is incomplete"
       };
       for (const [id, value] of Object.entries(values)) {
         const element = document.getElementById(id);
         if (element) element.textContent = value;
       }
-      setSystemReady(Boolean(health.storageReady));
+      setSystemReady(storageVerified);
     } catch {
       const values = {
         "video-count": "—",
