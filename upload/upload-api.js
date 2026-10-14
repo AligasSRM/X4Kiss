@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
+  const API_BASE = "https://x4kiss-backend-neon.onrender.com";
   let sessionToken = window.sessionStorage.getItem("xkiss_session_token") || "";
 
   async function request(path, options = {}) {
