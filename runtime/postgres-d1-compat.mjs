@@ -43,7 +43,7 @@ export function createPostgresBindings(connectionString) {
   if (!connectionString) throw new Error("DATABASE_URL is required");
   const pool = new Pool({
     connectionString,
-    ssl: { rejectUnauthorized: false },
+    ssl: { rejectUnauthorized: true },
     max: 5,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000
