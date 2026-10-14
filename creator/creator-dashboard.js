@@ -1,1 +1,117 @@
-(()=>{"use strict";const API_BASE="https://xkiss.srourr-ali73.workers.dev";async function getJSON(path){const token=window.sessionStorage.getItem("xkiss_session_token")||"";const response=await fetch(API_BASE+path,{headers:{Accept:"application/json",...(path==="/api/creator/videos"?{"Authorization":"Bearer "+token}:{})},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.message||"Request failed.");return data}function setSystemReady(ready){const pill=document.getElementById("system-status"),roadmap=document.getElementById("roadmap-storage");if(ready){pill.classList.add("ready");pill.innerHTML="<span></span> Storage connected";roadmap.textContent="Connected"}else{pill.innerHTML="<span></span> Core online · Storage pending";roadmap.textContent="Pending R2"}}function setWalletNotConnected(){document.getElementById("wallet-pending").textContent="—";document.getElementById("wallet-available").textContent="—";document.getElementById("payout-state").textContent="Not active";document.getElementById("wallet-pending-detail").textContent="Wallet ledger not connected";document.getElementById("wallet-available-detail").textContent="Settlement not connected";document.getElementById("payout-detail").textContent="Payout layer disabled";document.getElementById("roadmap-wallet").textContent="Prepared"}async function loadWallet(){try{const ledger=await getJSON("/api/wallet/ledger/status");if(ledger.storageReady){document.getElementById("wallet-pending-detail").textContent="Ledger connected";document.getElementById("wallet-available-detail").textContent="Ledger connected";document.getElementById("payout-detail").textContent="Eligibility layer ready";document.getElementById("roadmap-wallet").textContent="Connected"}else setWalletNotConnected()}catch(error){setWalletNotConnected()}}async function loadDashboard(){try{const[library,health]=await Promise.all([getJSON("/api/creator/videos"),getJSON("/api/health")]);const videos=Array.isArray(library.videos)?library.videos:[];document.getElementById("video-count").textContent=String(videos.length);document.getElementById("live-count").textContent="0";document.getElementById("storage-state").textContent=health.storageReady?"Ready":"Pending";document.getElementById("storage-detail").textContent=health.storageReady?"Production storage connected":"R2 not activated";setSystemReady(Boolean(health.storageReady))}catch(error){document.getElementById("video-count").textContent="—";document.getElementById("live-count").textContent="0";document.getElementById("storage-state").textContent="Offline";document.getElementById("storage-detail").textContent="Worker status unavailable";document.getElementById("system-status").innerHTML="<span></span> Worker unavailable"}await loadWallet()}window.addEventListener("DOMContentLoaded",loadDashboard)})();
+(() => {
+  "use strict";
+
+  const API_BASE = "https://x4kiss-backend-neon.onrender.com";
+
+  async function getJSON(path) {
+    const token = window.sessionStorage.getItem("xkiss_session_token") || "";
+    const response = await fetch(API_BASE + path, {
+      headers: {
+        Accept: "application/json",
+        ...(path === "/api/creator/videos"
+          ? { Authorization: "Bearer " + token }
+          : {})
+      },
+      cache: "no-store"
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Request failed.");
+    return data;
+  }
+
+  function setSystemReady(ready) {
+    const pill = document.getElementById("system-status");
+    const roadmap = document.getElementById("roadmap-storage");
+    if (!pill || !roadmap) return;
+
+    if (ready) {
+      pill.classList.add("ready");
+      pill.innerHTML = "<span></span> Storage connected";
+      roadmap.textContent = "Connected";
+    } else {
+      pill.classList.remove("ready");
+      pill.innerHTML = "<span></span> ElasticLake pending verification";
+      roadmap.textContent = "Pending verification";
+    }
+  }
+
+  function setWalletNotConnected() {
+    const values = {
+      "wallet-pending": "—",
+      "wallet-available": "—",
+      "payout-state": "Not active",
+      "wallet-pending-detail": "Wallet ledger not connected",
+      "wallet-available-detail": "Settlement not connected",
+      "payout-detail": "Payout layer disabled",
+      "roadmap-wallet": "Prepared"
+    };
+    for (const [id, value] of Object.entries(values)) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    }
+  }
+
+  async function loadWallet() {
+    try {
+      const ledger = await getJSON("/api/wallet/ledger/status");
+      if (ledger.storageReady) {
+        const values = {
+          "wallet-pending-detail": "Ledger connected",
+          "wallet-available-detail": "Ledger connected",
+          "payout-detail": "Eligibility layer ready",
+          "roadmap-wallet": "Connected"
+        };
+        for (const [id, value] of Object.entries(values)) {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        }
+      } else {
+        setWalletNotConnected();
+      }
+    } catch {
+      setWalletNotConnected();
+    }
+  }
+
+  async function loadDashboard() {
+    try {
+      const [library, health] = await Promise.all([
+        getJSON("/api/creator/videos"),
+        getJSON("/api/health")
+      ]);
+      const videos = Array.isArray(library.videos) ? library.videos : [];
+      const values = {
+        "video-count": String(videos.length),
+        "live-count": "0",
+        "storage-state": health.storageReady ? "Ready" : "Pending",
+        "storage-detail": health.storageReady
+          ? "Production storage connected"
+          : "ElasticLake credentials or verification pending"
+      };
+      for (const [id, value] of Object.entries(values)) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+      }
+      setSystemReady(Boolean(health.storageReady));
+    } catch {
+      const values = {
+        "video-count": "—",
+        "live-count": "0",
+        "storage-state": "Offline",
+        "storage-detail": "Backend status unavailable"
+      };
+      for (const [id, value] of Object.entries(values)) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+      }
+      const status = document.getElementById("system-status");
+      if (status) {
+        status.classList.remove("ready");
+        status.innerHTML = "<span></span> Backend unavailable";
+      }
+    }
+    await loadWallet();
+  }
+
+  window.addEventListener("DOMContentLoaded", loadDashboard);
+})();
