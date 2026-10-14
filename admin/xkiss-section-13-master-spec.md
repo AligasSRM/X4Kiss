@@ -1,4 +1,4 @@
-# XKiss Section 13 — Admin Dashboard
+# X4Kiss Section 13 — Admin Dashboard
 
 ## Current state
 - Dashboard implementation: GREEN / CLOSED / LOCKED after dedicated Section 13 verification.
