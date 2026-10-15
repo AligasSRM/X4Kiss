@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * X4Kiss Module Lifecycle Control — 15.24
    * Player Core remains the single lifecycle authority.
    */
-  import("../player/runtime/xkiss-module-lifecycle-integration.js")
+  import("../player/runtime/x4kiss-module-lifecycle-integration.js")
     .then(({ installX4KissModuleLifecycle }) => {
       const result = installX4KissModuleLifecycle(window.X4KissPlayerCore);
       if (!result.ok) {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * X4Kiss Module Contract Registry — 15.25
    * Player Core remains the single contract authority.
    */
-  import("../player/runtime/xkiss-module-contract-integration.js")
+  import("../player/runtime/x4kiss-module-contract-integration.js")
     .then(({ installX4KissModuleContractRegistry }) => {
       const result = installX4KissModuleContractRegistry(window.X4KissPlayerCore);
       if (!result.ok) {
@@ -59,14 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
    * Player Core remains the single orchestration authority.
    */
   Promise.all([
-    import("../player/runtime/xkiss-module-lifecycle-integration.js"),
-    import("../player/runtime/xkiss-module-contract-integration.js"),
-    import("../player/runtime/xkiss-module-orchestration-integration.js"),
-    import("../player/runtime/xkiss-module-security-integration.js"),
-    import("../player/runtime/xkiss-module-health-integration.js"),
-    import("../player/runtime/xkiss-module-diagnostics-integration.js"),
-    import("../player/runtime/xkiss-module-recovery-integration.js"),
-    import("../player/runtime/xkiss-module-recovery-guard-integration.js")
+    import("../player/runtime/x4kiss-module-lifecycle-integration.js"),
+    import("../player/runtime/x4kiss-module-contract-integration.js"),
+    import("../player/runtime/x4kiss-module-orchestration-integration.js"),
+    import("../player/runtime/x4kiss-module-security-integration.js"),
+    import("../player/runtime/x4kiss-module-health-integration.js"),
+    import("../player/runtime/x4kiss-module-diagnostics-integration.js"),
+    import("../player/runtime/x4kiss-module-recovery-integration.js"),
+    import("../player/runtime/x4kiss-module-recovery-guard-integration.js")
   ])
     .then(([lifecycleModule, contractModule, orchestrationModule, securityModule, healthModule, diagnosticsModule, recoveryModule, recoveryGuardModule]) => {
       const lifecycle = lifecycleModule.installX4KissModuleLifecycle(window.X4KissPlayerCore);
@@ -140,10 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
     videoData =
       getX4KissVideo(requestedId) ||
       getX4KissVideo("video-001");
-  } else if (typeof XKISS_VIDEOS !== "undefined") {
+  } else if (typeof X4KISS_VIDEOS !== "undefined") {
     videoData =
-      XKISS_VIDEOS[requestedId] ||
-      XKISS_VIDEOS["video-001"];
+      X4KISS_VIDEOS[requestedId] ||
+      X4KISS_VIDEOS["video-001"];
   }
 
   if (!videoData) {
@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.dispatchEvent(new CustomEvent("xkiss:player-ready"));
+  window.dispatchEvent(new CustomEvent("x4kiss:player-ready"));
 
   console.log(
     "X4Kiss Player loaded:",
