@@ -146,12 +146,12 @@
         ? "Creator session verified."
         : "Your session is missing. Return to Home and sign in.";
       if (!state.signedIn) {
-        window.location.replace("register.html?reason=required");
+        window.location.replace("register.html?next=" + encodeURIComponent("creator-upload.html") + "&reason=required");
       }
     } catch {
       state.signedIn = false;
       if (status) status.textContent = "Could not verify your session. Please return to Home and sign in again.";
-      window.location.replace("register.html?reason=session");
+      window.location.replace("register.html?next=" + encodeURIComponent("creator-upload.html") + "&reason=session");
     }
   }
 
