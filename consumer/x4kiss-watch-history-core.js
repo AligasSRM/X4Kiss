@@ -1,2 +1,2 @@
-export const XKISS_WATCH_HISTORY={section:"17.8",status:"GREEN_CLOSED",failClosed:true,productionActivationAllowed:false,backendRequired:true};
+export const X4KISS_WATCH_HISTORY={section:"17.8",status:"GREEN_CLOSED",failClosed:true,productionActivationAllowed:false,backendRequired:true};
 export function validateWatchEvent(input={}){return {ok:typeof input.videoId==="string"&&Number.isFinite(input.position),persistAllowed:false,backendRequired:true,failClosed:true};}
