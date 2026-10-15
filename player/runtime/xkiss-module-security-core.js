@@ -1,11 +1,11 @@
-import { validateXKissModuleSecurityRules } from "./xkiss-module-security-rules.js";
+import { validateX4KissModuleSecurityRules } from "./x4kiss-module-security-rules.js";
 
-export function createXKissModuleSecurity(core) {
+export function createX4KissModuleSecurity(core) {
   if (!core || !core.moduleLifecycle || !core.moduleContracts) {
-    throw new Error("XKiss Module Security requires lifecycle and contract controls.");
+    throw new Error("X4Kiss Module Security requires lifecycle and contract controls.");
   }
 
-  const rules = validateXKissModuleSecurityRules();
+  const rules = validateX4KissModuleSecurityRules();
   const events = [];
   const rateBuckets = new Map();
   let integritySnapshot = null;
@@ -205,4 +205,4 @@ export function createXKissModuleSecurity(core) {
 }
 
 // Backward-compatible product-name alias for security integration.
-export const createX4KissModuleSecurity = createXKissModuleSecurity;
+export const createX4KissModuleSecurity = createX4KissModuleSecurity;
