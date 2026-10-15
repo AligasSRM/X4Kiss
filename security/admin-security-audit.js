@@ -1,7 +1,7 @@
 const ALLOWED_OUTCOMES = new Set(["allowed", "denied", "error"]);
 
 export async function recordAdminSecurityAudit(env, event) {
-  const db = env?.X4KISS_ADMIN_AUDIT;
+  const db = env?.XKISS_ADMIN_AUDIT;
   if (!db || typeof db.prepare !== "function") {
     return { ok: false, status: "audit_backend_not_configured" };
   }
