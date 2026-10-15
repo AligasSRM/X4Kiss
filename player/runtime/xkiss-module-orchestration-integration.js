@@ -1,4 +1,4 @@
-import { createX4KissModuleOrchestrator } from "./xkiss-module-orchestration-core.js";
+import { createX4KissModuleOrchestrator } from "./x4kiss-module-orchestration-core.js";
 
 export function installX4KissModuleOrchestrator(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
@@ -12,4 +12,4 @@ export function installX4KissModuleOrchestrator(core) {
 }
 
 // Backward-compatible alias for existing orchestration workflows.
-export const installXKissModuleOrchestrator = installX4KissModuleOrchestrator;
+export const installX4KissModuleOrchestrator = installX4KissModuleOrchestrator;
