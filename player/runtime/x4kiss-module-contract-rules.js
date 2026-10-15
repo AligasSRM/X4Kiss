@@ -36,5 +36,3 @@ export function validateX4KissModuleContractRules() {
   };
 }
 
-// Backward-compatible product-name alias for contract integration.
-export const validateX4KissModuleContractRules = validateX4KissModuleContractRules;
