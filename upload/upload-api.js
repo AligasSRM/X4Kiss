@@ -2,7 +2,7 @@
   "use strict";
 
   const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
-  const SESSION_KEY = "x4keys_session_token";
+  const SESSION_KEY = "x4kiss_session_token";
   let sessionToken = window.sessionStorage.getItem(SESSION_KEY) || "";
 
   async function request(path, options = {}) {
