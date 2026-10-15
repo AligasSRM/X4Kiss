@@ -1,9 +1,9 @@
-import { createXKissModuleContractRegistry } from "./xkiss-module-contract-core.js";
-import { createXKissModuleLifecycle } from "./xkiss-module-lifecycle-core.js";
-import { createXKissModuleOrchestrator } from "./xkiss-module-orchestration-core.js";
-import { createXKissModuleSecurity } from "./xkiss-module-security-core.js";
+import { createX4KissModuleContractRegistry } from "./x4kiss-module-contract-core.js";
+import { createX4KissModuleLifecycle } from "./x4kiss-module-lifecycle-core.js";
+import { createX4KissModuleOrchestrator } from "./x4kiss-module-orchestration-core.js";
+import { createX4KissModuleSecurity } from "./x4kiss-module-security-core.js";
 
-export function runXKissModuleSecuritySelfCheck() {
+export function runX4KissModuleSecuritySelfCheck() {
   const core = {
     modules: {},
     registerModule(name, status) {
@@ -15,9 +15,9 @@ export function runXKissModuleSecuritySelfCheck() {
     }
   };
 
-  core.moduleContracts = createXKissModuleContractRegistry(core);
-  core.moduleLifecycle = createXKissModuleLifecycle(core);
-  core.moduleOrchestrator = createXKissModuleOrchestrator(core);
+  core.moduleContracts = createX4KissModuleContractRegistry(core);
+  core.moduleLifecycle = createX4KissModuleLifecycle(core);
+  core.moduleOrchestrator = createX4KissModuleOrchestrator(core);
 
   core.moduleContracts.register("secure-base", {
     version: "1.0.0",
@@ -31,7 +31,7 @@ export function runXKissModuleSecuritySelfCheck() {
   });
 
   const activated = core.moduleOrchestrator.activate("secure-base");
-  const security = createXKissModuleSecurity(core);
+  const security = createX4KissModuleSecurity(core);
   security.captureIntegritySnapshot();
 
   const authorized = security.authorize("execute", "secure-base", "execute");
