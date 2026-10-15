@@ -1,4 +1,4 @@
-import {createX4KissModuleRecovery} from "./xkiss-module-recovery-core.js";
+import {createX4KissModuleRecovery} from "./x4kiss-module-recovery-core.js";
 export function installX4KissModuleRecovery(core){
   if(!core)return{ok:false,error:"player-core-required",stage:"15.30"};
   if(!core.moduleHealth||!core.moduleDiagnostics||!core.moduleLifecycle||!core.moduleContracts)return{ok:false,error:"recovery-prerequisite-missing",stage:"15.30"};
@@ -7,4 +7,4 @@ export function installX4KissModuleRecovery(core){
   catch(error){return{ok:false,error:String(error?.message||error),stage:"15.30"};}
 }
 // Backward-compatible alias for existing recovery workflows.
-export const installXKissModuleRecovery = installX4KissModuleRecovery;
+export const installX4KissModuleRecovery = installX4KissModuleRecovery;
