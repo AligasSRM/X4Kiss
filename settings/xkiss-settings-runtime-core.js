@@ -4,9 +4,9 @@ import {
   evaluateSystemSettingsRuntimeActivation
 } from "./system-settings-runtime-activation-core.js";
 
-export const XKISS_SETTINGS_RUNTIME_CORE = {
+export const X4KISS_SETTINGS_RUNTIME_CORE = {
   section: "15.RUNTIME-SETTINGS",
-  name: "XKiss Settings Runtime Core",
+  name: "X4Kiss Settings Runtime Core",
   status: "connected",
   backendOnly: true,
   frontendCannotAuthorize: true,
@@ -15,7 +15,7 @@ export const XKISS_SETTINGS_RUNTIME_CORE = {
   activationStage: "15.15"
 };
 
-export function getXKissSettingsRuntimeStatus() {
+export function getX4KissSettingsRuntimeStatus() {
   const core = getSystemSettingsCoreStatus();
   const validation = validateSystemSettingsCore();
   const activation = getSystemSettingsRuntimeActivationStatus();
@@ -29,21 +29,21 @@ export function getXKissSettingsRuntimeStatus() {
 
   return {
     ok: core.ok === true && validation.ok === true && activation.ok === true,
-    service: XKISS_SETTINGS_RUNTIME_CORE.name,
-    status: XKISS_SETTINGS_RUNTIME_CORE.status,
-    backendOnly: XKISS_SETTINGS_RUNTIME_CORE.backendOnly,
+    service: X4KISS_SETTINGS_RUNTIME_CORE.name,
+    status: X4KISS_SETTINGS_RUNTIME_CORE.status,
+    backendOnly: X4KISS_SETTINGS_RUNTIME_CORE.backendOnly,
     coreStage: core.section,
     coreConnected: validation.coreConnected === true,
     rulesConnected: validation.rulesConnected === true,
     activationStage: activation.stage,
     activationGateConnected: activation.status === "connected",
     activationAllowed: activationGate.allowed === true && activation.activationAllowed === true,
-    reason: "Settings Runtime Core is connected to the XKiss backend boundary. Production activation remains fail-closed until backend providers, authorization and audit verification are connected."
+    reason: "Settings Runtime Core is connected to the X4Kiss backend boundary. Production activation remains fail-closed until backend providers, authorization and audit verification are connected."
   };
 }
 
-export function validateXKissSettingsRuntimeCore() {
-  const status = getXKissSettingsRuntimeStatus();
+export function validateX4KissSettingsRuntimeCore() {
+  const status = getX4KissSettingsRuntimeStatus();
 
   return {
     ok: status.ok === true,
