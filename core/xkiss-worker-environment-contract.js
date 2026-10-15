@@ -1,6 +1,6 @@
-export const XKISS_WORKER_ENVIRONMENT_CONTRACT = {
+export const X4KISS_WORKER_ENVIRONMENT_CONTRACT = {
   stage: "AUDIT-04",
-  name: "XKiss Worker Environment Contract",
+  name: "X4Kiss Worker Environment Contract",
   version: "1.1.0",
   failClosed: true,
   requiredBindings: [
@@ -16,7 +16,7 @@ export const XKISS_WORKER_ENVIRONMENT_CONTRACT = {
 
 export function evaluateWorkerEnvironment(env = {}) {
   const bindings = Object.fromEntries(
-    XKISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map((item) => [
+    X4KISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map((item) => [
       item.name,
       Boolean(env && env[item.name])
     ])
@@ -25,14 +25,14 @@ export function evaluateWorkerEnvironment(env = {}) {
 
   return {
     ok: true,
-    stage: XKISS_WORKER_ENVIRONMENT_CONTRACT.stage,
+    stage: X4KISS_WORKER_ENVIRONMENT_CONTRACT.stage,
     status: missing.length === 0 ? "READY_FOR_PROVIDER_VERIFICATION" : "BLOCKED",
     activationAllowed: false,
     failClosed: true,
     bindings,
     missingBindings: missing,
-    providerBoundary: XKISS_WORKER_ENVIRONMENT_CONTRACT.providerBoundary,
-    secretsPolicy: XKISS_WORKER_ENVIRONMENT_CONTRACT.secretsPolicy
+    providerBoundary: X4KISS_WORKER_ENVIRONMENT_CONTRACT.providerBoundary,
+    secretsPolicy: X4KISS_WORKER_ENVIRONMENT_CONTRACT.secretsPolicy
   };
 }
 
