@@ -1,8 +1,8 @@
-import { getXKissProductionReadiness, validateXKissProductionReadiness } from "./xkiss-production-readiness-core.js";
+import { getX4KissProductionReadiness, validateX4KissProductionReadiness } from "./x4kiss-production-readiness-core.js";
 
-export function runXKissProductionReadinessSelfTest() {
-  const status = getXKissProductionReadiness();
-  const validation = validateXKissProductionReadiness();
+export function runX4KissProductionReadinessSelfTest() {
+  const status = getX4KissProductionReadiness();
+  const validation = validateX4KissProductionReadiness();
 
   return {
     ok:
