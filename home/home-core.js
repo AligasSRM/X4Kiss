@@ -86,23 +86,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function markHomeReady() {
-    document.documentElement.dataset.xkissHome = "ready";
-    document.body.dataset.xkissHome = "ready";
+    document.documentElement.dataset.x4kissHome = "ready";
+    document.body.dataset.x4kissHome = "ready";
   }
 
   async function updateAccountNavigation() {
-    const token = window.sessionStorage.getItem("xkiss_session_token") || "";
+    const token = window.sessionStorage.getItem("x4kiss_session_token") || "";
     const accountLink = document.querySelector("[data-auth-nav]");
     const quickAuthLink = document.querySelector("[data-auth-quick]");
     if (!token) return;
     try {
-      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/auth/me", {
+      const response = await fetch("https://x4kiss.srourr-ali73.workers.dev/api/auth/me", {
         headers: { "Authorization": "Bearer " + token, "Accept": "application/json" },
         cache: "no-store"
       });
       const data = await response.json();
       if (!response.ok || data.ok !== true || data.status !== "authenticated") {
-        window.sessionStorage.removeItem("xkiss_session_token");
+        window.sessionStorage.removeItem("x4kiss_session_token");
         return;
       }
       if (accountLink) {
