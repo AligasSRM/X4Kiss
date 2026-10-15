@@ -1,7 +1,7 @@
-import { getXKissReleaseLockStatus } from "./xkiss-release-lock.js";
+import { getX4KissReleaseLockStatus } from "./x4kiss-release-lock.js";
 
-export function runXKissReleaseLockSelfTest() {
-  const status = getXKissReleaseLockStatus();
+export function runX4KissReleaseLockSelfTest() {
+  const status = getX4KissReleaseLockStatus();
   return {
     ok:
       status.locked === true &&
