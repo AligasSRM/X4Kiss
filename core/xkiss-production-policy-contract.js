@@ -1,6 +1,6 @@
-export const XKISS_PRODUCTION_POLICY_CONTRACT = {
+export const X4KISS_PRODUCTION_POLICY_CONTRACT = {
   stage: "AUDIT-06",
-  name: "XKiss Production Policy Contract",
+  name: "X4Kiss Production Policy Contract",
   version: "1.1.0",
   failClosed: true,
   monetization: {
@@ -57,7 +57,7 @@ export function evaluateProductionPolicyConfiguration(config = {}) {
 
   return {
     ok: true,
-    stage: XKISS_PRODUCTION_POLICY_CONTRACT.stage,
+    stage: X4KISS_PRODUCTION_POLICY_CONTRACT.stage,
     status: missing.length === 0 ? "READY_FOR_POLICY_INTEGRATION" : "BLOCKED",
     activationAllowed: false,
     failClosed: true,
