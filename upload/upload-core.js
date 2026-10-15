@@ -60,7 +60,7 @@
       setProgress(0, data.storageReady ? "Storage check complete — no file uploaded" : "Waiting for storage");
     } catch {
       setStorageStatus(false, "Worker unavailable");
-      $("upload-status").textContent = "Could not reach the XKiss upload service.";
+      $("upload-status").textContent = "Could not reach the X4Kiss upload service.";
       setProgress(0, "Upload service unavailable");
     }
   }
