@@ -1,6 +1,6 @@
-import { evaluateReleaseLockPreflight } from "./xkiss-release-lock-preflight.js";
+import { evaluateReleaseLockPreflight } from "./x4kiss-release-lock-preflight.js";
 
-export function runXKissReleaseLockPreflightSelfTest() {
+export function runX4KissReleaseLockPreflightSelfTest() {
   const required = {
     player_regression_15_23_15_31: "GREEN",
     production_readiness_audit: "GREEN",
