@@ -100,5 +100,3 @@ export function createX4KissModuleHealth(core) {
   });
 }
 
-// Backward-compatible product-name alias for health integration.
-export const createX4KissModuleHealth = createX4KissModuleHealth;
