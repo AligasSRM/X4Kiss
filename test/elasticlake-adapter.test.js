@@ -37,7 +37,8 @@ test("JSON write signs and sends a PUT to the configured bucket", async (t) => {
   const originalFetch = globalThis.fetch;
   let seen;
   globalThis.fetch = async (request, init) => {
-    seen = { url: String(request), method: init?.method || request.method, body: init?.body };
+    const req = request instanceof Request ? request : new Request(request, init);
+    seen = { url: req.url, method: req.method, body: await req.clone().text() };
     return new Response("", { status: 200 });
   };
   t.after(() => { globalThis.fetch = originalFetch; });
@@ -50,7 +51,7 @@ test("JSON write signs and sends a PUT to the configured bucket", async (t) => {
   assert.equal(seen.body, JSON.stringify({ ok: true }));
 });
 
-test("JSON read returns parsed object and handles 404", async (t) => {
+test("JSON read returns parsed object", async (t) => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () => new Response(JSON.stringify({ value: 7 }), {
     status: 200, headers: { "content-type": "application/json" }
