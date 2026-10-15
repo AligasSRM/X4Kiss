@@ -1,4 +1,4 @@
-export const XKISS_STORAGE_PRODUCTION_GATE = {
+export const X4KISS_STORAGE_PRODUCTION_GATE = {
   stage: "AUDIT-03",
   name: "Video Storage Production Gate",
   failClosed: true,
@@ -13,7 +13,7 @@ export const XKISS_STORAGE_PRODUCTION_GATE = {
 };
 
 function storageConfigPresent(env = {}) {
-  return XKISS_STORAGE_PRODUCTION_GATE.requiredConfiguration.every(
+  return X4KISS_STORAGE_PRODUCTION_GATE.requiredConfiguration.every(
     (name) => Boolean(env && env[name])
   );
 }
@@ -23,13 +23,13 @@ export function evaluateStorageProductionGate(env = {}) {
 
   return {
     ok: true,
-    stage: XKISS_STORAGE_PRODUCTION_GATE.stage,
+    stage: X4KISS_STORAGE_PRODUCTION_GATE.stage,
     status: configurationPresent ? "READY_FOR_STORAGE_TEST" : "BLOCKED",
     configurationPresent,
     activationAllowed: false,
     failClosed: true,
-    provider: XKISS_STORAGE_PRODUCTION_GATE.provider,
-    missingConfiguration: XKISS_STORAGE_PRODUCTION_GATE.requiredConfiguration.filter(
+    provider: X4KISS_STORAGE_PRODUCTION_GATE.provider,
+    missingConfiguration: X4KISS_STORAGE_PRODUCTION_GATE.requiredConfiguration.filter(
       (name) => !Boolean(env && env[name])
     )
   };
