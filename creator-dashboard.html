@@ -13,8 +13,8 @@
 <header class="dashboard-header"><nav class="dashboard-nav">
 <a class="brand" href="index.html" aria-label="X4Kiss Home"><span class="brand-x">X4</span><span class="brand-kiss">kiss</span></a>
 <div class="nav-links" aria-label="Creator navigation">
-<a href="index.html">Home</a><a href="videos.html">Videos</a><a href="live.html">Live</a><a class="active" href="creator-dashboard.html">Dashboard</a><a href="creator-library.html">My Videos</a><a href="index.html#account">Account</a>
-</div><a class="login" href="index.html#account">Login</a>
+<a href="index.html" data-i18n="nav-home">Home</a><a href="videos.html" data-i18n="nav-videos">Videos</a><a href="live.html" data-i18n="nav-live">Live</a><a class="active" href="creator-dashboard.html" data-i18n="nav-dashboard">Dashboard</a><a href="creator-library.html" data-i18n="nav-library">My Videos</a><a href="index.html#account" data-i18n="nav-account">Account</a>
+</div><a class="login" href="index.html#account" data-i18n="nav-login">Login</a>
 </nav></header>
 <main class="dashboard-page">
 <section class="dashboard-hero"><div><span class="eyebrow">CREATOR WORKSPACE</span><h1 data-i18n="hero-title">Creator Dashboard</h1><p data-i18n="hero-description">Your central creator workspace for videos, live broadcasting, storage and future earnings.</p></div><span id="system-status" class="system-pill"><span></span> Checking system</span></section>
@@ -193,6 +193,7 @@
   const strings = {
     en: {
       'interface-language-heading':'Interface Language','interface-language-help':'Choose the language used by this dashboard. This setting is independent of country and location settings.','interface-language-label':'Display language',
+      'nav-home':'Home','nav-videos':'Videos','nav-live':'Live','nav-dashboard':'Dashboard','nav-library':'My Videos','nav-account':'Account','nav-login':'Login',
       'hero-title':'Creator Dashboard','hero-description':'Your central creator workspace for videos, live broadcasting, storage and future earnings.',
       'country-title':'Location & Country','country-description':'Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.',
       'country-search-label':'Find a country or territory','country-label':'Country or territory','country-placeholder':'Choose a country or territory','country-detect':'Detect country from my location',
@@ -203,6 +204,7 @@
     },
     ar: {
       'interface-language-heading':'لغة الواجهة','interface-language-help':'اختر لغة لوحة التحكم. هذا الإعداد مستقل عن إعدادات الدولة والموقع.','interface-language-label':'لغة العرض',
+      'nav-home':'الرئيسية','nav-videos':'الفيديوهات','nav-live':'البث المباشر','nav-dashboard':'لوحة التحكم','nav-library':'فيديوهاتي','nav-account':'الحساب','nav-login':'تسجيل الدخول',
       'hero-title':'لوحة تحكم صانع المحتوى','hero-description':'مساحة مركزية لإدارة الفيديوهات والبث المباشر والتخزين والأرباح المستقبلية.',
       'country-title':'الموقع والدولة','country-description':'اختر دولة أو اطلب إحداثيات جهازك. الإحداثيات لا تحدد الدولة تلقائياً، والوصول إلى الموقع اختياري.',
       'country-search-label':'ابحث عن دولة أو منطقة','country-label':'الدولة أو المنطقة','country-placeholder':'اختر دولة أو منطقة','country-detect':'تحديد الدولة من موقعي',
@@ -214,9 +216,10 @@
   };
   const map = {
     'interface-language-heading':'#interface-language-heading','interface-language-help':'#interface-language-help','interface-language-label':'#interface-language-label',
+    'nav-home':'.nav-links a[href="index.html"]','nav-videos':'.nav-links a[href="videos.html"]','nav-live':'.nav-links a[href="live.html"]','nav-dashboard':'.nav-links a[href="creator-dashboard.html"]','nav-library':'.nav-links a[href="creator-library.html"]','nav-account':'.nav-links a[href="index.html#account"]','nav-login':'.dashboard-nav > .login',
     'hero-title':'.dashboard-hero h1','hero-description':'.dashboard-hero > div > p',
     'country-title':'#location-heading','country-description':'.location-settings .section-head p',
-    'country-search-label':'label[for="country-search"]','country-label':'label[for="country-select"]','country-detect':'#detect-location',
+    'country-search-label':'label[for="country-search"] span','country-label':'label[for="country-select"] span','country-detect':'#detect-location',
     'overview-title':'.stats-section h2','overview-description':'.stats-section .section-head p',
     'wallet-title':'.wallet-section h2','wallet-description':'.wallet-section .section-head p',
     'tools-title':'.actions-section h2','tools-description':'.actions-section .section-head p',
