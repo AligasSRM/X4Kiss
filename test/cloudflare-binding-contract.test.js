@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { adminBackendStatus } from "../admin/x4kiss-admin-backend.js";
 import { settingsBackendStatus } from "../settings/x4kiss-settings-backend.js";
+import { createX4KissModuleContractRegistry } from "../player/runtime/x4kiss-module-contract-core.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -31,4 +32,8 @@ test("admin and settings status recognize the configured D1 binding", () => {
   assert.equal(adminBackendStatus(env).ok, true);
   assert.equal(settingsBackendStatus(env).databaseConfigured, true);
   assert.equal(settingsBackendStatus(env).ok, true);
+});
+
+test("renamed Player module contract export is available", () => {
+  assert.equal(typeof createX4KissModuleContractRegistry, "function");
 });
