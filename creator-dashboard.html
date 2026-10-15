@@ -251,7 +251,6 @@
       }
     }
     const countrySearch = document.getElementById('country-search');
-    if (countrySearch && countrySearch.value.trim()) countrySearch.dispatchEvent(new Event('input'));
   }
   picker.addEventListener('change', () => applyLanguage(picker.value));
   applyLanguage(picker.value);
