@@ -1,8 +1,8 @@
-import { createXKissModuleContractRegistry } from "./xkiss-module-contract-core.js";
-import { validateXKissModuleContractRules } from "./xkiss-module-contract-rules.js";
+import { createX4KissModuleContractRegistry } from "./x4kiss-module-contract-core.js";
+import { validateX4KissModuleContractRules } from "./x4kiss-module-contract-rules.js";
 
-export function runXKissModuleContractSelfCheck() {
-  const rules = validateXKissModuleContractRules();
+export function runX4KissModuleContractSelfCheck() {
+  const rules = validateX4KissModuleContractRules();
   const core = {
     modules: {},
     registerModule(name, status) {
@@ -14,7 +14,7 @@ export function runXKissModuleContractSelfCheck() {
     }
   };
 
-  const registry = createXKissModuleContractRegistry(core);
+  const registry = createX4KissModuleContractRegistry(core);
   const base = registry.register("base-core", {
     version: "1.0.0",
     dependencies: [],
