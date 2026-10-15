@@ -2,7 +2,11 @@
   "use strict";
 
   const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
-  let sessionToken = window.sessionStorage.getItem("xkiss_session_token") || "";
+  const SESSION_KEY = "x4keys_session_token";
+  const LEGACY_SESSION_KEY = "xkiss_session_token";
+  let sessionToken = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
+  if (sessionToken) window.sessionStorage.setItem(SESSION_KEY, sessionToken);
+  window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
 
   async function request(path, options = {}) {
     const response = await fetch(API_BASE + path, {
@@ -98,8 +102,8 @@
 
   function setSessionToken(token) {
     sessionToken = token || "";
-    if (sessionToken) window.sessionStorage.setItem("xkiss_session_token", sessionToken);
-    else window.sessionStorage.removeItem("xkiss_session_token");
+    if (sessionToken) window.sessionStorage.setItem(SESSION_KEY, sessionToken);
+    else window.sessionStorage.removeItem(SESSION_KEY);
   }
 
   window.XKissUploadAPI = { getStorageStatus, authenticate, verifySession, prepareUpload, uploadFile, setSessionToken };
