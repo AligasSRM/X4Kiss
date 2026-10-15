@@ -6,7 +6,12 @@
     token = sessionStorage.getItem(SESSION_KEY) || "";
   } catch (_) {}
   var file = (location.pathname.split("/").pop() || "index.html").split("?")[0];
-  var target = file + location.search + location.hash;
+  var allowedReturnRoutes = [
+    "creator-upload.html", "creator-library.html", "creator-dashboard.html",
+    "live-room.html", "videos.html", "search.html", "live.html",
+    "player.html", "monetization.html"
+  ];
+  var target = allowedReturnRoutes.indexOf(file) !== -1 ? file + location.search + location.hash : "index.html";
   function sendToRegistration(reason) {
     var suffix = reason ? "&reason=" + encodeURIComponent(reason) : "";
     location.replace("register.html?next=" + encodeURIComponent(target) + suffix);
