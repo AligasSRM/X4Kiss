@@ -1370,7 +1370,7 @@ const CORS_ALLOWED_ORIGINS = new Set([
   "https://aligassrm.github.io",
   "https://wondrous-cranachan-a62723.netlify.app"
 ]);
-const NETLIFY_PREVIEW_ORIGIN = /^https:\/\/deploy-preview-\\d+--wondrous-cranachan-a62723\\.netlify\\.app$/;
+const NETLIFY_PREVIEW_ORIGIN = /^https:\/\/deploy-preview-\d+--wondrous-cranachan-a62723\.netlify\.app$/;
 
 function applyCorsHeaders(request, response) {
   const headers = new Headers(response.headers);
