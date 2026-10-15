@@ -1,15 +1,15 @@
-import { createXKissModuleContractRegistry } from "./xkiss-module-contract-core.js";
-import { createXKissModuleLifecycle } from "./xkiss-module-lifecycle-core.js";
-import { createXKissModuleOrchestrator } from "./xkiss-module-orchestration-core.js";
+import { createX4KissModuleContractRegistry } from "./x4kiss-module-contract-core.js";
+import { createX4KissModuleLifecycle } from "./x4kiss-module-lifecycle-core.js";
+import { createX4KissModuleOrchestrator } from "./x4kiss-module-orchestration-core.js";
 
-export function runXKissModuleOrchestrationSelfCheck() {
+export function runX4KissModuleOrchestrationSelfCheck() {
   const core = {
     modules: {},
     registerModule(name, status) { this.modules[name] = { status }; return true; },
     getModuleStatus() { return { ...this.modules }; }
   };
-  core.moduleContracts = createXKissModuleContractRegistry(core);
-  core.moduleLifecycle = createXKissModuleLifecycle(core);
+  core.moduleContracts = createX4KissModuleContractRegistry(core);
+  core.moduleLifecycle = createX4KissModuleLifecycle(core);
   const events = [];
   const hooks = name => ({
     init: () => events.push(name + ":init"),
@@ -24,7 +24,7 @@ export function runXKissModuleOrchestrationSelfCheck() {
   core.moduleLifecycle.register("middle", hooks("middle"));
   core.moduleLifecycle.register("top", hooks("top"));
 
-  const orchestrator = createXKissModuleOrchestrator(core);
+  const orchestrator = createX4KissModuleOrchestrator(core);
   const plan = orchestrator.plan("top");
   const activated = orchestrator.activate("top");
   const final = core.moduleLifecycle.getStatus();
