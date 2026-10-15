@@ -1,4 +1,4 @@
-import { createX4KissModuleHealth } from "./xkiss-module-health-core.js";
+import { createX4KissModuleHealth } from "./x4kiss-module-health-core.js";
 
 export function installX4KissModuleHealth(core) {
   if (!core) return { ok: false, error: "player-core-required", stage: "15.28" };
@@ -16,4 +16,4 @@ export function installX4KissModuleHealth(core) {
 }
 
 // Backward-compatible alias for existing health workflows.
-export const installXKissModuleHealth = installX4KissModuleHealth;
+export const installX4KissModuleHealth = installX4KissModuleHealth;
