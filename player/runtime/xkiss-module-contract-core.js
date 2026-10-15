@@ -1,4 +1,4 @@
-import { validateXKissModuleContract } from "./xkiss-module-contract-rules.js";
+import { validateX4KissModuleContract } from "./x4kiss-module-contract-rules.js";
 
 function validName(name) {
   return typeof name === "string" && /^[A-Za-z0-9._-]{1,80}$/.test(name);
@@ -14,9 +14,9 @@ function snapshot(contract) {
   };
 }
 
-export function createXKissModuleContractRegistry(core) {
+export function createX4KissModuleContractRegistry(core) {
   if (!core || typeof core.registerModule !== "function") {
-    throw new Error("XKiss Module Contract Registry requires Player Core.");
+    throw new Error("X4Kiss Module Contract Registry requires Player Core.");
   }
 
   const contracts = new Map();
@@ -26,7 +26,7 @@ export function createXKissModuleContractRegistry(core) {
       return { ok: false, error: "invalid-or-duplicate-module" };
     }
 
-    const validation = validateXKissModuleContract(contract);
+    const validation = validateX4KissModuleContract(contract);
     if (!validation.ok) {
       return { ok: false, error: "invalid-module-contract", validation };
     }
@@ -86,4 +86,4 @@ export function createXKissModuleContractRegistry(core) {
 }
 
 // Backward-compatible product-name alias for contract integration.
-export const createX4KissModuleContractRegistry = createXKissModuleContractRegistry;
+export const createX4KissModuleContractRegistry = createX4KissModuleContractRegistry;
