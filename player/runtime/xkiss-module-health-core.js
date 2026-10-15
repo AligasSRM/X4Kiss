@@ -1,8 +1,8 @@
-import { XKISS_MODULE_HEALTH_RULES, validateXKissModuleHealthReport, severityForStatus } from "./xkiss-module-health-rules.js";
+import { X4KISS_MODULE_HEALTH_RULES, validateX4KissModuleHealthReport, severityForStatus } from "./x4kiss-module-health-rules.js";
 
-export function createXKissModuleHealth(core) {
+export function createX4KissModuleHealth(core) {
   if (!core || !core.moduleLifecycle || !core.moduleContracts) {
-    throw new Error("XKiss Module Health requires Core lifecycle and contracts.");
+    throw new Error("X4Kiss Module Health requires Core lifecycle and contracts.");
   }
 
   const lifecycle = core.moduleLifecycle;
@@ -44,7 +44,7 @@ export function createXKissModuleHealth(core) {
   }
 
   function report(report) {
-    const validation = validateXKissModuleHealthReport(report);
+    const validation = validateX4KissModuleHealthReport(report);
     if (!validation.ok) return { ok: false, ...validation };
     reports.set(report.module, { ...report });
     emit("health-report", { module: report.module, status: report.status, severity: report.severity });
@@ -89,7 +89,7 @@ export function createXKissModuleHealth(core) {
 
   return Object.freeze({
     stage: "15.28",
-    rules: XKISS_MODULE_HEALTH_RULES,
+    rules: X4KISS_MODULE_HEALTH_RULES,
     scan,
     report,
     lock,
@@ -101,4 +101,4 @@ export function createXKissModuleHealth(core) {
 }
 
 // Backward-compatible product-name alias for health integration.
-export const createX4KissModuleHealth = createXKissModuleHealth;
+export const createX4KissModuleHealth = createX4KissModuleHealth;
