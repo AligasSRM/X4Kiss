@@ -3,7 +3,7 @@ import { isStorageReady, storeJsonObject, getJsonObject } from "../storage/elast
 const WALLET_LEDGER_PREFIX = "wallet-ledger:";
 
 export function isWalletLedgerReady(env) {
-  return Boolean(env && (env.XKISS_WALLET_LEDGER || isStorageReady(env)));
+  return Boolean(env && (env.X4KISS_WALLET_LEDGER || isStorageReady(env)));
 }
 
 function clean(value) {
@@ -30,8 +30,8 @@ export async function storeWalletEntry(env, entry) {
 
   const key = createWalletLedgerKey(entry);
 
-  if (env.XKISS_WALLET_LEDGER) {
-    const existing = await env.XKISS_WALLET_LEDGER.get(key);
+  if (env.X4KISS_WALLET_LEDGER) {
+    const existing = await env.X4KISS_WALLET_LEDGER.get(key);
 
     if (existing) {
       return {
@@ -40,7 +40,7 @@ export async function storeWalletEntry(env, entry) {
         status: "duplicate",
         recorded: false,
         key,
-        storage: "XKISS_WALLET_LEDGER"
+        storage: "X4KISS_WALLET_LEDGER"
       };
     }
 
@@ -56,7 +56,7 @@ export async function storeWalletEntry(env, entry) {
       storedAt: new Date().toISOString()
     };
 
-    await env.XKISS_WALLET_LEDGER.put(key, JSON.stringify(record));
+    await env.X4KISS_WALLET_LEDGER.put(key, JSON.stringify(record));
 
     return {
       ok: true,
@@ -64,7 +64,7 @@ export async function storeWalletEntry(env, entry) {
       status: "stored",
       recorded: true,
       key,
-      storage: "XKISS_WALLET_LEDGER"
+      storage: "X4KISS_WALLET_LEDGER"
     };
   }
 
@@ -116,8 +116,8 @@ export async function getWalletEntry(env, entry) {
 
   const key = createWalletLedgerKey(entry);
 
-  if (env.XKISS_WALLET_LEDGER) {
-    const value = await env.XKISS_WALLET_LEDGER.get(key, "json");
+  if (env.X4KISS_WALLET_LEDGER) {
+    const value = await env.X4KISS_WALLET_LEDGER.get(key, "json");
 
     return {
       ok: true,
@@ -125,7 +125,7 @@ export async function getWalletEntry(env, entry) {
       status: value ? "found" : "not-found",
       key,
       entry: value || null,
-      storage: "XKISS_WALLET_LEDGER"
+      storage: "X4KISS_WALLET_LEDGER"
     };
   }
 
