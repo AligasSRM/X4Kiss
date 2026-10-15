@@ -14,9 +14,9 @@ function cloneRecord(record) {
   return record ? { ...record } : null;
 }
 
-export function createXKissModuleLifecycle(core) {
+export function createX4KissModuleLifecycle(core) {
   if (!core || typeof core.registerModule !== "function") {
-    throw new Error("XKiss Module Lifecycle requires Player Core.");
+    throw new Error("X4Kiss Module Lifecycle requires Player Core.");
   }
 
   const modules = new Map();
@@ -126,4 +126,4 @@ export function createXKissModuleLifecycle(core) {
 }
 
 // Keep the new product-name export available alongside the established API.
-export const createX4KissModuleLifecycle = createXKissModuleLifecycle;
+export const createX4KissModuleLifecycle = createX4KissModuleLifecycle;
