@@ -23,24 +23,28 @@
 <section class="location-settings" aria-labelledby="location-heading" style="margin:1.5rem 0;padding:1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem">
   <div class="section-head"><div><h2 id="location-heading">Location &amp; Country</h2><p>Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.</p></div></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;align-items:end">
+    <label for="country-search" style="display:grid;gap:.45rem">Find a country or territory
+      <input id="country-search" type="search" autocomplete="off" placeholder="Type a country name…" aria-controls="country-select" style="width:100%;padding:.8rem;border-radius:.6rem">
+    </label>
     <label for="country-select" style="display:grid;gap:.45rem">Country or territory
       <select id="country-select" name="country" autocomplete="country-name" aria-describedby="country-help" style="width:100%;padding:.8rem;border-radius:.6rem">
         <option value="">Choose a country or territory</option>
       </select>
     </label>
     <div style="display:grid;gap:.5rem">
-      <button id="detect-location" type="button" style="padding:.8rem 1rem;border-radius:.6rem;cursor:pointer">Detect my location</button>
-      <p id="location-status" role="status" aria-live="polite" style="margin:0">Your location has not been requested.</p>
+      <button id="detect-location" type="button" style="padding:.8rem 1rem;border-radius:.6rem;cursor:pointer">Detect country from my location</button>
+      <p id="location-status" role="status" aria-live="polite" style="margin:0">Location has not been requested.</p>
     </div>
   </div>
-  <p id="country-help" style="margin:.75rem 0 0;font-size:.9em;opacity:.8">Your browser asks permission before sharing coordinates. This control displays coordinates only: it does not infer or select a country, and it does not send coordinates to the dashboard server.</p>
+  <p id="country-help" style="margin:.75rem 0 0;font-size:.9em;opacity:.8">Country selection is optional. If you request automatic detection, your browser will ask permission for device coordinates. Those coordinates are sent to OpenStreetMap Nominatim to look up a country; they are not sent to the dashboard server. OpenStreetMap data attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>.</p>
 </section>
 <script>
 (() => {
   const countrySelect = document.getElementById('country-select');
   const detectButton = document.getElementById('detect-location');
+  const countrySearch = document.getElementById('country-search');
   const status = document.getElementById('location-status');
-  if (!countrySelect || !detectButton || !status) return;
+  if (!countrySelect || !detectButton || !countrySearch || !status) return;
 
   const countryCodes = [
     'AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AS','AT','AU','AW','AX','AZ',
@@ -66,6 +70,7 @@
     'UA','UG','UM','US','UY','UZ',
     'VA','VC','VE','VG','VI','VN','VU',
     'WF','WS',
+    'XK',
     'YE','YT',
     'ZA','ZM','ZW'
   ];
@@ -84,6 +89,33 @@
     countrySelect.appendChild(option);
   }
 
+  // Search filters the native select without removing the selected country.
+  countrySearch.addEventListener('input', () => {
+    const query = countrySearch.value.trim().toLocaleLowerCase('en');
+    const selectedCode = countrySelect.value;
+    countrySelect.replaceChildren();
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = query ? 'Matching countries and territories' : 'Choose a country or territory';
+    countrySelect.appendChild(placeholder);
+    const filtered = options.filter(country =>
+      country.name.toLocaleLowerCase('en').includes(query) ||
+      country.code.toLocaleLowerCase('en').includes(query)
+    );
+    for (const country of filtered) {
+      const option = document.createElement('option');
+      option.value = country.code;
+      option.textContent = country.name;
+      countrySelect.appendChild(option);
+    }
+    if (selectedCode && filtered.some(country => country.code === selectedCode)) {
+      countrySelect.value = selectedCode;
+    }
+    if (query && filtered.length === 0) {
+      status.textContent = 'No matching country or territory. Try another spelling or select a country manually.';
+    }
+  });
+
   detectButton.addEventListener('click', () => {
     if (!window.isSecureContext) {
       status.textContent = 'Location access requires a secure context (normally HTTPS). Please open the secure site or choose your country manually.';
@@ -95,11 +127,42 @@
     }
     detectButton.disabled = true;
     status.textContent = 'Waiting for browser location permission…';
-    navigator.geolocation.getCurrentPosition(position => {
-      const latitude = position.coords.latitude.toFixed(5);
-      const longitude = position.coords.longitude.toFixed(5);
-      status.textContent = 'Coordinates detected: ' + latitude + ', ' + longitude + '. Country detection is not available here; please choose your country manually.';
-      detectButton.disabled = false;
+    navigator.geolocation.getCurrentPosition(async position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      try {
+        status.textContent = 'Coordinates received. Looking up the country…';
+        const lookupUrl = new URL('https://nominatim.openstreetmap.org/reverse');
+        lookupUrl.search = new URLSearchParams({
+          format: 'jsonv2',
+          lat: String(latitude),
+          lon: String(longitude),
+          zoom: '3',
+          addressdetails: '1',
+          'accept-language': 'en'
+        }).toString();
+        const response = await fetch(lookupUrl.toString(), {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store'
+        });
+        if (!response.ok) throw new Error('Country lookup service returned HTTP ' + response.status);
+        const result = await response.json();
+        const countryCode = result && result.address && result.address.country_code
+          ? result.address.country_code.toUpperCase()
+          : '';
+        if (!countryCode) throw new Error('No country was returned for these coordinates.');
+        const matchedOption = Array.from(countrySelect.options).find(option => option.value === countryCode);
+        if (!matchedOption) throw new Error('The detected country is not available in the current country list.');
+        countrySelect.value = countryCode;
+        countrySearch.value = '';
+        countrySearch.dispatchEvent(new Event('input'));
+        countrySelect.value = countryCode;
+        status.textContent = 'Country detected: ' + matchedOption.textContent + '. Please verify it before continuing. Location is approximate.';
+      } catch (lookupError) {
+        status.textContent = 'Coordinates were obtained, but the country lookup failed. Please choose your country manually. ' + (lookupError && lookupError.message ? lookupError.message : '');
+      } finally {
+        detectButton.disabled = false;
+      }
     }, error => {
       const messages = {
         1: 'Location permission was denied. You can choose your country manually.',
