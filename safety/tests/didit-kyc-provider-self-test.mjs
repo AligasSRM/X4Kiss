@@ -1,6 +1,6 @@
 import { verifyDiditWebhook } from "../../safety/didit-kyc-provider.js";
 
-const secret = "didit-self-test-secret";
+const secret = process.env.DIDIT_WEBHOOK_SECRET || "didit-self-test-secret";
 const timestamp = Math.floor(Date.now() / 1000);
 const payload = {
   session_id: "didit-self-test-session",

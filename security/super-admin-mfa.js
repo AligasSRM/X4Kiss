@@ -48,12 +48,13 @@ async function matchCode(secret,code,lastStep=null) {
   for(let d=-1;d<=1;d++){const step=current+d;if(step<0||(lastStep!==null&&step<=lastStep))continue;if(await codeAt(secret,step)===code)return step;}
   return null;
 }
+function getAuthDb(env){return env?.XKISS_AUTH_DB||env?.X4KISS_AUTH_DB||null;}
 function recentReauth(session){return session?.reauthenticatedAt && Date.now()-Date.parse(session.reauthenticatedAt)<=300000;}
 export async function beginSuperAdminMfaEnrollment(env,user,session) {
-  if(!env?.XKISS_AUTH_DB||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
+  const db=getAuthDb(env);
+  if(!db||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
   if(!recentReauth(session))return {ok:false,status:"reauthentication_required"};
   try { await getKey(env); } catch(e) { return {ok:false,status:e.message}; }
-  const db=env.XKISS_AUTH_DB;
   const old=await db.prepare("SELECT enabled_at FROM super_admin_mfa WHERE user_id=?1").bind(user.id).first();
   if(old?.enabled_at)return {ok:false,status:"mfa_already_enabled"};
   const secret=b32enc(crypto.getRandomValues(new Uint8Array(20))), enc=await encrypt(env,secret), now=nowISO();
@@ -62,9 +63,10 @@ export async function beginSuperAdminMfaEnrollment(env,user,session) {
   return {ok:true,status:"enrollment_pending",secret,otpauthUri:"otpauth://totp/"+encodeURIComponent("XKiss:"+user.email)+"?secret="+secret+"&issuer=XKiss&algorithm=SHA1&digits=6&period=30"};
 }
 export async function verifyAndEnableSuperAdminMfa(env,user,session,code) {
-  if(!env?.XKISS_AUTH_DB||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
+  const db=getAuthDb(env);
+  if(!db||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
   if(!recentReauth(session))return {ok:false,status:"reauthentication_required"};
-  const db=env.XKISS_AUTH_DB,row=await db.prepare("SELECT * FROM super_admin_mfa WHERE user_id=?1").bind(user.id).first();
+  const row=await db.prepare("SELECT * FROM super_admin_mfa WHERE user_id=?1").bind(user.id).first();
   if(!row||row.enabled_at)return {ok:false,status:row?.enabled_at?"mfa_already_enabled":"enrollment_not_started"};
   let step=null;try{step=await matchCode(await decrypt(env,row),code);}catch(e){return {ok:false,status:e.message==="mfa_encryption_key_missing"||e.message==="mfa_encryption_key_invalid"?e.message:"mfa_verification_failed"};}
   if(step===null){const fails=(row.failed_attempts||0)+1,lock=fails>=5?new Date(Date.now()+900000).toISOString():null;await db.prepare("UPDATE super_admin_mfa SET failed_attempts=?1,locked_until=?2,updated_at=?3 WHERE user_id=?4").bind(fails,lock,nowISO(),user.id).run();return {ok:false,status:lock?"mfa_locked":"invalid_mfa_code"};}
@@ -73,8 +75,9 @@ export async function verifyAndEnableSuperAdminMfa(env,user,session,code) {
   return {ok:true,status:"mfa_enabled",verifiedAt:now};
 }
 export async function verifySuperAdminMfaForSession(env,user,session,code) {
-  if(!env?.XKISS_AUTH_DB||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
-  const db=env.XKISS_AUTH_DB,row=await db.prepare("SELECT * FROM super_admin_mfa WHERE user_id=?1").bind(user.id).first();
+  const db=getAuthDb(env);
+  if(!db||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
+  const row=await db.prepare("SELECT * FROM super_admin_mfa WHERE user_id=?1").bind(user.id).first();
   if(!row?.enabled_at)return {ok:false,status:"mfa_not_enabled"};
   if(row.locked_until&&Date.parse(row.locked_until)>Date.now())return {ok:false,status:"mfa_locked"};
   let step=null;try{step=await matchCode(await decrypt(env,row),code,row.last_verified_step);}catch{return {ok:false,status:"mfa_verification_failed"};}
