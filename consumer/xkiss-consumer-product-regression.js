@@ -1,17 +1,17 @@
-import {validateConsumerProductFoundation} from "./xkiss-consumer-product-section-core.js";
-import {validateConsumerModules} from "./xkiss-consumer-product-modules.js";
-import {validatePlaylist} from "./xkiss-playlists-core.js";
-import {validateSubscription} from "./xkiss-subscriptions-core.js";
-import {validatePPV} from "./xkiss-ppv-core.js";
-import {validateTip} from "./xkiss-tips-gifting-core.js";
-import {validateMessage} from "./xkiss-messaging-core.js";
-import {validateNotification} from "./xkiss-notifications-core.js";
-import {validateRecommendationContext} from "./xkiss-recommendations-core.js";
-import {validateWatchEvent} from "./xkiss-watch-history-core.js";
-import {validateSavedItem} from "./xkiss-saved-favorites-core.js";
-import {validateInteraction} from "./xkiss-viewer-creator-interactions-core.js";
-import {validatePrivacyAction} from "./xkiss-privacy-blocking-core.js";
-import {validateDiscoveryQuery} from "./xkiss-discovery-core.js";
+import {validateConsumerProductFoundation} from "./x4kiss-consumer-product-section-core.js";
+import {validateConsumerModules} from "./x4kiss-consumer-product-modules.js";
+import {validatePlaylist} from "./x4kiss-playlists-core.js";
+import {validateSubscription} from "./x4kiss-subscriptions-core.js";
+import {validatePPV} from "./x4kiss-ppv-core.js";
+import {validateTip} from "./x4kiss-tips-gifting-core.js";
+import {validateMessage} from "./x4kiss-messaging-core.js";
+import {validateNotification} from "./x4kiss-notifications-core.js";
+import {validateRecommendationContext} from "./x4kiss-recommendations-core.js";
+import {validateWatchEvent} from "./x4kiss-watch-history-core.js";
+import {validateSavedItem} from "./x4kiss-saved-favorites-core.js";
+import {validateInteraction} from "./x4kiss-viewer-creator-interactions-core.js";
+import {validatePrivacyAction} from "./x4kiss-privacy-blocking-core.js";
+import {validateDiscoveryQuery} from "./x4kiss-discovery-core.js";
 const checks=[
 ()=>validatePlaylist({title:"Test"}).ok,()=>validateSubscription({creatorId:"creator"}).ok,
 ()=>validatePPV({contentId:"video"}).ok,()=>validateTip({creatorId:"creator",amount:1}).ok,
