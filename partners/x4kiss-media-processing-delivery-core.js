@@ -1,4 +1,4 @@
-export const XKISS_MEDIA_PROCESSING_DELIVERY={section:"16.5",status:"GREEN_CLOSED",failClosed:true,productionActivationAllowed:false,backendRequired:true,processingProviderRequired:true,protectedDeliveryRequired:true};
+export const X4KISS_MEDIA_PROCESSING_DELIVERY={section:"16.5",status:"GREEN_CLOSED",failClosed:true,productionActivationAllowed:false,backendRequired:true,processingProviderRequired:true,protectedDeliveryRequired:true};
 export function validateMediaProcessingStatus(input={}){
   const processing=["NOT_STARTED","QUEUED","PROCESSING","READY","FAILED"].includes(input.status);
   const delivery=["UNAVAILABLE","PROTECTED_READY"].includes(input.delivery||"UNAVAILABLE");
