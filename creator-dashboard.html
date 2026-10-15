@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
@@ -17,16 +17,26 @@
 </div><a class="login" href="index.html#account">Login</a>
 </nav></header>
 <main class="dashboard-page">
-<section class="dashboard-hero"><div><span class="eyebrow">CREATOR WORKSPACE</span><h1>Creator Dashboard</h1><p>Your central creator workspace for videos, live broadcasting, storage and future earnings.</p></div><span id="system-status" class="system-pill"><span></span> Checking system</span></section>
+<section class="dashboard-hero"><div><span class="eyebrow">CREATOR WORKSPACE</span><h1 data-i18n="hero-title">Creator Dashboard</h1><p data-i18n="hero-description">Your central creator workspace for videos, live broadcasting, storage and future earnings.</p></div><span id="system-status" class="system-pill"><span></span> Checking system</span></section>
 
+
+<section class="interface-language" aria-labelledby="interface-language-heading" style="margin:1.5rem 0;padding:1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem">
+  <div class="section-head"><div><h2 id="interface-language-heading">Interface Language</h2><p id="interface-language-help">Choose the language used by this dashboard. This setting is independent of country and location settings.</p></div></div>
+  <label for="interface-language-select" style="display:grid;gap:.45rem;max-width:24rem"><span id="interface-language-label">Display language</span>
+    <select id="interface-language-select" name="interface-language" autocomplete="off" aria-describedby="interface-language-help" style="width:100%;padding:.8rem;border-radius:.6rem">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+  </label>
+</section>
 
 <section class="location-settings" aria-labelledby="location-heading" style="margin:1.5rem 0;padding:1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem">
-  <div class="section-head"><div><h2 id="location-heading">Location &amp; Country</h2><p>Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.</p></div></div>
+  <div class="section-head"><div><h2 id="location-heading" data-i18n="country-title">Location &amp; Country</h2><p data-i18n="country-description">Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.</p></div></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;align-items:end">
-    <label for="country-search" style="display:grid;gap:.45rem">Find a country or territory
+    <label for="country-search" style="display:grid;gap:.45rem"><span>Find a country or territory</span>
       <input id="country-search" type="search" autocomplete="off" placeholder="Type a country name…" aria-controls="country-select" style="width:100%;padding:.8rem;border-radius:.6rem">
     </label>
-    <label for="country-select" style="display:grid;gap:.45rem">Country or territory
+    <label for="country-select" style="display:grid;gap:.45rem"><span>Country or territory</span>
       <select id="country-select" name="country" autocomplete="country-name" aria-describedby="country-help" style="width:100%;padding:.8rem;border-radius:.6rem">
         <option value="">Choose a country or territory</option>
       </select>
@@ -175,8 +185,77 @@
   });
 })();
 </script>
+<script>
+(() => {
+  // UI translation is intentionally independent of the country dataset and location lookup.
+  const picker = document.getElementById('interface-language-select');
+  if (!picker) return;
+  const strings = {
+    en: {
+      'interface-language-heading':'Interface Language','interface-language-help':'Choose the language used by this dashboard. This setting is independent of country and location settings.','interface-language-label':'Display language',
+      'hero-title':'Creator Dashboard','hero-description':'Your central creator workspace for videos, live broadcasting, storage and future earnings.',
+      'country-title':'Location & Country','country-description':'Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.',
+      'country-search-label':'Find a country or territory','country-label':'Country or territory','country-placeholder':'Choose a country or territory','country-detect':'Detect country from my location',
+      'overview-title':'Overview','overview-description':'Current platform data only. No placeholder earnings or fake metrics.',
+      'wallet-title':'Wallet & Payouts','wallet-description':'Live wallet state only. No fake balance or payout amount is displayed.',
+      'tools-title':'Creator Tools','tools-description':'Quick access to creator modules; availability is shown only when verified.',
+      'roadmap-title':'Ready for the next layers','back-home':'Back to Home'
+    },
+    ar: {
+      'interface-language-heading':'لغة الواجهة','interface-language-help':'اختر لغة لوحة التحكم. هذا الإعداد مستقل عن إعدادات الدولة والموقع.','interface-language-label':'لغة العرض',
+      'hero-title':'لوحة تحكم صانع المحتوى','hero-description':'مساحة مركزية لإدارة الفيديوهات والبث المباشر والتخزين والأرباح المستقبلية.',
+      'country-title':'الموقع والدولة','country-description':'اختر دولة أو اطلب إحداثيات جهازك. الإحداثيات لا تحدد الدولة تلقائياً، والوصول إلى الموقع اختياري.',
+      'country-search-label':'ابحث عن دولة أو منطقة','country-label':'الدولة أو المنطقة','country-placeholder':'اختر دولة أو منطقة','country-detect':'تحديد الدولة من موقعي',
+      'overview-title':'نظرة عامة','overview-description':'بيانات المنصة الحالية فقط، دون أرباح أو أرقام وهمية.',
+      'wallet-title':'المحفظة والدفعات','wallet-description':'نعرض حالة المحفظة الفعلية فقط، دون رصيد أو دفعات وهمية.',
+      'tools-title':'أدوات صانع المحتوى','tools-description':'وصول سريع إلى وحدات صانع المحتوى؛ لا نعرض التوفر على أنه مؤكّد إلا بعد التحقق.',
+      'roadmap-title':'جاهزون لإضافة المراحل التالية','back-home':'العودة إلى الرئيسية'
+    }
+  };
+  const map = {
+    'interface-language-heading':'#interface-language-heading','interface-language-help':'#interface-language-help','interface-language-label':'#interface-language-label',
+    'hero-title':'.dashboard-hero h1','hero-description':'.dashboard-hero > div > p',
+    'country-title':'#location-heading','country-description':'.location-settings .section-head p',
+    'country-search-label':'label[for="country-search"]','country-label':'label[for="country-select"]','country-detect':'#detect-location',
+    'overview-title':'.stats-section h2','overview-description':'.stats-section .section-head p',
+    'wallet-title':'.wallet-section h2','wallet-description':'.wallet-section .section-head p',
+    'tools-title':'.actions-section h2','tools-description':'.actions-section .section-head p',
+    'roadmap-title':'.roadmap-card h2','back-home':'.dashboard-footer a'
+  };
+  function applyLanguage(lang) {
+    const language = strings[lang] ? lang : 'en';
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    for (const [key, selector] of Object.entries(map)) {
+      const el = document.querySelector(selector);
+      if (!el) continue;
+      if (key === 'country-search-label' || key === 'country-label') {
+        const textNode = Array.from(el.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
+        if (textNode) textNode.nodeValue = '\n      ' + strings[language][key] + '\n      ';
+      } else {
+        el.textContent = strings[language][key];
+      }
+    }
+    const search = document.getElementById('country-search');
+    const countrySelect = document.getElementById('country-select');
+    if (search) search.placeholder = language === 'ar' ? 'اكتب اسم الدولة…' : 'Type a country name…';
+    if (countrySelect && countrySelect.options.length) countrySelect.options[0].textContent = strings[language]['country-placeholder'];
+    const displayNames = typeof Intl !== 'undefined' && typeof Intl.DisplayNames === 'function'
+      ? new Intl.DisplayNames([language], {type:'region'}) : null;
+    if (countrySelect && displayNames) {
+      for (const option of Array.from(countrySelect.options)) {
+        if (option.value) option.textContent = displayNames.of(option.value);
+      }
+    }
+    const countrySearch = document.getElementById('country-search');
+    if (countrySearch && countrySearch.value.trim()) countrySearch.dispatchEvent(new Event('input'));
+  }
+  picker.addEventListener('change', () => applyLanguage(picker.value));
+  applyLanguage(picker.value);
+})();
+</script>
 
-<section class="stats-section"><div class="section-head"><div><h2>Overview</h2><p>Current platform data only. No placeholder earnings or fake metrics.</p></div></div>
+<section class="stats-section"><div class="section-head"><div><h2 data-i18n="overview-title">Overview</h2><p data-i18n="overview-description">Current platform data only. No placeholder earnings or fake metrics.</p></div></div>
 <div class="stats-grid">
 <article class="stat-card"><span class="stat-label">My Videos</span><strong id="video-count">—</strong><span id="video-count-detail">Production library status is checked separately.</span></article>
 <article class="stat-card"><span class="stat-label">Live Rooms</span><strong id="live-count">—</strong><span id="live-count-detail">Live-room count endpoint is not connected.</span></article>
@@ -184,7 +263,7 @@
 <article class="stat-card"><span class="stat-label">Monetization</span><strong>Not active</strong><span>Payment layer comes later</span></article>
 </div></section>
 
-<section class="wallet-section"><div class="section-head"><div><h2>Wallet &amp; Payouts</h2><p>Live wallet state only. No fake balance or payout amount is displayed.</p></div></div>
+<section class="wallet-section"><div class="section-head"><div><h2 data-i18n="wallet-title">Wallet &amp; Payouts</h2><p data-i18n="wallet-description">Live wallet state only. No fake balance or payout amount is displayed.</p></div></div>
 <div class="wallet-grid">
 <article class="wallet-card"><span class="wallet-label">Pending Balance</span><strong id="wallet-pending">—</strong><span id="wallet-pending-detail">Wallet ledger not connected</span></article>
 <article class="wallet-card"><span class="wallet-label">Available Balance</span><strong id="wallet-available">—</strong><span id="wallet-available-detail">Settlement not connected</span></article>
@@ -194,7 +273,7 @@
 <div class="wallet-note"><strong>Wallet and payouts are not active</strong><span>Revenue → Pending → Settlement → Available → Payout. Real balances and payments remain disabled until the required storage, account verification and payment layers are enabled.</span></div>
 </section>
 
-<section class="actions-section"><div class="section-head"><div><h2>Creator Tools</h2><p>Quick access to creator modules; availability is shown only when verified.</p></div></div>
+<section class="actions-section"><div class="section-head"><div><h2 data-i18n="tools-title">Creator Tools</h2><p data-i18n="tools-description">Quick access to creator modules; availability is shown only when verified.</p></div></div>
 <div class="action-grid">
 <a class="action-card primary-card" href="creator-upload.html"><span class="action-number">01</span><strong>Upload Video</strong><span>Prepare video metadata and connect to production storage when enabled.</span><b>Open Upload →</b></a>
 <a class="action-card" href="creator-library.html"><span class="action-number">02</span><strong>My Videos</strong><span>Open the creator library; owner-scoped listing and playback must be verified.</span><b>Open Library →</b></a>
@@ -202,12 +281,12 @@
 <a class="action-card" href="index.html#account"><span class="action-number">04</span><strong>Account</strong><span>Account and creator identity controls will connect here.</span><b>Open Account →</b></a>
 </div></section>
 
-<section class="roadmap-section"><div class="roadmap-card"><div><span class="eyebrow">CREATOR PLATFORM</span><h2>Ready for the next layers</h2><p>The dashboard is separated from storage, payments and account authentication so those systems can be connected later without rebuilding this creator workspace.</p></div>
+<section class="roadmap-section"><div class="roadmap-card"><div><span class="eyebrow">CREATOR PLATFORM</span><h2 data-i18n="roadmap-title">Ready for the next layers</h2><p>The dashboard is separated from storage, payments and account authentication so those systems can be connected later without rebuilding this creator workspace.</p></div>
 <div class="roadmap-grid">
 <div><strong>01</strong><span>Video Upload &amp; Storage</span><em id="roadmap-storage">Pending</em></div><div><strong>02</strong><span>Creator Library</span><em id="roadmap-library">Not verified</em></div><div><strong>03</strong><span>Live</span><em id="roadmap-live">Not verified</em></div><div><strong>04</strong><span>Monetization</span><em>Next layer</em></div><div><strong>05</strong><span>Wallet &amp; Payouts</span><em id="roadmap-wallet">Not verified</em></div><div><strong>06</strong><span>Creator Analytics</span><em>Future layer</em></div>
 </div></div></section>
 </main>
-<footer class="dashboard-footer"><div>X4Kiss — Creator Dashboard</div><a href="index.html">Back to Home</a></footer>
+<footer class="dashboard-footer"><div>X4Kiss — Creator Dashboard</div><a href="index.html" data-i18n="back-home">Back to Home</a></footer>
 <script src="creator/creator-dashboard.js"></script>
 </body>
 </html>
