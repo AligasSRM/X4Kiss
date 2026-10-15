@@ -1,6 +1,6 @@
-import { createXKissModuleHealth } from "./xkiss-module-health-core.js";
+import { createX4KissModuleHealth } from "./x4kiss-module-health-core.js";
 
-export function runXKissModuleHealthSelfCheck() {
+export function runX4KissModuleHealthSelfCheck() {
   const modules = { base: { state: "active" } };
   const core = {
     moduleLifecycle: {
@@ -13,7 +13,7 @@ export function runXKissModuleHealthSelfCheck() {
     },
     registerModule() {}
   };
-  const health = createXKissModuleHealth(core);
+  const health = createX4KissModuleHealth(core);
   const scan = health.scan();
   const healthy = health.get("base");
   const invalid = health.report({ module: "base", status: "BROKEN", severity: "HIGH", timestamp: Date.now() });
