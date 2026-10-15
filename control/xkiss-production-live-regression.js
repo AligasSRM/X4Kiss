@@ -1,4 +1,4 @@
-const LIVE_BASE = "https://xkiss.srourr-ali73.workers.dev";
+const LIVE_BASE = "https://x4kiss.srourr-ali73.workers.dev";
 
 const ENDPOINTS = [
   ["/api/health", "GET", 200],
@@ -60,7 +60,7 @@ export async function runProductionLiveRegression() {
 
   return {
     ok: failed.length === 0 && health?.reachable === true,
-    test: "XKiss production live endpoint regression",
+    test: "X4Kiss production live endpoint regression",
     base: LIVE_BASE,
     checks,
     failedCount: failed.length,
