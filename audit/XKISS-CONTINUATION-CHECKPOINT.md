@@ -19,24 +19,24 @@ Date: 2026-10-01
 - Final merge commit: 7928ec70212e1498928172020f75bfbf2d408b4a.
 - Storage gate aligned with the active IDrive e2 S3-compatible adapter.
 - Required storage configuration:
-  - XKISS_IDRIVE_ENDPOINT
-  - XKISS_IDRIVE_BUCKET
-  - XKISS_IDRIVE_REGION
-  - XKISS_IDRIVE_ACCESS_KEY
-  - XKISS_IDRIVE_SECRET_KEY
+  - X4KISS_IDRIVE_ENDPOINT
+  - X4KISS_IDRIVE_BUCKET
+  - X4KISS_IDRIVE_REGION
+  - X4KISS_IDRIVE_ACCESS_KEY
+  - X4KISS_IDRIVE_SECRET_KEY
 - Fail-closed behavior preserved.
 
 ## AUDIT-03 historical work
-- The broken `XKISS_VIEW_EVENTS` binding path was removed from the view-event store.
+- The broken `X4KISS_VIEW_EVENTS` binding path was removed from the view-event store.
 - A dedicated IDrive e2 implementation is now the single view-event storage path.
-- Worker environment contract/self-test no longer require the obsolete `XKISS_VIEW_EVENTS` binding.
+- Worker environment contract/self-test no longer require the obsolete `X4KISS_VIEW_EVENTS` binding.
 - View storage self-test is now `write -> read -> delete` with a unique test event.
 - Real Hostless/IDrive production verification is still NOT completed.
 - Do not claim storage is production-ready or connected until that real verification passes.
 - No credentials/secrets are stored in source code.
 
 ## Next exact step
-Continue from `audit/xkiss-audit-03-fresh-baseline.md`. The old AUDIT-03 checkpoint is historical.
+Continue from `audit/x4kiss-audit-03-fresh-baseline.md`. The old AUDIT-03 checkpoint is historical.
 1. Verify production configuration exists securely.
 2. Perform a real safe test object Write.
 3. Read the same object back.
@@ -59,7 +59,7 @@ AUDIT-04 Worker Environment
 -> Production Activation Readiness
 
 ## Resume instruction
-Load `audit/xkiss-audit-03-fresh-baseline.md` first. Do not restart completed locked stages and do not mix X4Kiss with AC.
+Load `audit/x4kiss-audit-03-fresh-baseline.md` first. Do not restart completed locked stages and do not mix X4Kiss with AC.
 
 ## Last known main commit
 8b63820202f2658fa1176570af82bbe767fdf954
