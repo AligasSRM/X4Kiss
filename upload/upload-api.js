@@ -23,11 +23,11 @@
     if (!response.ok) {
       let message = data.message;
       if (!message && response.status === 401 && data.status === "invalid_credentials") {
-        message = "Email or password was not accepted. This email already has an account; use its original password. If you no longer know it, password recovery must be set up before you can sign in.";
+        message = "Email or password was not accepted. Use the password for this account.";
       } else if (!message && response.status === 503 && data.status === "backend_not_configured") {
-        message = "Sign-in service is temporarily unavailable because its authentication backend is not configured.";
+        message = "The authentication backend is not configured.";
       } else if (!message) {
-        message = "XKiss request failed (HTTP " + response.status + ").";
+        message = "X4Kiss request failed (HTTP " + response.status + ").";
       }
       const error = new Error(message);
       error.status = response.status;
@@ -39,7 +39,7 @@
   }
 
   async function getStorageStatus() {
-    return request("/api/upload/status");
+    return request("/api/upload/status", { cache: "no-store" });
   }
 
   async function authenticate(email, password, createAccount = false) {
@@ -49,8 +49,7 @@
       body: JSON.stringify({ email, password })
     });
     if (!result.token) throw new Error("Authentication did not return a session token.");
-    sessionToken = result.token;
-    window.sessionStorage.setItem("xkiss_session_token", sessionToken);
+    setSessionToken(result.token);
     return result;
   }
 
@@ -87,17 +86,21 @@
       headers: {
         "Authorization": "Bearer " + sessionToken,
         "Content-Type": file.type,
-        "X-XKiss-File-Name": file.name,
-        "X-XKiss-File-Size": String(file.size),
-        "X-XKiss-Title": metadata.title,
-        "X-XKiss-Description": metadata.description || "",
-        "X-XKiss-Category": metadata.category
+        "X-X4Kiss-File-Name": file.name,
+        "X-X4Kiss-File-Size": String(file.size),
+        "X-X4Kiss-Title": metadata.title,
+        "X-X4Kiss-Description": metadata.description || "",
+        "X-X4Kiss-Category": metadata.category
       },
       body: file
     });
   }
 
-  function setSessionToken(token) { sessionToken = token || ""; if (sessionToken) window.sessionStorage.setItem("xkiss_session_token", sessionToken); else window.sessionStorage.removeItem("xkiss_session_token"); }
+  function setSessionToken(token) {
+    sessionToken = token || "";
+    if (sessionToken) window.sessionStorage.setItem("xkiss_session_token", sessionToken);
+    else window.sessionStorage.removeItem("xkiss_session_token");
+  }
 
   window.XKissUploadAPI = { getStorageStatus, authenticate, verifySession, prepareUpload, uploadFile, setSessionToken };
 })();
