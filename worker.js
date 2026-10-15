@@ -49,10 +49,9 @@ import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuper
 import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
 
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "https://aligassrm.github.io",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-X4Kiss-Upload-Key, X-X4Kiss-File-Name, X-X4Kiss-File-Size, X-X4Kiss-Title, X-X4Kiss-Description, X-X4Kiss-Category, X-X4Kiss-Download-Policy, X-X4Kiss-Visibility",
   "Vary": "Origin"
@@ -89,8 +88,7 @@ async function ensureCreatorVideoIndex(db) {
   `).run();
 }
 
-export default {
-  async fetch(request, env) {
+async function handleRequest(request, env) {
     const url = new URL(request.url);
     const storageReady = isStorageReady(env);
 
@@ -1366,5 +1364,37 @@ export default {
       status: "online",
       path: url.pathname
     });
+}
+
+const CORS_ALLOWED_ORIGINS = new Set([
+  "https://aligassrm.github.io",
+  "https://wondrous-cranachan-a62723.netlify.app"
+]);
+const NETLIFY_PREVIEW_ORIGIN = /^https:\/\/deploy-preview-\d+--wondrous-cranachan-a62723\.netlify\.app$/;
+
+function applyCorsHeaders(request, response) {
+  const headers = new Headers(response.headers);
+  headers.delete("Access-Control-Allow-Origin");
+
+  const origin = request.headers.get("Origin");
+  if (origin && (CORS_ALLOWED_ORIGINS.has(origin) || NETLIFY_PREVIEW_ORIGIN.test(origin))) {
+    headers.set("Access-Control-Allow-Origin", origin);
+  }
+
+  headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  headers.set("Access-Control-Allow-Headers", CORS_HEADERS["Access-Control-Allow-Headers"]);
+  headers.set("Vary", "Origin");
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
+export default {
+  async fetch(request, env) {
+    const response = await handleRequest(request, env);
+    return applyCorsHeaders(request, response);
   }
 };
