@@ -1,6 +1,6 @@
-import { runPlatformSettingsSectionCheck } from "./xkiss-platform-settings-section-core.js";
+import { runPlatformSettingsSectionCheck } from "./x4kiss-platform-settings-section-core.js";
 
-export function runXKissPlatformSettingsSectionSelfTest() {
+export function runX4KissPlatformSettingsSectionSelfTest() {
   const result = runPlatformSettingsSectionCheck();
 
   return {
@@ -10,7 +10,7 @@ export function runXKissPlatformSettingsSectionSelfTest() {
       result.failClosed === true &&
       result.productionActivationAllowed === false,
     section: "15",
-    test: "XKiss Platform Settings Section 15 complete self-test",
+    test: "X4Kiss Platform Settings Section 15 complete self-test",
     status: result.status,
     productionActivationAllowed: result.productionActivationAllowed,
     externalActivationRequired: result.externalActivationRequired,
@@ -19,4 +19,4 @@ export function runXKissPlatformSettingsSectionSelfTest() {
 }
 
 // Backward-compatible product-name alias for the final review runner.
-export const runX4KissPlatformSettingsSectionSelfTest = runXKissPlatformSettingsSectionSelfTest;
+export const runX4KissPlatformSettingsSectionSelfTest = runX4KissPlatformSettingsSectionSelfTest;
