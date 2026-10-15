@@ -7,10 +7,11 @@ const ROLE_PERMISSIONS = Object.freeze({
 });
 
 export function adminBackendStatus(env={}) {
+  const db = env?.XKISS_DB || env?.X4KISS_DB;
   return {
-    ok:Boolean(env.XKISS_DB),
+    ok:Boolean(db),
     service:"X4Kiss Admin Backend",
-    databaseConfigured:Boolean(env.XKISS_DB),
+    databaseConfigured:Boolean(db),
     authorizationMode:"role_based",
     mfaRequiredForSuperAdmin:true,
     auditRequired:true,
