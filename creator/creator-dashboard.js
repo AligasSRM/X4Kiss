@@ -1,9 +1,8 @@
 (() => {
   "use strict";
 
-  // Keep the existing Worker API host until the deployed hostname is verified.
-  // This is the API backend, not the ElasticLake storage endpoint.
-  const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
+  // X4Kiss Worker API host. This is the API backend, not the ElasticLake storage endpoint.
+  const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
   const SESSION_KEY = "x4keys_session_token";
   const LEGACY_SESSION_KEY = "xkiss_session_token";
 
