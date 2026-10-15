@@ -1,4 +1,4 @@
-const XKISS_LIVE = {
+const X4KISS_LIVE = {
   liveRooms: [],
   upcoming: []
 };
