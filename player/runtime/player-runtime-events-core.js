@@ -1,8 +1,8 @@
-import { validateXKissPlayerRuntimeEventsRequest } from "./player-runtime-events-rules.js";
+import { validateX4KissPlayerRuntimeEventsRequest } from "./player-runtime-events-rules.js";
 
-export const XKISS_PLAYER_RUNTIME_EVENTS_CORE = {
+export const X4KISS_PLAYER_RUNTIME_EVENTS_CORE = {
   section: "15.18",
-  name: "XKiss Player Runtime Events Core",
+  name: "X4Kiss Player Runtime Events Core",
   version: "1.0.0",
   status: "connected",
   failClosed: true
@@ -10,7 +10,7 @@ export const XKISS_PLAYER_RUNTIME_EVENTS_CORE = {
 
 const events = [];
 
-export function recordXKissPlayerRuntimeEvent(type, detail = {}) {
+export function recordX4KissPlayerRuntimeEvent(type, detail = {}) {
   if (!type) return { ok: false, reason: "event_type_missing" };
   const event = { type, timestamp: Date.now(), detail: { ...detail } };
   events.push(event);
@@ -18,11 +18,11 @@ export function recordXKissPlayerRuntimeEvent(type, detail = {}) {
   return { ok: true, event };
 }
 
-export function readXKissPlayerRuntimeEvents() {
+export function readX4KissPlayerRuntimeEvents() {
   return events.map(event => ({ ...event, detail: { ...event.detail } }));
 }
 
-export function evaluateXKissPlayerRuntimeEvents(request = {}) {
-  const validation = validateXKissPlayerRuntimeEventsRequest(request);
+export function evaluateX4KissPlayerRuntimeEvents(request = {}) {
+  const validation = validateX4KissPlayerRuntimeEventsRequest(request);
   return { allowed: validation.allowed === true, gates: validation.gates };
 }

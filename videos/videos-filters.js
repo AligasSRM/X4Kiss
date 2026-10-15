@@ -1,14 +1,14 @@
-document.addEventListener("xkiss:videos-ready", () => {
+document.addEventListener("x4kiss:videos-ready", () => {
   "use strict";
 
-  const API = window.XKissVideos;
+  const API = window.X4KissVideos;
   const searchInput = document.getElementById("video-search");
   const filterContainer = document.getElementById("video-filters");
   const sortSelect = document.getElementById("video-sort");
   const clearButton = document.getElementById("clear-filters");
 
   if (!API || !searchInput || !filterContainer || !sortSelect) {
-    console.error("XKiss Videos: filter UI could not initialize.");
+    console.error("X4Kiss Videos: filter UI could not initialize.");
     return;
   }
 
@@ -26,7 +26,7 @@ document.addEventListener("xkiss:videos-ready", () => {
         API.setState({ category });
         API.applyFilters();
         renderFilters();
-        document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+        document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
       });
 
       filterContainer.appendChild(button);
@@ -36,7 +36,7 @@ document.addEventListener("xkiss:videos-ready", () => {
   function handleSearch() {
     API.setState({ search: searchInput.value });
     API.applyFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   }
 
   searchInput.addEventListener("input", handleSearch);
@@ -44,7 +44,7 @@ document.addEventListener("xkiss:videos-ready", () => {
   sortSelect.addEventListener("change", () => {
     API.setState({ sort: sortSelect.value });
     API.applyFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   });
 
   clearButton?.addEventListener("click", () => {
@@ -53,7 +53,7 @@ document.addEventListener("xkiss:videos-ready", () => {
     API.setState({ category: "All", search: "", sort: "latest" });
     API.applyFilters();
     renderFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   });
 
   renderFilters();

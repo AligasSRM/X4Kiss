@@ -61,13 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function bindVideoLinks() {
     document.querySelectorAll(
-      'a[data-video-id], [data-xkiss-video]'
+      'a[data-video-id], [data-x4kiss-video]'
     ).forEach(element => {
       if (element.dataset.homeVideoLinkBound === "true") return;
 
       const videoId =
         element.dataset.videoId ||
-        element.dataset.xkissVideo;
+        element.dataset.x4kissVideo;
 
       if (!videoId) return;
 

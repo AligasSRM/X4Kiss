@@ -11,8 +11,8 @@ const b64 = a => btoa(String.fromCharCode(...a));
 const un64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const nowISO = () => new Date().toISOString();
 async function getKey(env) {
-  if (!env?.XKISS_MFA_ENCRYPTION_KEY) throw Error("mfa_encryption_key_missing");
-  let bytes; try { bytes=un64(env.XKISS_MFA_ENCRYPTION_KEY); } catch { throw Error("mfa_encryption_key_invalid"); }
+  if (!env?.X4KISS_MFA_ENCRYPTION_KEY) throw Error("mfa_encryption_key_missing");
+  let bytes; try { bytes=un64(env.X4KISS_MFA_ENCRYPTION_KEY); } catch { throw Error("mfa_encryption_key_invalid"); }
   if(bytes.length!==32) throw Error("mfa_encryption_key_invalid");
   return crypto.subtle.importKey("raw",bytes,"AES-GCM",false,["encrypt","decrypt"]);
 }
@@ -59,7 +59,7 @@ export async function beginSuperAdminMfaEnrollment(env,user,session) {
   const secret=b32enc(crypto.getRandomValues(new Uint8Array(20))), enc=await encrypt(env,secret), now=nowISO();
   await db.prepare("INSERT INTO super_admin_mfa (user_id,secret_ciphertext,secret_iv,enabled_at,failed_attempts,locked_until,last_verified_step,created_at,updated_at) VALUES (?1,?2,?3,NULL,0,NULL,NULL,?4,?4) ON CONFLICT(user_id) DO UPDATE SET secret_ciphertext=excluded.secret_ciphertext,secret_iv=excluded.secret_iv,enabled_at=NULL,failed_attempts=0,locked_until=NULL,last_verified_step=NULL,updated_at=excluded.updated_at")
     .bind(user.id,enc.secretCiphertext,enc.secretIv,now).run();
-  return {ok:true,status:"enrollment_pending",secret,otpauthUri:"otpauth://totp/"+encodeURIComponent("XKiss:"+user.email)+"?secret="+secret+"&issuer=XKiss&algorithm=SHA1&digits=6&period=30"};
+  return {ok:true,status:"enrollment_pending",secret,otpauthUri:"otpauth://totp/"+encodeURIComponent("X4Kiss:"+user.email)+"?secret="+secret+"&issuer=X4Kiss&algorithm=SHA1&digits=6&period=30"};
 }
 export async function verifyAndEnableSuperAdminMfa(env,user,session,code) {
   if(!env?.XKISS_AUTH_DB||user?.role!=="super_admin")return {ok:false,status:"forbidden"};

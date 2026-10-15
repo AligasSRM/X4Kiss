@@ -112,7 +112,7 @@
     const link = document.createElement("a");
     link.href = url;
     const stamp = new Date().toISOString().replace(/[:.]/g,"-").replace("T","_").slice(0,19);
-    link.download = "xkiss-recording-" + stamp + ".webm";
+    link.download = "x4kiss-recording-" + stamp + ".webm";
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -135,5 +135,5 @@
   }
 
   window.addEventListener("DOMContentLoaded",initialize);
-  window.XKissRecorder = {startRecording,stopRecording,downloadRecording};
+  window.X4KissRecorder = {startRecording,stopRecording,downloadRecording};
 })();

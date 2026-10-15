@@ -13,14 +13,14 @@
     const grid = document.getElementById("library-grid");
     const empty = document.getElementById("library-empty");
     const notice = document.getElementById("library-notice");
-    const token = window.sessionStorage.getItem("xkiss_session_token") || "";
+    const token = window.sessionStorage.getItem("x4kiss_session_token") || "";
     if (new URLSearchParams(window.location.search).get("uploaded") === "1") {
       notice.hidden = false;
       notice.textContent = "Upload confirmed. Your video is saved privately below; it is not public or playable until publishing and playback are enabled.";
     }
 
     try {
-      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/creator/videos", {
+      const response = await fetch("https://x4kiss.srourr-ali73.workers.dev/api/creator/videos", {
         headers: {"Accept":"application/json", "Authorization":"Bearer " + token},
         cache: "no-store"
       });

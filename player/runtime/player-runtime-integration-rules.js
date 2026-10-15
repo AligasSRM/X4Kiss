@@ -1,13 +1,13 @@
-export const XKISS_PLAYER_RUNTIME_INTEGRATION_RULES = {
+export const X4KISS_PLAYER_RUNTIME_INTEGRATION_RULES = {
   section: "15.16",
-  name: "XKiss Player Runtime Integration Rules",
+  name: "X4Kiss Player Runtime Integration Rules",
   version: "1.0.0",
   status: "prepared",
   operations: ["validate_homepage","validate_player_page","validate_video_runtime","read_runtime_status"]
 };
 
-export function validateXKissPlayerRuntimeIntegrationRequest(request = {}) {
-  const validOperation = XKISS_PLAYER_RUNTIME_INTEGRATION_RULES.operations.includes(request.operation);
+export function validateX4KissPlayerRuntimeIntegrationRequest(request = {}) {
+  const validOperation = X4KISS_PLAYER_RUNTIME_INTEGRATION_RULES.operations.includes(request.operation);
   const homepage = request.homepageVerified === true;
   const playerPage = request.playerPageVerified === true;
   const playerCore = request.playerCoreConnected === true;

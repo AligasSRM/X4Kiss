@@ -22,8 +22,8 @@
 
     if (typeof getX4KissVideo === "function") {
       videoData = getX4KissVideo(requestedId) || getX4KissVideo("video-001");
-    } else if (typeof XKISS_VIDEOS !== "undefined") {
-      videoData = XKISS_VIDEOS[requestedId] || XKISS_VIDEOS["video-001"];
+    } else if (typeof X4KISS_VIDEOS !== "undefined") {
+      videoData = X4KISS_VIDEOS[requestedId] || X4KISS_VIDEOS["video-001"];
     }
 
     if (!videoData) {

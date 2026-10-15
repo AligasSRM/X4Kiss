@@ -58,10 +58,10 @@ The latest run supersedes older statements below wherever they conflict. Histori
 
 ## Live integration evidence
 
-- Cloudflare account inventory confirms the deployed `xkiss` Worker and its production deployment.
-- The Worker has a live `XKISS_AUTH_DB` / `XKISS_DB` binding to the `xkiss-production` D1 database and an `XKISS_AUTH_SESSIONS` KV binding.
+- Cloudflare account inventory confirms the deployed `x4kiss` Worker and its production deployment.
+- The Worker has a live `X4KISS_AUTH_DB` / `X4KISS_DB` binding to the `x4kiss-production` D1 database and an `X4KISS_AUTH_SESSIONS` KV binding.
 - A read-only D1 schema/count check confirmed the users, sessions, admin audit, and Super Admin MFA tables exist. Only aggregate row counts were inspected; no user records or credentials were read.
-- The authentication acceptance run passed against `https://xkiss.srourr-ali73.workers.dev`.
+- The authentication acceptance run passed against `https://x4kiss.srourr-ali73.workers.dev`.
 - Worker health: online; storage ready.
 - Settings runtime: connected; `activationAllowed=false`.
 - Safety status/self-test: contract checks pass; enforcement remains disabled because live age assurance, creator verification, moderation, reporting, and durable safety-audit enforcement are not all connected and verified.
@@ -74,7 +74,7 @@ The latest run supersedes older statements below wherever they conflict. Histori
 
 ## Remaining production activation blockers
 
-1. **Private video upload — live small-payload transfer GREEN; full creator flow YELLOW.** The production acceptance run above verified authenticated transfer and a successful private ElasticLake object write. The test used a 24-byte MP4-container fixture, not a playable video, and did not verify large-file streaming, object read-back after upload, processing, playback, or publishing. The creator library is deliberately fail-closed until an owner-scoped index exists. The acceptance object remains private at key `videos/05cc9f3d-2efd-45a2-a3bf-7b5efb6b2583-xkiss-acceptance-38141395365.mp4`; it is test data, not a published video.
+1. **Private video upload — live small-payload transfer GREEN; full creator flow YELLOW.** The production acceptance run above verified authenticated transfer and a successful private ElasticLake object write. The test used a 24-byte MP4-container fixture, not a playable video, and did not verify large-file streaming, object read-back after upload, processing, playback, or publishing. The creator library is deliberately fail-closed until an owner-scoped index exists. The acceptance object remains private at key `videos/05cc9f3d-2efd-45a2-a3bf-7b5efb6b2583-x4kiss-acceptance-38141395365.mp4`; it is test data, not a published video.
 2. Publish and configure a compliant, actual age-assurance/creator-verification workflow; securely connect the server-side provider credentials; then run a controlled live end-to-end verification and confirm the signed webhook is delivered and durably recorded. Existing draft workflows and zero webhook deliveries do not satisfy this gate.
 3. Real moderation, user reporting, and durable safety-audit enforcement.
 4. Settings authorization and audit verification before enabling any production activation control.

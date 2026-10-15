@@ -18,7 +18,7 @@
 
 ## Repairs committed
 
-1. Corrected the main branch D1 binding names in `wrangler.toml` to match the bindings consumed by `worker.js`: `XKISS_AUTH_DB`, `XKISS_DB`, and `XKISS_ADMIN_AUDIT`. No deployment was performed.
+1. Corrected the main branch D1 binding names in `wrangler.toml` to match the bindings consumed by `worker.js`: `X4KISS_AUTH_DB`, `X4KISS_DB`, and `X4KISS_ADMIN_AUDIT`. No deployment was performed.
 2. Added a final-review assertion that detects future Worker runtime / D1 configuration drift.
 3. Added local tests proving that a caller-supplied Super Admin identity is rejected without an authenticated session and that missing authentication configuration fails closed.
 4. Added safe diagnostic fields to the production auth acceptance failure so it reports HTTP status and non-sensitive response fields.

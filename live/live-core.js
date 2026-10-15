@@ -4,7 +4,7 @@
   const state = { liveRooms: [], upcoming: [] };
 
   function getLiveData() {
-    return window.XKISS_LIVE || { liveRooms: [], upcoming: [] };
+    return window.X4KISS_LIVE || { liveRooms: [], upcoming: [] };
   }
 
   function escapeHtml(value) {
@@ -88,7 +88,7 @@
     renderLiveRooms();
     renderUpcoming();
 
-    window.XKissLive = {
+    window.X4KissLive = {
       getState: () => ({
         liveRooms: [...state.liveRooms],
         upcoming: [...state.upcoming]
@@ -97,7 +97,7 @@
       renderUpcoming
     };
 
-    document.dispatchEvent(new CustomEvent("xkiss:live-ready"));
+    document.dispatchEvent(new CustomEvent("x4kiss:live-ready"));
   }
 
   window.addEventListener("DOMContentLoaded", initialize);

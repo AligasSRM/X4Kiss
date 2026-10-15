@@ -1,0 +1,167 @@
+import fs from "node:fs";
+import path from "node:path";
+import { execFileSync } from "node:child_process";
+
+const root = process.cwd();
+const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
+const exists = (p) => fs.existsSync(path.join(root, p));
+
+const sections = [
+  ["1","Home",["index.html","home/home-core.js"]],
+  ["2","Videos",["videos.html","videos/videos-core.js"]],
+  ["3","Live",["live.html","live/live-core.js"]],
+  ["4","Creators",["index.html","home/home-creators.js"]],
+  ["5","User Account",["index.html"]],
+  ["6","Creator Dashboard",["creator-dashboard.html","creator/creator-dashboard.js"]],
+  ["7","Video Upload",["creator-upload.html","upload/upload-core.js"]],
+  ["8","Monetization",["monetization.html","monetization/monetization.js"]],
+  ["9","Views & Revenue System",["views-revenue/view-pipeline.js","views-revenue/view-event-store.js"]],
+  ["10","Creator Wallet & Payouts",["wallet/wallet-ledger-store.js","wallet/payout-lifecycle.js"]],
+  ["11","Search & Categories",["search.html","search/search-core.js"]],
+  ["12","Safety & Verification",["safety/safety-integration.js","safety/age-verification.js"]],
+  ["13","Admin Dashboard",["admin.html","admin/admin-integration.js"]],
+  ["14","Super Admin & Security",["security/super-admin-security-core.js","security/super-admin-mfa.js"]],
+  ["15","Platform Settings",["settings/x4kiss-platform-settings-section-core.js","settings/x4kiss-platform-settings-section-self-test.js"]],
+  ["16","Enterprise Content & Partners",["partners/x4kiss-enterprise-content-partners-core.js","partners/x4kiss-enterprise-content-partners-self-test.js","partners/x4kiss-enterprise-content-partners-integration.js","partners/x4kiss-section-16-external-dependencies.js","partners/x4kiss-section-16-regression.js","partners/x4kiss-section-16-lock.js"]],
+  ["17","Consumer Product Features",["consumer/x4kiss-consumer-product-section-core.js","consumer/x4kiss-consumer-product-section-self-test.js","consumer/x4kiss-consumer-product-section-integration.js","consumer/x4kiss-consumer-product-regression.js","consumer/x4kiss-section-17-external-dependencies.js","consumer/x4kiss-section-17-lock.js"]],
+  ["18","Alex Control Engine",["control/x4kiss-autonomous-control-core.js","control/x4kiss-autonomous-control-policy.js","control/x4kiss-control-runner.js","control/x4kiss-control-section-self-test.js","control/x4kiss-control-lock.js"]],
+  ["19","Production Activation Readiness",["activation/x4kiss-production-activation-readiness-core.js","activation/x4kiss-production-activation-readiness-self-test.js","activation/x4kiss-section-19-external-dependencies.js","activation/x4kiss-section-19-regression.js","activation/x4kiss-section-19-lock.js"]],
+  ["20","Final Master Release Lock",["release/x4kiss-final-master-lock.js","release/x4kiss-final-master-release-self-test.js","release/x4kiss-final-master-regression.js"]]
+];
+
+const jsFiles = [];
+const htmlFiles = [];
+function walk(dir) {
+  for (const entry of fs.readdirSync(dir,{withFileTypes:true})) {
+    if ([".git","node_modules"].includes(entry.name)) continue;
+    const full = path.join(dir,entry.name);
+    if (entry.isDirectory()) walk(full);
+    else if (entry.name.endsWith(".js")) jsFiles.push(path.relative(root,full).replaceAll(path.sep,"/"));
+    else if (entry.name.endsWith(".html")) htmlFiles.push(path.relative(root,full).replaceAll(path.sep,"/"));
+  }
+}
+walk(root);
+
+const syntaxErrors = [];
+for (const file of jsFiles) {
+  try { execFileSync(process.execPath,["--check",file],{stdio:"pipe"}); }
+  catch (e) { syntaxErrors.push({file,error:String(e.stderr||e.message)}); }
+}
+
+const importErrors = [];
+const importRe = /(?:import\s+(?:[^'"]+?\s+from\s+)?|export\s+[^'"]+?\s+from\s+|import\()(['"])(\.\.?\/[^'"]+)\1/g;
+for (const file of jsFiles) {
+  const content = read(file);
+  for (const m of content.matchAll(importRe)) {
+    const target = path.posix.normalize(path.posix.join(path.posix.dirname(file),m[2]));
+    if (!exists(target)) importErrors.push({file,target});
+  }
+}
+
+const workerBindingErrors = [];
+const workerSource = exists("worker.js") ? read("worker.js") : "";
+const wranglerSource = exists("wrangler.toml") ? read("wrangler.toml") : "";
+const d1Blocks = wranglerSource.split(/\[\[d1_databases\]\]/).slice(1);
+const configuredD1Bindings = d1Blocks.map(block => {
+  const match = block.match(/\bbinding\s*=\s*["']([^"']+)["']/);
+  return match ? match[1] : null;
+}).filter(Boolean);
+const runtimeD1Bindings = [...workerSource.matchAll(/\benv\.((?:X4KISS|X4KISS)_[A-Z0-9_]+)\b/g)]
+  .map(match => match[1])
+  .filter((name, index, all) => all.indexOf(name) === index && !name.endsWith("_AUTH_SESSIONS"));
+for (const binding of runtimeD1Bindings) {
+  if (!configuredD1Bindings.includes(binding)) workerBindingErrors.push({ type: "runtime_binding_missing_from_wrangler", binding });
+}
+for (const binding of configuredD1Bindings) {
+  if (!runtimeD1Bindings.includes(binding)) workerBindingErrors.push({ type: "wrangler_d1_binding_not_used_by_worker", binding });
+}
+if (new Set(configuredD1Bindings).size !== configuredD1Bindings.length) {
+  workerBindingErrors.push({ type: "duplicate_wrangler_d1_binding" });
+}
+
+const htmlAssetErrors = [];
+const assetRe = /(?:src|href)\s*=\s*["']([^"']+)["']/gi;
+for (const file of htmlFiles) {
+  const content = read(file);
+  for (const m of content.matchAll(assetRe)) {
+    const target = m[1];
+    if (/^(https?:|data:|mailto:|javascript:)/i.test(target)) continue;
+    const pathOnly = target.split("#")[0].split("?")[0];
+    if (!pathOnly) continue;
+    const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(file),pathOnly));
+    if (!exists(resolved)) htmlAssetErrors.push({file,target:resolved});
+  }
+}
+
+const sectionPresence = Object.fromEntries(
+  sections.map(([id,name,files]) => [id,{
+    name,
+    present: files.every(exists),
+    missing: files.filter(f=>!exists(f))
+  }])
+);
+
+const qualityFile = "js/player/player-quality.js";
+const qualityContent = exists(qualityFile) ? read(qualityFile) : "";
+const requiredQualities = ["340p","460p","720p","1080p"];
+const qualityOk = requiredQualities.every(q=>qualityContent.includes(q)) &&
+  !/\b(?:360p|400p|1040p)\b/.test(qualityContent);
+
+const releaseLock = exists("core/x4kiss-release-lock.js") ? read("core/x4kiss-release-lock.js") : "";
+const lockStateOk = releaseLock.includes('state: "DEVELOPMENT_ACTIVE"') || releaseLock.includes('locked: true');
+
+const section16 = await import(path.join(root,"partners/x4kiss-enterprise-content-partners-self-test.js").replaceAll(path.sep,"/"));
+const section16Result = section16.runEnterpriseContentPartnersSectionSelfTest();
+const section17 = await import(path.join(root,"consumer/x4kiss-consumer-product-section-self-test.js").replaceAll(path.sep,"/"));
+const section17Result = section17.runConsumerProductSectionSelfTest();
+const section18 = await import(path.join(root,"control/x4kiss-control-section-self-test.js").replaceAll(path.sep,"/"));
+const section18Result = await section18.runControlSectionSelfTest();
+
+const section15 = await import(path.join(root,"settings/x4kiss-platform-settings-section-self-test.js").replaceAll(path.sep,"/"));
+const section15Result = section15.runX4KissPlatformSettingsSectionSelfTest();
+const section19 = await import(path.join(root,"activation/x4kiss-production-activation-readiness-self-test.js").replaceAll(path.sep,"/"));
+const section19Result = section19.runSection19SelfTest();
+const section20 = await import(path.join(root,"release/x4kiss-final-master-release-self-test.js").replaceAll(path.sep,"/"));
+const section20Result = section20.runSection20SelfTest();
+
+const reviewedCommit = execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
+const reviewedCommitMessage = execFileSync("git",["log","-1","--pretty=%s"],{encoding:"utf8"}).trim();
+
+const result = {
+  stage:"FINAL-REVIEW",
+  reviewedCommit,
+  reviewedCommitMessage,
+  sections,
+  sectionPresence,
+  syntaxErrors,
+  importErrors,
+  htmlAssetErrors,
+  workerBindingErrors,
+  qualityOk,
+  lockStateOk,
+  section15: section15Result,
+  section16: section16Result,
+  section17: section17Result,
+  section18: section18Result,
+  section19: section19Result,
+  section20: section20Result
+};
+
+const allSectionsPresent = Object.values(sectionPresence).every(x=>x.present);
+const ok =
+  allSectionsPresent &&
+  syntaxErrors.length === 0 &&
+  importErrors.length === 0 &&
+  htmlAssetErrors.length === 0 &&
+  workerBindingErrors.length === 0 &&
+  qualityOk &&
+  lockStateOk &&
+  section15Result.ok === true &&
+  section16Result.ok === true &&
+  section17Result.ok === true &&
+  section18Result.ok === true &&
+  section19Result.ok === true &&
+  section20Result.ok === true;
+
+console.log(JSON.stringify({...result,ok},null,2));
+if (!ok) process.exit(1);

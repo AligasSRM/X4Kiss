@@ -1,14 +1,14 @@
-import { validateXKissPlayerRuntimeStateRequest } from "./player-runtime-state-rules.js";
+import { validateX4KissPlayerRuntimeStateRequest } from "./player-runtime-state-rules.js";
 
-export const XKISS_PLAYER_RUNTIME_STATE_CORE = {
+export const X4KISS_PLAYER_RUNTIME_STATE_CORE = {
   section: "15.17",
-  name: "XKiss Player Runtime State Core",
+  name: "X4Kiss Player Runtime State Core",
   version: "1.0.0",
   status: "connected",
   failClosed: true
 };
 
-export function getXKissPlayerRuntimeState(video) {
+export function getX4KissPlayerRuntimeState(video) {
   if (!video) return { ok: false, reason: "video_element_missing" };
   return {
     ok: true,
@@ -25,7 +25,7 @@ export function getXKissPlayerRuntimeState(video) {
   };
 }
 
-export function evaluateXKissPlayerRuntimeState(request = {}) {
-  const validation = validateXKissPlayerRuntimeStateRequest(request);
+export function evaluateX4KissPlayerRuntimeState(request = {}) {
+  const validation = validateX4KissPlayerRuntimeStateRequest(request);
   return { allowed: validation.allowed === true, gates: validation.gates };
 }

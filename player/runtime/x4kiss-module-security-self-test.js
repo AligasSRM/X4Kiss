@@ -1,0 +1,98 @@
+import { createX4KissModuleContractRegistry } from "./x4kiss-module-contract-core.js";
+import { createX4KissModuleLifecycle } from "./x4kiss-module-lifecycle-core.js";
+import { createX4KissModuleOrchestrator } from "./x4kiss-module-orchestration-core.js";
+import { createX4KissModuleSecurity } from "./x4kiss-module-security-core.js";
+
+export function runX4KissModuleSecuritySelfCheck() {
+  const core = {
+    modules: {},
+    registerModule(name, status) {
+      this.modules[name] = { status };
+      return true;
+    },
+    getModuleStatus() {
+      return { ...this.modules };
+    }
+  };
+
+  core.moduleContracts = createX4KissModuleContractRegistry(core);
+  core.moduleLifecycle = createX4KissModuleLifecycle(core);
+  core.moduleOrchestrator = createX4KissModuleOrchestrator(core);
+
+  core.moduleContracts.register("secure-base", {
+    version: "1.0.0",
+    dependencies: [],
+    capabilities: ["read", "execute"]
+  });
+
+  core.moduleLifecycle.register("secure-base", {
+    init() {},
+    start() {}
+  });
+
+  const activated = core.moduleOrchestrator.activate("secure-base");
+  const security = createX4KissModuleSecurity(core);
+  security.captureIntegritySnapshot();
+
+  const authorized = security.authorize("execute", "secure-base", "execute");
+  const deniedUnknown = security.authorize("execute", "unknown-module");
+  const validInput = security.validateInput("normal user text", { type: "string", maxLength: 100 });
+  const dangerousInput = security.validateInput("<script>alert(1)</script>", { type: "string", maxLength: 100 });
+  const invalidControl = security.validateInput("safe\u0000value", { type: "string" });
+
+  const limited = [];
+  for (let i = 0; i < 4; i += 1) {
+    limited.push(security.allowRate("self-test", 3, 10000));
+  }
+
+  const integrityClean = security.checkIntegrity();
+
+  const originalContracts = core.moduleContracts;
+  core.moduleContracts = {
+    get(name) {
+      return name ? { name, version: "tampered", dependencies: [], capabilities: ["execute"], registeredAt: 0 } : {};
+    },
+    list() {
+      return {};
+    }
+  };
+  const integrityChanged = security.checkIntegrity();
+  core.moduleContracts = originalContracts;
+
+  const locked = security.lockModule("secure-base", "self-test");
+  const health = security.getHealth();
+
+  const ok =
+    activated.ok === true &&
+    authorized.ok === true &&
+    deniedUnknown.ok === false &&
+    deniedUnknown.error === "unknown-module" &&
+    validInput.ok === true &&
+    dangerousInput.ok === false &&
+    invalidControl.ok === false &&
+    limited[0].ok === true &&
+    limited[2].ok === true &&
+    limited[3].ok === false &&
+    integrityClean.ok === true &&
+    integrityChanged.ok === false &&
+    integrityChanged.changed === true &&
+    locked.ok === true &&
+    locked.locked === true &&
+    health.status === "warning";
+
+  return {
+    ok,
+    stage: "15.27",
+    coreControlled: true,
+    authorized,
+    deniedUnknown,
+    validInput,
+    dangerousInput,
+    invalidControl,
+    rateLimitResult: limited[3],
+    integrityClean,
+    integrityChanged,
+    locked,
+    health
+  };
+}

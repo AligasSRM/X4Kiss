@@ -11,14 +11,14 @@
 
   function getVideos() {
     if (
-      typeof XKISS_VIDEOS !== "object" ||
-      XKISS_VIDEOS === null
+      typeof X4KISS_VIDEOS !== "object" ||
+      X4KISS_VIDEOS === null
     ) {
-      console.error("XKiss Videos: XKISS_VIDEOS data is unavailable.");
+      console.error("X4Kiss Videos: X4KISS_VIDEOS data is unavailable.");
       return [];
     }
 
-    return Object.values(XKISS_VIDEOS).filter(
+    return Object.values(X4KISS_VIDEOS).filter(
       video => video && video.id
     );
   }
@@ -126,7 +126,7 @@
     state.allVideos = getVideos();
     applyFilters();
 
-    window.XKissVideos = {
+    window.X4KissVideos = {
       getState,
       getCategories,
       setState,
@@ -134,7 +134,7 @@
     };
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:videos-ready")
+      new CustomEvent("x4kiss:videos-ready")
     );
   }
 

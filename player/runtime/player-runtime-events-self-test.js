@@ -1,13 +1,13 @@
-import { recordXKissPlayerRuntimeEvent, readXKissPlayerRuntimeEvents, evaluateXKissPlayerRuntimeEvents } from "./player-runtime-events-core.js";
+import { recordX4KissPlayerRuntimeEvent, readX4KissPlayerRuntimeEvents, evaluateX4KissPlayerRuntimeEvents } from "./player-runtime-events-core.js";
 
-export function runXKissPlayerRuntimeEventsSelfCheck() {
-  const before = readXKissPlayerRuntimeEvents().length;
-  const emitted = recordXKissPlayerRuntimeEvent("test", { ok: true });
-  const after = readXKissPlayerRuntimeEvents();
-  const valid = evaluateXKissPlayerRuntimeEvents({
+export function runX4KissPlayerRuntimeEventsSelfCheck() {
+  const before = readX4KissPlayerRuntimeEvents().length;
+  const emitted = recordX4KissPlayerRuntimeEvent("test", { ok: true });
+  const after = readX4KissPlayerRuntimeEvents();
+  const valid = evaluateX4KissPlayerRuntimeEvents({
     operation: "emit", playerCoreConnected: true, runtimeStateConnected: true
   });
-  const denied = evaluateXKissPlayerRuntimeEvents({
+  const denied = evaluateX4KissPlayerRuntimeEvents({
     operation: "emit", playerCoreConnected: true, runtimeStateConnected: false
   });
   const checks = {

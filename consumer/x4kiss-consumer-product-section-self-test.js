@@ -1,0 +1,2 @@
+import {runConsumerProductRegression} from "./x4kiss-consumer-product-regression.js";
+export function runConsumerProductSectionSelfTest(){const r=runConsumerProductRegression();return {ok:r.ok===true&&r.failClosed===true&&r.productionActivationAllowed===false&&r.productionActivationAllowed===false,test:"X4Kiss Section 17 Consumer Product complete self-test",section:"17",status:"GREEN_CLOSED",failClosed:true,productionActivationAllowed:false,checksPassed:r.checksPassed,checksTotal:r.checksTotal};}

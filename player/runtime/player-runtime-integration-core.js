@@ -1,26 +1,26 @@
-import { validateXKissPlayerRuntimeIntegrationRequest } from "./player-runtime-integration-rules.js";
+import { validateX4KissPlayerRuntimeIntegrationRequest } from "./player-runtime-integration-rules.js";
 
-export const XKISS_PLAYER_RUNTIME_INTEGRATION_CORE = {
+export const X4KISS_PLAYER_RUNTIME_INTEGRATION_CORE = {
   section: "15.16",
-  name: "XKiss Player Runtime Integration Core",
+  name: "X4Kiss Player Runtime Integration Core",
   version: "1.0.0",
   status: "connected",
   failClosed: true
 };
 
-export const XKISS_APPROVED_QUALITIES = ["340p", "460p", "720p", "1080p"];
+export const X4KISS_APPROVED_QUALITIES = ["340p", "460p", "720p", "1080p"];
 
-export function getXKissPlayerRuntimeIntegrationStatus() {
+export function getX4KissPlayerRuntimeIntegrationStatus() {
   return {
     ok: true,
     stage: "15.16",
-    service: XKISS_PLAYER_RUNTIME_INTEGRATION_CORE.name,
-    status: XKISS_PLAYER_RUNTIME_INTEGRATION_CORE.status,
-    approvedQualities: [...XKISS_APPROVED_QUALITIES]
+    service: X4KISS_PLAYER_RUNTIME_INTEGRATION_CORE.name,
+    status: X4KISS_PLAYER_RUNTIME_INTEGRATION_CORE.status,
+    approvedQualities: [...X4KISS_APPROVED_QUALITIES]
   };
 }
 
-export function evaluateXKissPlayerRuntimeIntegration(request = {}) {
-  const validation = validateXKissPlayerRuntimeIntegrationRequest(request);
+export function evaluateX4KissPlayerRuntimeIntegration(request = {}) {
+  const validation = validateX4KissPlayerRuntimeIntegrationRequest(request);
   return { allowed: validation.allowed === true, gates: validation.gates };
 }

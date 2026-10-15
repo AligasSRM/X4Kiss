@@ -3,19 +3,7 @@ name: Storage Adapter Tests
 on:
   push:
     branches: [main]
-    paths:
-      - "storage/**"
-      - "test/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/storage-adapter-tests.yml"
   pull_request:
-    paths:
-      - "storage/**"
-      - "test/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/storage-adapter-tests.yml"
   workflow_dispatch:
 
 permissions:
@@ -34,4 +22,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run automated tests
-        run: node --test test/elasticlake-adapter.test.js
+        run: npm test

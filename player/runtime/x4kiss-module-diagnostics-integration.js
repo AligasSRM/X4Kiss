@@ -1,0 +1,3 @@
+import {createX4KissModuleDiagnostics} from "./x4kiss-module-diagnostics-core.js";
+export function installX4KissModuleDiagnostics(core){if(!core)return{ok:false,error:"player-core-required",stage:"15.29"};if(!core.moduleHealth)return{ok:false,error:"health-prerequisite-missing",stage:"15.29"};if(core.moduleDiagnostics)return{ok:true,stage:"15.29",coreControlled:true,reused:true,diagnostics:core.moduleDiagnostics};try{const diagnostics=createX4KissModuleDiagnostics(core);core.moduleDiagnostics=diagnostics;core.registerModule("module-diagnostics","active");return{ok:true,stage:"15.29",coreControlled:core.moduleDiagnostics===diagnostics,diagnostics};}catch(error){return{ok:false,error:String(error?.message||error),stage:"15.29"};}}
+

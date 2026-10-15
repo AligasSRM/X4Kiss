@@ -1,4 +1,4 @@
-# XKiss Storage Connection Checklist
+# X4Kiss Storage Connection Checklist
 
 Status: YELLOW — configuration and live tests still required.
 
@@ -6,7 +6,7 @@ Status: YELLOW — configuration and live tests still required.
 - [ ] Confirm region.
 - [ ] Confirm bucket name exactly as shown in the provider dashboard.
 - [ ] Create/confirm a least-privilege access key for this bucket.
-- [ ] Store credentials only in the XKiss server-side secret manager.
+- [ ] Store credentials only in the X4Kiss server-side secret manager.
 - [ ] Verify no credentials are present in frontend assets, logs, commits, or public files.
 - [ ] Test upload of a harmless temporary object.
 - [ ] Read the object back and compare its contents.

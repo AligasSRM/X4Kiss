@@ -52,7 +52,7 @@
 
   async function checkStorage() {
     try {
-      const data = await window.XKissUploadAPI.getStorageStatus();
+      const data = await window.X4KissUploadAPI.getStorageStatus();
       setStorageStatus(Boolean(data.storageReady), data.storageReady ? "Storage ready" : "Storage not active");
       $("upload-status").textContent = data.storageReady
         ? "Object storage is reachable. Secure creator authorization and the actual file-transfer pipeline must also be enabled before upload."
@@ -60,7 +60,7 @@
       setProgress(0, data.storageReady ? "Storage check complete — no file uploaded" : "Waiting for storage");
     } catch {
       setStorageStatus(false, "Worker unavailable");
-      $("upload-status").textContent = "Could not reach the XKiss upload service.";
+      $("upload-status").textContent = "Could not reach the X4Kiss upload service.";
       setProgress(0, "Upload service unavailable");
     }
   }
@@ -107,9 +107,9 @@
         title: $("video-title").value.trim(), description: $("video-description").value.trim(),
         category: $("video-category").value
       };
-      await window.XKissUploadAPI.prepareUpload(metadata);
+      await window.X4KissUploadAPI.prepareUpload(metadata);
       setProgress(25, "Creator session verified — transferring video");
-      const data = await window.XKissUploadAPI.uploadFile(state.file, metadata);
+      const data = await window.X4KissUploadAPI.uploadFile(state.file, metadata);
       setProgress(100, "Video stored privately — not published");
       setResult((data.message || "Video stored privately.") + " Opening My Videos…", "success");
       $("upload-status").textContent = "Upload confirmed by the server. Opening your private video library.";
@@ -140,7 +140,7 @@
   async function restoreSession() {
     const status = $("creator-auth-status");
     try {
-      const result = await window.XKissUploadAPI.verifySession();
+      const result = await window.X4KissUploadAPI.verifySession();
       state.signedIn = result.ok === true && result.status === "authenticated";
       if (status) status.textContent = state.signedIn
         ? "Creator session verified."
