@@ -1,4 +1,4 @@
-import {runSection20SelfTest} from "./xkiss-final-master-release-self-test.js";
+import {runSection20SelfTest} from "./x4kiss-final-master-release-self-test.js";
 
 export function runSection20Regression(){
   const a=runSection20SelfTest();
