@@ -9,7 +9,7 @@ Branch: main
 - Runtime adapter: `storage/elasticlake-adapter.js`.
 - Worker configuration: `wrangler.toml`.
 - Required Worker secrets: `ELASTICLAKE_ACCESS_KEY_ID` and `ELASTICLAKE_SECRET_ACCESS_KEY`.
-- Bucket: `xkiss-storage--xkiss-production--xkiss-midea`.
+- Bucket: `x4kiss-storage--x4kiss-production--x4kiss-midea`.
 - Current Worker secrets inventory was checked on 2026-10-10; retired-provider credentials were not present.
 - Repository searches on 2026-10-11 returned no matches for retired-provider references.
 
@@ -36,7 +36,7 @@ Production activation remains BLOCKED / fail-closed until the remaining independ
 
 ## Next phase — AUDIT-04 Worker Environment Contract
 Status: YELLOW / IN PROGRESS.
-- Removed the obsolete `XKISS_VIDEOS` binding from the current Worker environment contract.
+- Removed the obsolete `X4KISS_VIDEOS` binding from the current Worker environment contract.
 - Aligned the contract and self-test with ElasticLake's endpoint, bucket, region, access-key ID, and secret-key configuration.
 - Required next: run the relevant self-tests and CI on the latest commits, inspect failures, and resolve them before marking AUDIT-04 GREEN.
 - Never use real credentials in self-tests or source code.
