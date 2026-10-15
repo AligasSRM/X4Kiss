@@ -79,5 +79,3 @@ export function createX4KissModuleOrchestrator(core) {
   });
 }
 
-// Backward-compatible product-name alias for orchestration integration.
-export const createX4KissModuleOrchestrator = createX4KissModuleOrchestrator;
