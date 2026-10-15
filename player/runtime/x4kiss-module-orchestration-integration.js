@@ -11,5 +11,3 @@ export function installX4KissModuleOrchestrator(core) {
   return { ok: true, reused: false, stage: "15.26", coreControlled: true, orchestrator };
 }
 
-// Backward-compatible alias for existing orchestration workflows.
-export const installX4KissModuleOrchestrator = installX4KissModuleOrchestrator;
