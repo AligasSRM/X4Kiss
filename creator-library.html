@@ -4,20 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#07080b">
+<meta name="description" content="Manage your private X4Kiss creator video library.">
 <title>X4Kiss — Creator Library</title>
 <script src="auth/route-guard.js"></script>
 <link rel="stylesheet" href="creator/creator-library.css">
 </head>
 <body>
 <header class="creator-header">
-  <nav class="creator-nav">
+  <nav class="creator-nav" aria-label="Main navigation">
     <a class="brand" href="index.html" aria-label="X4Kiss Home"><span class="brand-x">X4</span><span class="brand-kiss">kiss</span></a>
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="videos.html">Videos</a>
       <a href="live.html">Live</a>
       <a href="creator-upload.html">Upload</a>
-      <a class="active" href="creator-library.html">My Videos</a>
+      <a class="active" href="creator-library.html" aria-current="page">My Videos</a>
     </div>
     <a class="login" href="index.html#account">Account</a>
   </nav>
@@ -25,18 +26,18 @@
 
 <main class="creator-page">
   <section class="creator-hero">
-    <span class="eyebrow">XKISS CREATOR</span>
+    <span class="eyebrow">X4KISS CREATOR</span>
     <h1>My Videos</h1>
-    <p>Manage your uploaded videos, publishing status, visibility and download settings from one creator library.</p>
+    <p>Manage your uploaded videos and review their server-reported status, visibility, download policy, and storage provider.</p>
   </section>
 
   <div id="library-notice" class="library-notice" role="status" aria-live="polite" hidden></div>
 
-  <section class="library-section">
+  <section class="library-section" aria-labelledby="library-heading">
     <div class="section-head">
       <div>
-        <h2>Video Library</h2>
-        <p id="library-count">Checking your library…</p>
+        <h2 id="library-heading">Private Video Library</h2>
+        <p id="library-count">Loading your library…</p>
       </div>
       <a class="primary" href="creator-upload.html">Upload Video</a>
     </div>
@@ -44,24 +45,24 @@
     <div id="library-grid" class="library-grid" aria-live="polite"></div>
 
     <div id="library-empty" class="empty-state" hidden>
-      <div class="empty-icon">▣</div>
+      <div class="empty-icon" aria-hidden="true">▣</div>
       <h3>No creator videos yet</h3>
-      <p>Your library will show videos after they are uploaded to production storage.</p>
+      <p>Your videos will appear here after the server confirms the upload and returns them from your private library.</p>
       <a class="primary" href="creator-upload.html">Upload Your First Video</a>
     </div>
   </section>
 
-  <section class="library-info">
+  <section class="library-info" aria-labelledby="storage-heading">
     <div>
-      <span class="eyebrow">STORAGE READY</span>
-      <h2>Built for production storage later</h2>
-      <p>The creator library is already separated from the storage provider. When R2 is activated, uploaded files can appear here without rebuilding the creator experience.</p>
+      <span class="eyebrow">STORAGE PROVIDER</span>
+      <h2 id="storage-heading">ElasticLake object storage</h2>
+      <p>X4Kiss uses the ElasticLake storage adapter for video objects. This page displays storage information returned by the authenticated backend; it does not assume that a video upload succeeded merely because this page opened. Public publishing, video processing, and playback remain disabled until their secure paths are implemented and tested.</p>
     </div>
     <div class="info-points">
       <div><strong>01</strong><span>Video metadata</span></div>
-      <div><strong>02</strong><span>Visibility</span></div>
+      <div><strong>02</strong><span>Visibility policy</span></div>
       <div><strong>03</strong><span>Download policy</span></div>
-      <div><strong>04</strong><span>Storage status</span></div>
+      <div><strong>04</strong><span>Backend storage status</span></div>
     </div>
   </section>
 </main>
