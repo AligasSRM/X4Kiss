@@ -66,7 +66,7 @@ a{color:#ff9ac0}button,input{font:inherit}.shell{width:min(100%,540px)}.brand{fo
     "player.html", "monetization.html"
   ];
   function getSafeReturnTarget(value) {
-    if (!value || value.charAt(0) === "/" || value.indexOf("\\\\") !== -1 || /^[a-z][a-z0-9+.-]*:/i.test(value)) return "index.html";
+    if (!value || value.charAt(0) === "/" || value.indexOf("\\") !== -1 || /^[a-z][a-z0-9+.-]*:/i.test(value)) return "index.html";
     try {
       var parsed = new URL(value, location.href);
       var file = parsed.pathname.split("/").pop();
