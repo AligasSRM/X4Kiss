@@ -9,6 +9,8 @@
 
   async function getJSON(path) {
     const token = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
+    if (token) window.sessionStorage.setItem(SESSION_KEY, token);
+    window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
     const response = await fetch(API_BASE + path, {
       headers: {
         Accept: "application/json",
