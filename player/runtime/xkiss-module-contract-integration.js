@@ -1,5 +1,5 @@
-import { createX4KissModuleContractRegistry } from "./xkiss-module-contract-core.js";
-import { validateX4KissModuleContractRules } from "./xkiss-module-contract-rules.js";
+import { createX4KissModuleContractRegistry } from "./x4kiss-module-contract-core.js";
+import { validateX4KissModuleContractRules } from "./x4kiss-module-contract-rules.js";
 
 export function installX4KissModuleContractRegistry(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
@@ -21,4 +21,4 @@ export function installX4KissModuleContractRegistry(core) {
 }
 
 // Backward-compatible alias for existing contract workflows.
-export const installXKissModuleContractRegistry = installX4KissModuleContractRegistry;
+export const installX4KissModuleContractRegistry = installX4KissModuleContractRegistry;
