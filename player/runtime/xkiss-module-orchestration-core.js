@@ -1,11 +1,11 @@
-import { validateXKissModuleOrchestrationRules } from "./xkiss-module-orchestration-rules.js";
+import { validateX4KissModuleOrchestrationRules } from "./x4kiss-module-orchestration-rules.js";
 
-export function createXKissModuleOrchestrator(core) {
+export function createX4KissModuleOrchestrator(core) {
   if (!core || !core.moduleContracts || !core.moduleLifecycle) {
-    throw new Error("XKiss Module Orchestrator requires Core contracts and lifecycle.");
+    throw new Error("X4Kiss Module Orchestrator requires Core contracts and lifecycle.");
   }
 
-  const rules = validateXKissModuleOrchestrationRules();
+  const rules = validateX4KissModuleOrchestrationRules();
 
   function plan(name) {
     const contracts = core.moduleContracts;
@@ -80,4 +80,4 @@ export function createXKissModuleOrchestrator(core) {
 }
 
 // Backward-compatible product-name alias for orchestration integration.
-export const createX4KissModuleOrchestrator = createXKissModuleOrchestrator;
+export const createX4KissModuleOrchestrator = createX4KissModuleOrchestrator;
