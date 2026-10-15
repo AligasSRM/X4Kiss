@@ -27,7 +27,7 @@
   <section class="upload-hero">
     <span class="eyebrow">X4KISS CREATOR</span>
     <h1>Upload Video</h1>
-    <p>Select a video up to 100 MB. After the server confirms storage, X4Kiss will take you to My Videos. Public publishing and playback remain disabled for now.</p>
+    <p>Select a video up to 100 MB. X4Kiss will open My Videos only after the upload endpoint returns success. Public publishing and playback remain disabled for now.</p>
   </section>
 
   <section class="upload-section">
@@ -114,7 +114,7 @@
 
       <div class="architecture-note">
         <strong>Storage architecture</strong>
-        <span>ElasticLake object storage has passed a direct write/read/delete test. Uploads require a creator session and are stored privately. Public publishing, processing, and playback remain disabled until their secure paths are completed.</span>
+        <span>X4Kiss uses the ElasticLake storage adapter. A storage self-test is not proof that every video upload works; each upload must be confirmed by the server and then appear in your private library. Public publishing, processing, and playback remain disabled until their secure paths are completed and tested.</span>
       </div>
     </div>
   </section>
