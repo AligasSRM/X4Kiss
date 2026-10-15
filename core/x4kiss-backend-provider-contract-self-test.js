@@ -1,7 +1,7 @@
 import {
-  XKISS_BACKEND_PROVIDER_CONTRACT,
+  X4KISS_BACKEND_PROVIDER_CONTRACT,
   evaluateBackendProviderContract
-} from "./xkiss-backend-provider-contract.js";
+} from "./x4kiss-backend-provider-contract.js";
 
 const EXPECTED_CAPABILITIES = {
   safety: ["identity", "age_verification", "creator_verification", "moderation", "reporting", "audit", "privacy"],
@@ -17,7 +17,7 @@ const complete = Object.fromEntries(
   ])
 );
 
-export function runXKissBackendProviderContractSelfTest() {
+export function runX4KissBackendProviderContractSelfTest() {
   const blocked = evaluateBackendProviderContract({});
   const ready = evaluateBackendProviderContract(complete);
 
@@ -60,7 +60,7 @@ export function runXKissBackendProviderContractSelfTest() {
 
   const cases = {
     contractDeclaresFourProviders:
-      Object.keys(XKISS_BACKEND_PROVIDER_CONTRACT.providers).length === 4,
+      Object.keys(X4KISS_BACKEND_PROVIDER_CONTRACT.providers).length === 4,
     emptyEnvironmentBlocks:
       blocked.status === "BLOCKED" &&
       blocked.missingProviders.length === 4 &&
