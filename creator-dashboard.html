@@ -28,6 +28,7 @@
       <option value="ar">العربية</option>
     </select>
   </label>
+  <p id="interface-language-status" role="status" aria-live="polite" aria-atomic="true" style="margin:.75rem 0 0;font-size:.9em;opacity:.9">Checking public translation services. Machine translation has not been verified on the live site yet.</p>
 </section>
 
 <section class="location-settings" aria-labelledby="location-heading" style="margin:1.5rem 0;padding:1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem">
@@ -234,7 +235,7 @@
   }
 
   function getStaticTextNodes() {
-    const excluded = 'script,style,noscript,option,select,[data-no-translate],.brand,#system-status';
+    const excluded = 'script,style,noscript,option,select,[data-no-translate],.brand,#system-status,#interface-language-status';
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const value = node.nodeValue;
@@ -422,9 +423,12 @@
   }
 
   function announceTranslationState(message) {
-    // Reuse the existing polite status area without sending status text to the translation API.
-    const help = document.getElementById('interface-language-help');
-    if (help) help.setAttribute('title', message);
+    // Keep service status visible and available to assistive technology; never send it to the API.
+    const status = document.getElementById('interface-language-status');
+    if (status) {
+      status.textContent = message;
+      status.title = message;
+    }
   }
 
   picker.addEventListener('change', () => applyLanguage(picker.value));
@@ -434,7 +438,11 @@
     // Keep the language selector's own heading/help translatable while excluding its options.
     const engineReady = await findTranslationEngine();
     populateLanguagePicker();
-    if (!engineReady) announceTranslationState('Public translation servers could not be reached. A fallback language list is available, but machine translation is not currently connected.');
+    if (engineReady) {
+      announceTranslationState('Translation service discovered. Live translation quality and availability still require browser testing.');
+    } else {
+      announceTranslationState('Public translation servers could not be reached. A fallback language list is available, but machine translation is not currently connected.');
+    }
     const saved = (() => { try { return localStorage.getItem('x4kiss-interface-language'); } catch (_) { return null; } })();
     if (saved && supportedLanguages.some(item => item.code === saved)) picker.value = saved;
     picker.addEventListener('change', () => {
