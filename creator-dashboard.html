@@ -187,73 +187,262 @@
 </script>
 <script>
 (() => {
-  // UI translation is intentionally independent of the country dataset and location lookup.
+  'use strict';
+
+  // X4Kiss in-file i18n layer: LibreTranslate-compatible public endpoints, no API key.
+  // Only static interface text is submitted for translation; user/account data is not collected.
   const picker = document.getElementById('interface-language-select');
   if (!picker) return;
-  const strings = {
-    en: {
-      'interface-language-heading':'Interface Language','interface-language-help':'Choose the language used by this dashboard. This setting is independent of country and location settings.','interface-language-label':'Display language',
-      'nav-home':'Home','nav-videos':'Videos','nav-live':'Live','nav-dashboard':'Dashboard','nav-library':'My Videos','nav-account':'Account','nav-login':'Login',
-      'hero-title':'Creator Dashboard','hero-description':'Your central creator workspace for videos, live broadcasting, storage and future earnings.',
-      'country-title':'Location & Country','country-description':'Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.',
-      'country-search-label':'Find a country or territory','country-label':'Country or territory','country-placeholder':'Choose a country or territory','country-detect':'Detect country from my location',
-      'overview-title':'Overview','overview-description':'Current platform data only. No placeholder earnings or fake metrics.',
-      'wallet-title':'Wallet & Payouts','wallet-description':'Live wallet state only. No fake balance or payout amount is displayed.',
-      'tools-title':'Creator Tools','tools-description':'Quick access to creator modules; availability is shown only when verified.',
-      'roadmap-title':'Ready for the next layers','back-home':'Back to Home'
-    },
-    ar: {
-      'interface-language-heading':'لغة الواجهة','interface-language-help':'اختر لغة لوحة التحكم. هذا الإعداد مستقل عن إعدادات الدولة والموقع.','interface-language-label':'لغة العرض',
-      'nav-home':'الرئيسية','nav-videos':'الفيديوهات','nav-live':'البث المباشر','nav-dashboard':'لوحة التحكم','nav-library':'فيديوهاتي','nav-account':'الحساب','nav-login':'تسجيل الدخول',
-      'hero-title':'لوحة تحكم صانع المحتوى','hero-description':'مساحة مركزية لإدارة الفيديوهات والبث المباشر والتخزين والأرباح المستقبلية.',
-      'country-title':'الموقع والدولة','country-description':'اختر دولة أو اطلب إحداثيات جهازك. الإحداثيات لا تحدد الدولة تلقائياً، والوصول إلى الموقع اختياري.',
-      'country-search-label':'ابحث عن دولة أو منطقة','country-label':'الدولة أو المنطقة','country-placeholder':'اختر دولة أو منطقة','country-detect':'تحديد الدولة من موقعي',
-      'overview-title':'نظرة عامة','overview-description':'بيانات المنصة الحالية فقط، دون أرباح أو أرقام وهمية.',
-      'wallet-title':'المحفظة والدفعات','wallet-description':'نعرض حالة المحفظة الفعلية فقط، دون رصيد أو دفعات وهمية.',
-      'tools-title':'أدوات صانع المحتوى','tools-description':'وصول سريع إلى وحدات صانع المحتوى؛ لا نعرض التوفر على أنه مؤكّد إلا بعد التحقق.',
-      'roadmap-title':'جاهزون لإضافة المراحل التالية','back-home':'العودة إلى الرئيسية'
-    }
-  };
-  const map = {
-    'interface-language-heading':'#interface-language-heading','interface-language-help':'#interface-language-help','interface-language-label':'#interface-language-label',
-    'nav-home':'.nav-links a[href="index.html"]','nav-videos':'.nav-links a[href="videos.html"]','nav-live':'.nav-links a[href="live.html"]','nav-dashboard':'.nav-links a[href="creator-dashboard.html"]','nav-library':'.nav-links a[href="creator-library.html"]','nav-account':'.nav-links a[href="index.html#account"]','nav-login':'.dashboard-nav > .login',
-    'hero-title':'.dashboard-hero h1','hero-description':'.dashboard-hero > div > p',
-    'country-title':'#location-heading','country-description':'.location-settings .section-head p',
-    'country-search-label':'label[for="country-search"] span','country-label':'label[for="country-select"] span','country-detect':'#detect-location',
-    'overview-title':'.stats-section h2','overview-description':'.stats-section .section-head p',
-    'wallet-title':'.wallet-section h2','wallet-description':'.wallet-section .section-head p',
-    'tools-title':'.actions-section h2','tools-description':'.actions-section .section-head p',
-    'roadmap-title':'.roadmap-card h2','back-home':'.dashboard-footer a'
-  };
-  function applyLanguage(lang) {
-    const language = strings[lang] ? lang : 'en';
-    document.documentElement.lang = language;
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    for (const [key, selector] of Object.entries(map)) {
-      const el = document.querySelector(selector);
-      if (!el) continue;
-      if (key === 'country-search-label' || key === 'country-label') {
-        const textNode = Array.from(el.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
-        if (textNode) textNode.nodeValue = '\n      ' + strings[language][key] + '\n      ';
-      } else {
-        el.textContent = strings[language][key];
+
+  const ENGINE_ENDPOINTS = [
+    'https://translate.argosopentech.com',
+    'https://libretranslate.de',
+    'https://trans.zillyhuhn.com'
+  ];
+  const CACHE_PREFIX = 'x4kiss-i18n-v1:';
+  const FALLBACK_LANGUAGES = [
+    ['ar','Arabic'],['az','Azerbaijani'],['eu','Basque'],['bn','Bengali'],
+    ['bg','Bulgarian'],['ca','Catalan'],['zh','Chinese'],['cs','Czech'],
+    ['da','Danish'],['nl','Dutch'],['en','English'],['eo','Esperanto'],
+    ['fi','Finnish'],['fr','French'],['gl','Galician'],['de','German'],
+    ['el','Greek'],['he','Hebrew'],['hi','Hindi'],['hu','Hungarian'],
+    ['id','Indonesian'],['ga','Irish'],['it','Italian'],['ja','Japanese'],
+    ['ko','Korean'],['ky','Kyrgyz'],['ms','Malay'],['fa','Persian'],
+    ['pl','Polish'],['pt','Portuguese'],['pt_BR','Portuguese (Brazil)'],
+    ['ru','Russian'],['sk','Slovak'],['es','Spanish'],['sw','Swahili'],
+    ['sv','Swedish'],['th','Thai'],['tr','Turkish'],['uk','Ukrainian'],
+    ['ur','Urdu'],['vi','Vietnamese']
+  ];
+  const directionByLanguage = new Set([
+    'ar','arc','ary','arz','ckb','dv','fa','ha','he','khw','ks','ku',
+    'ps','sd','ug','ur','yi'
+  ]);
+  let engineBase = null;
+  let supportedLanguages = [];
+  let originalNodes = [];
+  let activeRequest = 0;
+  let originalTexts = new Map();
+
+  function languageLabel(code, fallback) {
+    try {
+      if (typeof Intl !== 'undefined' && Intl.DisplayNames) {
+        const base = code.replace('_','-');
+        return new Intl.DisplayNames([base], {type:'language'}).of(base) || fallback || code;
       }
-    }
-    const search = document.getElementById('country-search');
-    const countrySelect = document.getElementById('country-select');
-    if (search) search.placeholder = language === 'ar' ? 'اكتب اسم الدولة…' : 'Type a country name…';
-    if (countrySelect && countrySelect.options.length) countrySelect.options[0].textContent = strings[language]['country-placeholder'];
-    const displayNames = typeof Intl !== 'undefined' && typeof Intl.DisplayNames === 'function'
-      ? new Intl.DisplayNames([language], {type:'region'}) : null;
-    if (countrySelect && displayNames) {
-      for (const option of Array.from(countrySelect.options)) {
-        if (option.value) option.textContent = displayNames.of(option.value);
-      }
-    }
-    const countrySearch = document.getElementById('country-search');
+    } catch (_) {}
+    return fallback || code;
   }
+
+  function getStaticTextNodes() {
+    const excluded = 'script,style,noscript,option,select,[data-no-translate],.brand,#system-status';
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const value = node.nodeValue;
+        if (!value || !value.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent || parent.closest(excluded)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('[contenteditable="true"],textarea,input')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      const original = node.nodeValue;
+      nodes.push({node, original});
+      originalTexts.set(node, original);
+    }
+    return nodes;
+  }
+
+  async function fetchJson(url, options, timeoutMs = 9000) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let timer;
+    try {
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          if (controller) controller.abort();
+          reject(new Error('Translation service timed out'));
+        }, timeoutMs);
+      });
+      const request = fetch(url, Object.assign({}, options || {}, controller ? {signal:controller.signal} : {}));
+      const response = await Promise.race([request, timeout]);
+      if (!response.ok) throw new Error('Translation service returned HTTP ' + response.status);
+      return await response.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function findTranslationEngine() {
+    for (const base of ENGINE_ENDPOINTS) {
+      try {
+        const result = await fetchJson(base + '/languages', {headers:{Accept:'application/json'}}, 5000);
+        if (Array.isArray(result) && result.some(item => item && item.code)) {
+          engineBase = base;
+          supportedLanguages = result
+            .filter(item => item && typeof item.code === 'string' && item.code.trim())
+            .map(item => ({code:item.code, name:languageLabel(item.code, item.name || item.code), fallback:item.name || item.code}))
+            .filter((item, index, all) => all.findIndex(other => other.code === item.code) === index);
+          if (!supportedLanguages.some(item => item.code === 'en')) supportedLanguages.unshift({code:'en',name:'English',fallback:'English'});
+          return true;
+        }
+      } catch (_) {}
+    }
+    supportedLanguages = FALLBACK_LANGUAGES.map(([code,name]) => ({
+      code, name:languageLabel(code,name), fallback:name
+    }));
+    return false;
+  }
+
+  function populateLanguagePicker() {
+    const previous = picker.value || 'en';
+    const fragment = document.createDocumentFragment();
+    const languages = supportedLanguages.slice().sort((a,b) => {
+      if (a.code === 'en') return -1;
+      if (b.code === 'en') return 1;
+      return a.name.localeCompare(b.name);
+    });
+    for (const language of languages) {
+      const option = document.createElement('option');
+      option.value = language.code;
+      option.textContent = language.name;
+      fragment.appendChild(option);
+    }
+    picker.replaceChildren(fragment);
+    picker.value = languages.some(item => item.code === previous) ? previous : 'en';
+    if (!picker.value) picker.value = 'en';
+  }
+
+  function directionFor(code) {
+    const base = String(code || 'en').toLowerCase().split(/[-_]/)[0];
+    return directionByLanguage.has(base) ? 'rtl' : 'ltr';
+  }
+
+  function cacheKey(language, text) {
+    return CACHE_PREFIX + encodeURIComponent(language) + ':' + encodeURIComponent(text);
+  }
+
+  async function translateBatch(texts, target) {
+    const cache = new Map();
+    const missing = [];
+    for (const text of texts) {
+      try {
+        const cached = localStorage.getItem(cacheKey(target, text));
+        if (cached) cache.set(text, cached);
+        else missing.push(text);
+      } catch (_) { missing.push(text); }
+    }
+    if (missing.length) {
+      if (!engineBase) throw new Error('No translation engine is available.');
+      const response = await fetchJson(engineBase + '/translate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json',Accept:'application/json'},
+        body:JSON.stringify({q:missing, source:'en', target})
+      }, 20000);
+      let translated = response && response.translatedText;
+      if (!Array.isArray(translated) && missing.length === 1 && typeof translated === 'string') translated = [translated];
+      if (!Array.isArray(translated) || translated.length !== missing.length) {
+        throw new Error('Translation engine returned an unexpected batch response.');
+      }
+      missing.forEach((text,index) => {
+        const value = typeof translated[index] === 'string' ? translated[index] : text;
+        cache.set(text, value);
+        try { localStorage.setItem(cacheKey(target,text), value); } catch (_) {}
+      });
+    }
+    return cache;
+  }
+
+  async function applyLanguage(target) {
+    const requestId = ++activeRequest;
+    const code = target || 'en';
+    document.documentElement.lang = code.replace('_','-');
+    document.documentElement.dir = directionFor(code);
+    document.documentElement.dataset.interfaceLanguage = code;
+
+    if (code === 'en') {
+      for (const entry of originalNodes) {
+        if (entry.node.isConnected) entry.node.nodeValue = entry.original;
+      }
+      updateCountryNames(code);
+      return;
+    }
+
+    const texts = Array.from(new Set(originalNodes.map(entry => entry.original.trim()).filter(Boolean)));
+    const results = new Map();
+    try {
+      // Use bounded batches so one language switch does not create a flood of API calls.
+      for (let i = 0; i < texts.length; i += 24) {
+        if (requestId !== activeRequest) return;
+        const batch = texts.slice(i, i + 24);
+        const translated = await translateBatch(batch, code);
+        for (const [key,value] of translated) results.set(key,value);
+      }
+      if (requestId !== activeRequest) return;
+      for (const entry of originalNodes) {
+        if (!entry.node.isConnected || entry.node.nodeValue.trim() !== entry.original.trim()) continue;
+        const translated = results.get(entry.original.trim());
+        if (translated) {
+          const leading = (entry.original.match(/^\s*/) || [''])[0];
+          const trailing = (entry.original.match(/\s*$/) || [''])[0];
+          entry.node.nodeValue = leading + translated + trailing;
+        }
+      }
+      updateCountryNames(code);
+      announceTranslationState('Interface language applied: ' + code + '. Machine translation may contain errors.');
+    } catch (error) {
+      if (requestId !== activeRequest) return;
+      announceTranslationState('Translation service unavailable. English interface restored; try again later.');
+      picker.value = 'en';
+      document.documentElement.lang = 'en';
+      document.documentElement.dir = 'ltr';
+      for (const entry of originalNodes) {
+        if (entry.node.isConnected) entry.node.nodeValue = entry.original;
+      }
+      updateCountryNames('en');
+    }
+  }
+
+  function updateCountryNames(language) {
+    const countrySelect = document.getElementById('country-select');
+    if (!countrySelect || typeof Intl === 'undefined' || !Intl.DisplayNames) return;
+    let displayNames;
+    try { displayNames = new Intl.DisplayNames([String(language).replace('_','-')], {type:'region'}); }
+    catch (_) { return; }
+    for (const option of Array.from(countrySelect.options)) {
+      if (!option.value) continue;
+      try { option.textContent = displayNames.of(option.value) || option.value; }
+      catch (_) {}
+    }
+  }
+
+  function announceTranslationState(message) {
+    // Reuse the existing polite status area without sending status text to the translation API.
+    const help = document.getElementById('interface-language-help');
+    if (help) help.setAttribute('title', message);
+  }
+
   picker.addEventListener('change', () => applyLanguage(picker.value));
-  applyLanguage(picker.value);
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    originalNodes = getStaticTextNodes();
+    // Keep the language selector's own heading/help translatable while excluding its options.
+    const engineReady = await findTranslationEngine();
+    populateLanguagePicker();
+    if (!engineReady) announceTranslationState('Public translation servers could not be reached. A fallback language list is available, but machine translation is not currently connected.');
+    const saved = (() => { try { return localStorage.getItem('x4kiss-interface-language'); } catch (_) { return null; } })();
+    if (saved && supportedLanguages.some(item => item.code === saved)) picker.value = saved;
+    picker.addEventListener('change', () => {
+      try { localStorage.setItem('x4kiss-interface-language', picker.value); } catch (_) {}
+    });
+    if (picker.value !== 'en') await applyLanguage(picker.value);
+    else {
+      document.documentElement.lang = 'en';
+      document.documentElement.dir = 'ltr';
+      updateCountryNames('en');
+    }
+  });
 })();
 </script>
 
