@@ -1,8 +1,8 @@
-import {installX4KissModuleLifecycle} from "./xkiss-module-lifecycle-integration.js";
-import {installX4KissModuleContractRegistry} from "./xkiss-module-contract-integration.js";
-import {installX4KissModuleHealth} from "./xkiss-module-health-integration.js";
-import {installX4KissModuleDiagnostics} from "./xkiss-module-diagnostics-integration.js";
-import {installX4KissModuleRecovery} from "./xkiss-module-recovery-integration.js";
+import {installX4KissModuleLifecycle} from "./x4kiss-module-lifecycle-integration.js";
+import {installX4KissModuleContractRegistry} from "./x4kiss-module-contract-integration.js";
+import {installX4KissModuleHealth} from "./x4kiss-module-health-integration.js";
+import {installX4KissModuleDiagnostics} from "./x4kiss-module-diagnostics-integration.js";
+import {installX4KissModuleRecovery} from "./x4kiss-module-recovery-integration.js";
 export async function runX4KissModuleRecoverySelfCheck(){
   const core={modules:{},registerModule(n,s="ready"){this.modules[n]=s;},getModuleStatus(){return{...this.modules}}};
   const lifecycle=installX4KissModuleLifecycle(core); const contracts=installX4KissModuleContractRegistry(core);
@@ -18,4 +18,4 @@ export async function runX4KissModuleRecoverySelfCheck(){
   return{ok: lifecycle.ok&&contracts.ok&&reg.ok&&health.ok&&diagnostics.ok&&recovery.ok&&handler.ok&&recovered.ok&&recovered.status==="RECOVERED"&&brokenContract.ok&&failed.ok===false&&failed.requiresManualIntervention===true,stage:"15.30",recovered,failed};
 }
 // Backward-compatible alias for established recovery workflow commands.
-export const runXKissModuleRecoverySelfCheck = runX4KissModuleRecoverySelfCheck;
+export const runX4KissModuleRecoverySelfCheck = runX4KissModuleRecoverySelfCheck;
