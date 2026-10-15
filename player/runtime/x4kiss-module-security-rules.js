@@ -24,7 +24,7 @@ function safeText(value, max = 160) {
   return value.replace(/[\u0000-\u001F\u007F]/g, "").slice(0, max);
 }
 
-export function validateXKissModuleSecurityRules() {
+export function validateX4KissModuleSecurityRules() {
   return Object.freeze({
     stage: "15.27",
     safeActions: SAFE_ACTIONS,
