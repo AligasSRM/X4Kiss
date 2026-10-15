@@ -81,7 +81,7 @@ h2 {
   overflow: hidden;
 }
 
-.xkiss-player {
+.x4kiss-player {
   position: relative;
 
   width: 100%;
@@ -96,7 +96,7 @@ h2 {
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65);
 }
 
-.xkiss-player video {
+.x4kiss-player video {
   display: block;
 
   width: 100%;
@@ -114,7 +114,7 @@ h2 {
    FULLSCREEN PLAYER
    ========================================================= */
 
-.xkiss-player:fullscreen {
+.x4kiss-player:fullscreen {
   width: 100vw;
   height: 100vh;
 
@@ -129,7 +129,7 @@ h2 {
   background: #000000;
 }
 
-.xkiss-player:-webkit-full-screen {
+.x4kiss-player:-webkit-full-screen {
   width: 100vw;
   height: 100vh;
 
@@ -144,7 +144,7 @@ h2 {
   background: #000000;
 }
 
-.xkiss-player:fullscreen video {
+.x4kiss-player:fullscreen video {
   width: 100%;
   height: 100%;
 
@@ -154,7 +154,7 @@ h2 {
   object-fit: contain;
 }
 
-.xkiss-player:-webkit-full-screen video {
+.x4kiss-player:-webkit-full-screen video {
   width: 100%;
   height: 100%;
 
@@ -164,29 +164,29 @@ h2 {
   object-fit: contain;
 }
 
-.xkiss-player:fullscreen .player-controls {
+.x4kiss-player:fullscreen .player-controls {
   bottom: 0;
 }
 
-.xkiss-player:-webkit-full-screen .player-controls {
+.x4kiss-player:-webkit-full-screen .player-controls {
   bottom: 0;
 }
 
-.xkiss-player::backdrop {
+.x4kiss-player::backdrop {
   background: #000000;
 }
 
-.xkiss-player::-webkit-backdrop {
+.x4kiss-player::-webkit-backdrop {
   background: #000000;
 }
 
 /* =========================================================
-   XKISS LOGO
+   X4KISS LOGO
    X = RAINBOW
    KISS = WHITE
    ========================================================= */
 
-.xkiss-logo {
+.x4kiss-logo {
   position: absolute;
 
   top: 14px;
@@ -593,7 +593,7 @@ h2 {
     max-width: 100%;
   }
 
-  .xkiss-player {
+  .x4kiss-player {
     width: 100%;
     max-width: 100%;
 
@@ -602,14 +602,14 @@ h2 {
     border-radius: 6px;
   }
 
-  .xkiss-player video {
+  .x4kiss-player video {
     width: 100%;
     height: 100%;
 
     object-fit: contain;
   }
 
-  .xkiss-logo {
+  .x4kiss-logo {
     top: 8px;
     right: 9px;
 
@@ -684,11 +684,11 @@ h2 {
     padding-right: 6px;
   }
 
-  .xkiss-player {
+  .x4kiss-player {
     border-radius: 4px;
   }
 
-  .xkiss-logo {
+  .x4kiss-logo {
     top: 7px;
     right: 8px;
 
