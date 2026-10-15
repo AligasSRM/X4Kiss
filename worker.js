@@ -49,7 +49,7 @@ import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuper
 import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
@@ -89,8 +89,25 @@ async function ensureCreatorVideoIndex(db) {
   `).run();
 }
 
+function normalizeEnv(env) {
+  if (!env) return env;
+  const authDb = env.X4KISS_AUTH_DB || env.XKISS_AUTH_DB || null;
+  const kissDb = env.X4KISS_DB || env.XKISS_DB || null;
+  const adminAuditDb = env.X4KISS_ADMIN_AUDIT || env.XKISS_ADMIN_AUDIT || null;
+  return {
+    ...env,
+    XKISS_AUTH_DB: authDb,
+    X4KISS_AUTH_DB: authDb,
+    XKISS_DB: kissDb,
+    X4KISS_DB: kissDb,
+    XKISS_ADMIN_AUDIT: adminAuditDb,
+    X4KISS_ADMIN_AUDIT: adminAuditDb
+  };
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, rawEnv) {
+    const env = normalizeEnv(rawEnv);
     const url = new URL(request.url);
     const storageReady = isStorageReady(env);
 

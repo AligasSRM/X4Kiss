@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { verifyVeriffWebhook, mapVeriffVerificationState } from "../veriff-kyc-provider.js";
 
-const secret = "test-veriff-shared-secret";
-const apiKey = "test-veriff-api-key";
+const secret = process.env.VERIFF_SHARED_SECRET || "test-veriff-shared-secret";
+const apiKey = process.env.VERIFF_API_KEY || "test-veriff-api-key";
 
 const payload = JSON.stringify({
   verification: {
