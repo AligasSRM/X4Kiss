@@ -6,5 +6,3 @@ export function installX4KissModuleRecovery(core){
   try{const recovery=createX4KissModuleRecovery(core);core.moduleRecovery=recovery;core.registerModule("module-recovery","active");return{ok:true,stage:"15.30",coreControlled:core.moduleRecovery===recovery,recovery};}
   catch(error){return{ok:false,error:String(error?.message||error),stage:"15.30"};}
 }
-// Backward-compatible alias for existing recovery workflows.
-export const installX4KissModuleRecovery = installX4KissModuleRecovery;
