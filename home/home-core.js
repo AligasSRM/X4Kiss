@@ -86,29 +86,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function markHomeReady() {
-    document.documentElement.dataset.xkissHome = "ready";
-    document.body.dataset.xkissHome = "ready";
+    document.documentElement.dataset.x4kissHome = "ready";
+    document.body.dataset.x4kissHome = "ready";
   }
 
   async function updateAccountNavigation() {
     const SESSION_KEY = "x4keys_session_token";
-    const LEGACY_SESSION_KEY = "xkiss_session_token";
-    const token = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
-    if (token) window.sessionStorage.setItem(SESSION_KEY, token);
-    window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
+    const token = window.sessionStorage.getItem(SESSION_KEY) || "";
     const accountLink = document.querySelector("[data-auth-nav]");
     const quickAuthLink = document.querySelector("[data-auth-quick]");
     if (!token) return;
     try {
-      const response = await fetch("https://xkiss.srourr-ali73.workers.dev/api/auth/me", {
+      const response = await fetch("https://x4kiss.srourr-ali73.workers.dev/api/auth/me", {
         headers: { "Authorization": "Bearer " + token, "Accept": "application/json" },
         cache: "no-store"
       });
       const data = await response.json();
       if (!response.ok || data.ok !== true || data.status !== "authenticated") {
         window.sessionStorage.removeItem("x4keys_session_token");
-        window.sessionStorage.removeItem("xkiss_session_token");
-        return;
+                return;
       }
       if (accountLink) {
         accountLink.href = "creator-dashboard.html";
