@@ -1,4 +1,4 @@
-import { evaluateProductionPolicyConfiguration } from "./xkiss-production-policy-contract.js";
+import { evaluateProductionPolicyConfiguration } from "./x4kiss-production-policy-contract.js";
 
 const validConfig = {
   monetization: {
@@ -16,7 +16,7 @@ const validConfig = {
   }
 };
 
-export function runXKissProductionPolicyContractSelfTest() {
+export function runX4KissProductionPolicyContractSelfTest() {
   const blocked = evaluateProductionPolicyConfiguration({});
   const ready = evaluateProductionPolicyConfiguration(validConfig);
 
