@@ -1,4 +1,4 @@
-export const XKISS_SECTION_19_EXTERNAL_DEPENDENCIES=Object.freeze({
+export const X4KISS_SECTION_19_EXTERNAL_DEPENDENCIES=Object.freeze({
   section:"19",
   failClosed:true,
   productionActivationAllowed:false,
@@ -41,9 +41,9 @@ export const XKISS_SECTION_19_EXTERNAL_DEPENDENCIES=Object.freeze({
 });
 
 export function validateSection19ExternalDependencies(){
-  const deps=XKISS_SECTION_19_EXTERNAL_DEPENDENCIES.dependencies;
-  const verifiedIntegrations=XKISS_SECTION_19_EXTERNAL_DEPENDENCIES.verifiedIntegrationKeys;
-  const externalProviders=XKISS_SECTION_19_EXTERNAL_DEPENDENCIES.externalProviderKeys;
+  const deps=X4KISS_SECTION_19_EXTERNAL_DEPENDENCIES.dependencies;
+  const verifiedIntegrations=X4KISS_SECTION_19_EXTERNAL_DEPENDENCIES.verifiedIntegrationKeys;
+  const externalProviders=X4KISS_SECTION_19_EXTERNAL_DEPENDENCIES.externalProviderKeys;
   const integrationEvidenceVerified=verifiedIntegrations.every(key=>deps[key]===true);
   const externalProvidersUnverified=externalProviders.every(key=>deps[key]===false);
   return {
