@@ -1,4 +1,4 @@
-export const XKISS_SECTION_16_EXTERNAL_DEPENDENCIES=Object.freeze({
+export const X4KISS_SECTION_16_EXTERNAL_DEPENDENCIES=Object.freeze({
   section:"16",failClosed:true,productionActivationAllowed:false,
   dependencies:{
     partnerIdentityVerification:false,rightsConsentStorage:false,enterpriseIngestion:false,
@@ -8,6 +8,6 @@ export const XKISS_SECTION_16_EXTERNAL_DEPENDENCIES=Object.freeze({
   }
 });
 export function validateSection16ExternalDependencies(){
-  const values=Object.values(XKISS_SECTION_16_EXTERNAL_DEPENDENCIES.dependencies);
+  const values=Object.values(X4KISS_SECTION_16_EXTERNAL_DEPENDENCIES.dependencies);
   return {ok:values.every(v=>v===false),allUnverified:values.every(v=>v===false),failClosed:true,productionActivationAllowed:false};
 }
