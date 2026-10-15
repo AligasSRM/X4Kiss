@@ -49,10 +49,9 @@ import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuper
 import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
 
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "https://aligassrm.github.io",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-X4Kiss-Upload-Key, X-X4Kiss-File-Name, X-X4Kiss-File-Size, X-X4Kiss-Title, X-X4Kiss-Description, X-X4Kiss-Category, X-X4Kiss-Download-Policy, X-X4Kiss-Visibility",
   "Vary": "Origin"
@@ -89,8 +88,7 @@ async function ensureCreatorVideoIndex(db) {
   `).run();
 }
 
-export default {
-  async fetch(request, env) {
+async function handleRequest(request, env) {
     const url = new URL(request.url);
     const storageReady = isStorageReady(env);
 
@@ -106,7 +104,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/register" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_input" }, 400); }
       const result = await registerMember(env, body);
@@ -115,7 +113,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/login" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_credentials" }, 401); }
       const result = await loginMember(env, body);
@@ -123,7 +121,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/me" && request.method === "GET") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const result = await authenticateSession(env, token);
@@ -131,7 +129,7 @@ export default {
     }
 
     if (url.pathname === "/api/auth/logout" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       return json(await logoutMember(env, token));
@@ -142,7 +140,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/reauth" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -151,7 +149,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/enroll" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
       const session=await authenticateSession(env,token);
@@ -161,7 +159,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/enable" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -172,7 +170,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/mfa/verify" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      if (!env.XKISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
@@ -183,7 +181,7 @@ export default {
     }
 
     if (url.pathname === "/api/admin/authorize" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) {
+      if (!env.XKISS_AUTH_DB) {
         return json({ ok: false, allowed: false, status: "auth_backend_not_configured" }, 503);
       }
 
@@ -200,7 +198,7 @@ export default {
       const session = await authenticateSession(env, token);
       const requestId = request.headers.get("cf-ray") || request.headers.get("x-request-id") || null;
 
-      if (!env.X4KISS_DB || !env.X4KISS_ADMIN_AUDIT) {
+      if (!env.XKISS_DB || !env.XKISS_ADMIN_AUDIT) {
         return json({ ok: false, allowed: false, status: "admin_security_providers_not_configured" }, 503);
       }
 
@@ -1228,7 +1226,7 @@ export default {
 
     if (url.pathname === "/api/upload/prepare" && request.method === "POST") {
       if (!storageReady) return json({ ok: false, storageReady: false, message: "Production storage is not ready. No file was uploaded." }, 503);
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const session = await authenticateSession(env, token);
@@ -1253,7 +1251,7 @@ export default {
         }, 503);
       }
 
-      if (!env.X4KISS_AUTH_DB) {
+      if (!env.XKISS_AUTH_DB) {
         return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       }
       const authorization = request.headers.get("Authorization") || "";
@@ -1296,8 +1294,8 @@ export default {
       const createdAt = new Date().toISOString();
 
       try {
-        await ensureCreatorVideoIndex(env.X4KISS_AUTH_DB);
-        await env.X4KISS_AUTH_DB.prepare(
+        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
+        await env.XKISS_AUTH_DB.prepare(
           "INSERT INTO creator_videos (id,creator_id,storage_key,file_name,content_type,file_size,title,description,category,visibility,download_policy,status,storage,created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,'private','disabled','uploading','ElasticLake',?10)"
         ).bind(videoId, session.user.id, key, fileName, contentType, fileSize, title, description, category, createdAt).run();
       } catch {
@@ -1311,7 +1309,7 @@ export default {
           downloadPolicy: "disabled",
           visibility: "private"
         });
-        await env.X4KISS_AUTH_DB.prepare(
+        await env.XKISS_AUTH_DB.prepare(
           "UPDATE creator_videos SET status='stored' WHERE id=?1 AND creator_id=?2"
         ).bind(videoId, session.user.id).run();
 
@@ -1327,7 +1325,7 @@ export default {
           message: "Video uploaded to private storage and added to My Videos. Public publishing and playback are not enabled yet."
         }, 201);
       } catch {
-        await env.X4KISS_AUTH_DB.prepare(
+        await env.XKISS_AUTH_DB.prepare(
           "UPDATE creator_videos SET status='failed' WHERE id=?1 AND creator_id=?2"
         ).bind(videoId, session.user.id).run().catch(() => {});
         return json({
@@ -1340,14 +1338,14 @@ export default {
     }
 
     if (url.pathname === "/api/creator/videos" && request.method === "GET") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
+      if (!env.XKISS_AUTH_DB) return json({ ok: false, message: "Authentication backend is not configured." }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
       const session = await authenticateSession(env, token);
       if (!session.ok) return json({ ok: false, message: "Sign in to access your creator library." }, 401);
       try {
-        await ensureCreatorVideoIndex(env.X4KISS_AUTH_DB);
-        const result = await env.X4KISS_AUTH_DB.prepare(
+        await ensureCreatorVideoIndex(env.XKISS_AUTH_DB);
+        const result = await env.XKISS_AUTH_DB.prepare(
           "SELECT id,storage_key AS key,file_name AS fileName,content_type AS contentType,file_size AS size,title,description,category,visibility,download_policy AS downloadPolicy,status,storage,created_at AS uploaded FROM creator_videos WHERE creator_id=?1 ORDER BY created_at DESC LIMIT 100"
         ).bind(session.user.id).all();
         return json({
@@ -1366,5 +1364,34 @@ export default {
       status: "online",
       path: url.pathname
     });
+}
+
+const CORS_ALLOWED_ORIGINS = new Set([
+  "https://aligassrm.github.io",
+  "https://wondrous-cranachan-a62723.netlify.app"
+]);
+const NETLIFY_PREVIEW_ORIGIN = /^https:\/\/deploy-preview-\d+--wondrous-cranachan-a62723\.netlify\.app$/;
+
+function applyCorsHeaders(request, response) {
+  const headers = new Headers(response.headers);
+  headers.delete("Access-Control-Allow-Origin");
+  const origin = request.headers.get("Origin");
+  if (origin && (CORS_ALLOWED_ORIGINS.has(origin) || NETLIFY_PREVIEW_ORIGIN.test(origin))) {
+    headers.set("Access-Control-Allow-Origin", origin);
+  }
+  headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  headers.set("Access-Control-Allow-Headers", CORS_HEADERS["Access-Control-Allow-Headers"]);
+  headers.set("Vary", "Origin");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
+export default {
+  async fetch(request, env) {
+    const response = await handleRequest(request, env);
+    return applyCorsHeaders(request, response);
   }
 };
