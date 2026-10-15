@@ -85,5 +85,3 @@ export function createX4KissModuleContractRegistry(core) {
   return Object.freeze({ register, get, has, hasCapability, dependenciesReady });
 }
 
-// Backward-compatible product-name alias for contract integration.
-export const createX4KissModuleContractRegistry = createX4KissModuleContractRegistry;
