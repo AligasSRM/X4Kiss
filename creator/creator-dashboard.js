@@ -3,7 +3,7 @@
 
   // X4Kiss Worker API host. This is the API backend, not the ElasticLake storage endpoint.
   const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
-  const SESSION_KEY = "x4keys_session_token";
+  const SESSION_KEY = "x4kiss_session_token";
 
   class ApiError extends Error {
     constructor(message, status = 0, code = "api_error") {
