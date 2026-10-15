@@ -1,14 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
-import {validateFinalMasterLock} from "./xkiss-final-master-lock.js";
-import {runSection19SelfTest} from "../activation/xkiss-production-activation-readiness-self-test.js";
+import {validateFinalMasterLock} from "./x4kiss-final-master-lock.js";
+import {runSection19SelfTest} from "../activation/x4kiss-production-activation-readiness-self-test.js";
 
 const root=process.cwd();
 const required=[
-  "audit/xkiss-section-20-master-spec.md",
-  "release/xkiss-final-master-lock.js",
-  "release/xkiss-final-master-release-self-test.js",
-  "activation/xkiss-production-activation-readiness-self-test.js"
+  "audit/x4kiss-section-20-master-spec.md",
+  "release/x4kiss-final-master-lock.js",
+  "release/x4kiss-final-master-release-self-test.js",
+  "activation/x4kiss-production-activation-readiness-self-test.js"
 ];
 
 export function runSection20SelfTest(){
@@ -18,7 +18,7 @@ export function runSection20SelfTest(){
   const ok=presence&&lock.ok===true&&section19.ok===true;
   return {
     ok,
-    test:"XKiss Section 20 Final Master Release self-test",
+    test:"X4Kiss Section 20 Final Master Release self-test",
     section:"20",
     status:ok?"GREEN_CLOSED":"FAULT_FAIL_CLOSED",
     locked:ok,
