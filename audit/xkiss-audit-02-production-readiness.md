@@ -21,7 +21,7 @@ The existing 15.23–15.31 GREEN / FINAL LOCKED runtime and security work is not
 
 ## Correction made in this checkpoint
 
-The storage gate previously described the provider as Cloudflare R2 and required XKISS_VIDEOS, while the active storage adapter implementation uses IDrive e2 S3-compatible credentials.
+The storage gate previously described the provider as Cloudflare R2 and required X4KISS_VIDEOS, while the active storage adapter implementation uses IDrive e2 S3-compatible credentials.
 
 This checkpoint aligns the storage gate with the actual adapter contract:
 
