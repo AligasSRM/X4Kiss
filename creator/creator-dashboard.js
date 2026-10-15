@@ -90,7 +90,14 @@
     if (!status || !roadmapStorage) return;
 
     status.classList.toggle("ready", kind === "ready");
-    status.textContent = label;
+    status.setAttribute("aria-live", "polite");
+    const indicator = status.querySelector("span");
+    if (indicator) {
+      indicator.style.background = kind === "ready" ? "#61d18b" : kind === "error" ? "#e06b6b" : "#d6ad5c";
+      status.replaceChildren(indicator, document.createTextNode(" " + label));
+    } else {
+      status.textContent = label;
+    }
     roadmapStorage.textContent = label;
   }
 
