@@ -24,21 +24,21 @@ export function getSafetyBackendStatus(env = {}) {
   const configured = Object.fromEntries(
     SAFETY_BACKEND.requiredCapabilities.map((capability) => [
       capability,
-      envOn(env, "XKISS_SAFETY_" + capability.toUpperCase() + "_READY")
+      envOn(env, "X4KISS_SAFETY_" + capability.toUpperCase() + "_READY")
     ])
   );
   const missing = Object.keys(configured).filter((key) => !configured[key]);
 
   return {
     ok: true,
-    service: "XKiss Safety Backend",
+    service: "X4Kiss Safety Backend",
     version: SAFETY_BACKEND.version,
     status: missing.length === 0 && storage ? "ready" : "blocked",
     failClosed: SAFETY_BACKEND.failClosed,
     storageReady: storage,
     capabilities: configured,
     missingCapabilities: missing,
-    enforcementEnabled: envOn(env, "XKISS_SAFETY_ENFORCEMENT_ENABLED"),
+    enforcementEnabled: envOn(env, "X4KISS_SAFETY_ENFORCEMENT_ENABLED"),
     activationAllowed: missing.length === 0 && storage,
     reason: missing.length === 0 && storage
       ? "All required safety capabilities and durable storage are configured."
@@ -65,7 +65,7 @@ export function runSafetyBackendSelfTest(env = {}) {
 
   return {
     ok: checks.every((check) => check.ok),
-    service: "XKiss Safety Backend",
+    service: "X4Kiss Safety Backend",
     status: "tested",
     enforcementEnabled: status.enforcementEnabled,
     activationAllowed: status.activationAllowed,
