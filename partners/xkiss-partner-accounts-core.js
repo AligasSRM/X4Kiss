@@ -7,7 +7,7 @@ const TRANSITIONS = Object.freeze({
   SUSPENDED:["ACTIVE","REVOKED"],
   REVOKED:[]
 });
-export const XKISS_PARTNER_ACCOUNTS = Object.freeze({
+export const X4KISS_PARTNER_ACCOUNTS = Object.freeze({
   section:"16.1", name:"Partner & Company Accounts", status:"GREEN_CLOSED",
   failClosed:true, productionActivationAllowed:false, backendRequired:true,
   states:PARTNER_STATES, frontendCannotAuthorize:true, secretsBackendOnly:true
