@@ -12,7 +12,7 @@ import { runSystemSettingsAuditReviewSelfCheck } from "./system-settings-audit-r
 import { runSystemSettingsAuditExportSelfCheck } from "./system-settings-audit-export-self-test.js";
 import { runSystemSettingsRuntimeActivationSelfCheck } from "./system-settings-runtime-activation-self-test.js";
 
-export const XKISS_PLATFORM_SETTINGS_SECTION = {
+export const X4KISS_PLATFORM_SETTINGS_SECTION = {
   section: "15",
   name: "Platform Settings",
   version: "1.1.0",
@@ -44,7 +44,7 @@ export function runPlatformSettingsSectionCheck() {
   return {
     ok: allGreen,
     section: "15",
-    name: XKISS_PLATFORM_SETTINGS_SECTION.name,
+    name: X4KISS_PLATFORM_SETTINGS_SECTION.name,
     status: allGreen ? "GREEN_CLOSED" : "FAULT",
     failClosed: true,
     productionActivationAllowed: false,
@@ -59,9 +59,9 @@ export function runPlatformSettingsSectionCheck() {
 export function getPlatformSettingsSectionStatus() {
   return {
     section: "15",
-    name: XKISS_PLATFORM_SETTINGS_SECTION.name,
-    status: XKISS_PLATFORM_SETTINGS_SECTION.status,
-    failClosed: XKISS_PLATFORM_SETTINGS_SECTION.failClosed,
+    name: X4KISS_PLATFORM_SETTINGS_SECTION.name,
+    status: X4KISS_PLATFORM_SETTINGS_SECTION.status,
+    failClosed: X4KISS_PLATFORM_SETTINGS_SECTION.failClosed,
     productionActivationAllowed: false
   };
 }
