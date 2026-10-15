@@ -4,7 +4,18 @@ import worker from "../worker.js";
 
 function makeEnv() {
   return {
-    XKISS_AUTH_DB: {},
+    XKISS_AUTH_DB: {
+      prepare(sql) {
+        assert.match(sql, /SELECT s\.id AS session_id/);
+        return {
+          bind() {
+            return {
+              async first() { return null; }
+            };
+          }
+        };
+      }
+    },
     XKISS_DB: {},
     XKISS_ADMIN_AUDIT: {
       prepare(sql) {
