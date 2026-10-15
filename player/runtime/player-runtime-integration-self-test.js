@@ -1,8 +1,8 @@
-import { getXKissPlayerRuntimeIntegrationStatus, evaluateXKissPlayerRuntimeIntegration, XKISS_APPROVED_QUALITIES } from "./player-runtime-integration-core.js";
+import { getX4KissPlayerRuntimeIntegrationStatus, evaluateX4KissPlayerRuntimeIntegration, X4KISS_APPROVED_QUALITIES } from "./player-runtime-integration-core.js";
 
-export function runXKissPlayerRuntimeIntegrationSelfCheck() {
-  const status = getXKissPlayerRuntimeIntegrationStatus();
-  const valid = evaluateXKissPlayerRuntimeIntegration({
+export function runX4KissPlayerRuntimeIntegrationSelfCheck() {
+  const status = getX4KissPlayerRuntimeIntegrationStatus();
+  const valid = evaluateX4KissPlayerRuntimeIntegration({
     operation: "validate_video_runtime",
     homepageVerified: true,
     playerPageVerified: true,
@@ -11,7 +11,7 @@ export function runXKissPlayerRuntimeIntegrationSelfCheck() {
     qualitiesVerified: true,
     videoRuntimeVerified: true
   });
-  const incomplete = evaluateXKissPlayerRuntimeIntegration({
+  const incomplete = evaluateX4KissPlayerRuntimeIntegration({
     operation: "validate_video_runtime",
     homepageVerified: true,
     playerPageVerified: true,
@@ -23,7 +23,7 @@ export function runXKissPlayerRuntimeIntegrationSelfCheck() {
   const checks = {
     stage: status.stage === "15.16",
     connected: status.status === "connected",
-    qualitySet: JSON.stringify(XKISS_APPROVED_QUALITIES) === JSON.stringify(["340p","460p","720p","1080p"]),
+    qualitySet: JSON.stringify(X4KISS_APPROVED_QUALITIES) === JSON.stringify(["340p","460p","720p","1080p"]),
     validAccepted: valid.allowed === true,
     incompleteDenied: incomplete.allowed === false
   };
