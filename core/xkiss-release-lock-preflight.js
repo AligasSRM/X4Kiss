@@ -1,6 +1,6 @@
-export const XKISS_RELEASE_LOCK_PREFLIGHT = {
+export const X4KISS_RELEASE_LOCK_PREFLIGHT = {
   stage: "RELEASE-LOCK",
-  name: "XKiss Release Lock Preflight",
+  name: "X4Kiss Release Lock Preflight",
   version: "1.0.0",
   failClosed: true,
   requiredGates: [
@@ -15,13 +15,13 @@ export const XKISS_RELEASE_LOCK_PREFLIGHT = {
 };
 
 export function evaluateReleaseLockPreflight(gates = {}) {
-  const required = XKISS_RELEASE_LOCK_PREFLIGHT.requiredGates;
+  const required = X4KISS_RELEASE_LOCK_PREFLIGHT.requiredGates;
   const checks = Object.fromEntries(required.map((name) => [name, gates[name] === "GREEN"]));
   const missing = required.filter((name) => !checks[name]);
 
   return {
     ok: missing.length === 0,
-    stage: XKISS_RELEASE_LOCK_PREFLIGHT.stage,
+    stage: X4KISS_RELEASE_LOCK_PREFLIGHT.stage,
     status: missing.length === 0 ? "READY_FOR_CODE_LOCK" : "BLOCKED",
     codeLockAllowed: missing.length === 0,
     productionActivationAllowed: false,
