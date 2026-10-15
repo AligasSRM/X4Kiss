@@ -15,5 +15,3 @@ export function installX4KissModuleHealth(core) {
   }
 }
 
-// Backward-compatible alias for existing health workflows.
-export const installX4KissModuleHealth = installX4KissModuleHealth;
