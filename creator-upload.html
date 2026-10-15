@@ -11,7 +11,7 @@
 <body>
 <header class="upload-header">
   <nav class="upload-nav">
-    <a class="brand" href="index.html" aria-label="X4Kiss Home"><span class="brand-x">X4</span><span class="brand-kiss">kiss</span></a>
+    <a class="brand" href="index.html" aria-label="X4Kiss Home"><span class="brand-x">X4</span><span class="brand-kiss">Kiss</span></a>
     <div class="nav-links" aria-label="Primary navigation">
       <a href="index.html">Home</a>
       <a href="videos.html">Videos</a>
@@ -34,7 +34,7 @@
     <div class="upload-card">
       <div class="architecture-note" id="creator-auth-status" aria-live="polite">
         <strong>Creator session</strong>
-        <span>You're using the account session from sign-in. Uploads are private and appear in My Videos after the server confirms storage.</span>
+        <span>Uploads require a verified account session. Videos remain private and appear in My Videos only after the server confirms storage.</span>
       </div>
       <div class="section-head">
         <div>
@@ -45,8 +45,8 @@
       </div>
 
       <label class="file-drop" id="file-drop">
-        <input id="video-file" type="file" accept="video/*">
-        <span class="file-icon">↑</span>
+        <input id="video-file" type="file" accept="video/*" aria-label="Select a video file">
+        <span class="file-icon" aria-hidden="true">↑</span>
         <strong>Select video</strong>
         <span>MP4, WebM and other browser-supported video files</span>
         <span id="file-name" class="file-name">No file selected</span>
@@ -78,22 +78,20 @@
 
         <label>
           <span>Download</span>
-          <select id="download-policy">
-            <option value="disabled">No Download</option>
-            <option value="free">Free Download</option>
-            <option value="paid">Paid Download</option>
+          <select id="download-policy" disabled>
+            <option value="disabled">Downloads disabled</option>
           </select>
         </label>
 
         <label>
           <span>Visibility</span>
-          <select id="video-visibility">
-            <option value="private">Private</option>
-            <option value="unlisted">Unlisted</option>
-            <option value="public">Public</option>
+          <select id="video-visibility" disabled>
+            <option value="private">Private only</option>
           </select>
         </label>
       </div>
+
+      <p id="upload-policy-note">Public or unlisted visibility, paid/free downloads, publishing, and playback are not enabled. These settings cannot be changed from this page.</p>
 
       <div class="upload-progress" aria-live="polite">
         <div class="progress-head">
