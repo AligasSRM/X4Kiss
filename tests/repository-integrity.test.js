@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readdir, stat } from "node:fs/promises";
+import { readdir, stat, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -60,4 +60,21 @@ test("all relative JavaScript imports resolve to repository files", async () => 
     }
   }
   assert.deepEqual(missing, [], "Unresolved local imports:\n" + missing.join("\n"));
+});
+
+
+test("Worker D1 references match Wrangler binding names", async () => {
+  const [worker, wrangler] = await Promise.all([
+    readFile(path.join(ROOT, "worker.js"), "utf8"),
+    readFile(path.join(ROOT, "wrangler.toml"), "utf8")
+  ]);
+  for (const binding of ["XKISS_AUTH_DB", "XKISS_DB", "XKISS_ADMIN_AUDIT"]) {
+    assert.match(wrangler, new RegExp('binding\\s*=\\s*"' + binding + '"'), `Wrangler binding missing: ${binding}`);
+    assert.ok(worker.includes("env." + binding), `Worker does not consume configured binding: ${binding}`);
+  }
+  assert.doesNotMatch(
+    worker,
+    /env\\.X4KISS_(?:AUTH_DB|DB|ADMIN_AUDIT)\\b/,
+    "Worker must not use D1 binding names that Wrangler does not define"
+  );
 });
