@@ -1,6 +1,6 @@
-import {runProductionActivationReadiness} from "./xkiss-production-activation-readiness-core.js";
-import {validateSection19ExternalDependencies} from "./xkiss-section-19-external-dependencies.js";
-import {validateSection19Lock} from "./xkiss-section-19-lock.js";
+import {runProductionActivationReadiness} from "./x4kiss-production-activation-readiness-core.js";
+import {validateSection19ExternalDependencies} from "./x4kiss-section-19-external-dependencies.js";
+import {validateSection19Lock} from "./x4kiss-section-19-lock.js";
 
 export function runSection19SelfTest(){
   const readiness=runProductionActivationReadiness();
@@ -17,7 +17,7 @@ export function runSection19SelfTest(){
     lock.ok===true;
   return {
     ok,
-    test:"XKiss Section 19 Production Activation Readiness self-test",
+    test:"X4Kiss Section 19 Production Activation Readiness self-test",
     section:"19",
     status:ok?"GREEN_CLOSED":"FAULT_FAIL_CLOSED",
     failClosed:true,
