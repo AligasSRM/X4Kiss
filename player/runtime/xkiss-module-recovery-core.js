@@ -1,9 +1,9 @@
-import {XKISS_MODULE_RECOVERY_RULES,validateRecoveryRequest} from "./xkiss-module-recovery-rules.js";
-export function createXKissModuleRecovery(core){
+import {X4KISS_MODULE_RECOVERY_RULES,validateRecoveryRequest} from "./x4kiss-module-recovery-rules.js";
+export function createX4KissModuleRecovery(core){
   if(!core?.moduleHealth||!core?.moduleDiagnostics||!core?.moduleLifecycle||!core?.moduleContracts)throw new Error("Recovery requires Health, Diagnostics, Lifecycle and Contracts.");
   const health=core.moduleHealth,diagnostics=core.moduleDiagnostics,lifecycle=core.moduleLifecycle,contracts=core.moduleContracts;
   const repairs=new Map(),history=[];
-  function emit(type,detail={}){const e={id:"recovery-"+(history.length+1),type,timestamp:Date.now(),detail};history.push(e);if(history.length>XKISS_MODULE_RECOVERY_RULES.maxHistory)history.shift();return e;}
+  function emit(type,detail={}){const e={id:"recovery-"+(history.length+1),type,timestamp:Date.now(),detail};history.push(e);if(history.length>X4KISS_MODULE_RECOVERY_RULES.maxHistory)history.shift();return e;}
   function registerRepair(module,handler){
     const v=validateRecoveryRequest({module}); if(!v.ok||typeof handler!=="function")return{ok:false,error:v.error||"invalid-handler"};
     if(!contracts.has(module))return{ok:false,error:"unknown-module"};
@@ -40,7 +40,7 @@ export function createXKissModuleRecovery(core){
     }
   }
   function getStatus(){const failed=history.filter(e=>e.type==="recovery-failed").length;return{stage:"15.30",status:failed?"WARNING":"HEALTHY",repairHandlers:repairs.size,events:history.length,recoveryReady:true};}
-  return Object.freeze({stage:"15.30",rules:XKISS_MODULE_RECOVERY_RULES,registerRepair,recover,getStatus,getEvents:()=>history.map(e=>({...e,detail:{...e.detail}}))});
+  return Object.freeze({stage:"15.30",rules:X4KISS_MODULE_RECOVERY_RULES,registerRepair,recover,getStatus,getEvents:()=>history.map(e=>({...e,detail:{...e.detail}}))});
 }
 // Backward-compatible product-name alias for recovery integration.
-export const createX4KissModuleRecovery = createXKissModuleRecovery;
+export const createX4KissModuleRecovery = createX4KissModuleRecovery;
