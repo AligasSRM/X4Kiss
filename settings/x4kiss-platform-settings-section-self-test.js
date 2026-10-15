@@ -18,5 +18,3 @@ export function runX4KissPlatformSettingsSectionSelfTest() {
   };
 }
 
-// Backward-compatible product-name alias for the final review runner.
-export const runX4KissPlatformSettingsSectionSelfTest = runX4KissPlatformSettingsSectionSelfTest;
