@@ -1,5 +1,5 @@
-import { createX4KissModuleLifecycle } from "./xkiss-module-lifecycle-core.js";
-import { validateX4KissModuleLifecycleRules } from "./xkiss-module-lifecycle-rules.js";
+import { createX4KissModuleLifecycle } from "./x4kiss-module-lifecycle-core.js";
+import { validateX4KissModuleLifecycleRules } from "./x4kiss-module-lifecycle-rules.js";
 
 export function installX4KissModuleLifecycle(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
@@ -21,4 +21,4 @@ export function installX4KissModuleLifecycle(core) {
 }
 
 // Backward-compatible alias for existing lifecycle workflows.
-export const installXKissModuleLifecycle = installX4KissModuleLifecycle;
+export const installX4KissModuleLifecycle = installX4KissModuleLifecycle;
