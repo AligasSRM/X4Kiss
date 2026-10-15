@@ -4,15 +4,6 @@
   const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
   const SESSION_KEY = "x4kiss_session_token";
 
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
   function showNotice(notice, message, isError = false) {
     if (!notice) return;
     notice.hidden = false;
@@ -62,8 +53,13 @@
         window.sessionStorage.removeItem(SESSION_KEY);
         throw new Error("Your creator session has expired. Sign in again to access your private library.");
       }
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        throw new Error("The server returned an invalid library response.");
+      }
       if (!response.ok || data.ok !== true) {
-        throw new Error(data.message || "Your private library could not be loaded.");
+        throw new Error(typeof data.message === "string" && data.message.trim()
+          ? data.message
+          : "Your private library could not be loaded.");
       }
 
       const videos = Array.isArray(data.videos) ? data.videos : [];
