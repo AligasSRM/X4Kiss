@@ -4,7 +4,6 @@
   // X4Kiss Worker API host. This is the API backend, not the ElasticLake storage endpoint.
   const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
   const SESSION_KEY = "x4keys_session_token";
-  const LEGACY_SESSION_KEY = "xkiss_session_token";
 
   class ApiError extends Error {
     constructor(message, status = 0, code = "api_error") {
@@ -17,20 +16,7 @@
 
   function getSessionToken() {
     try {
-      const currentToken = window.sessionStorage.getItem(SESSION_KEY);
-      if (currentToken) return currentToken;
-
-      const legacyToken = window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
-      if (!legacyToken) return "";
-
-      // Preserve the legacy token if migration cannot be written.
-      try {
-        window.sessionStorage.setItem(SESSION_KEY, legacyToken);
-        window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
-      } catch {
-        // The token can still be used for this request; do not expose it in logs.
-      }
-      return legacyToken;
+      return window.sessionStorage.getItem(SESSION_KEY) || "";
     } catch {
       return "";
     }
