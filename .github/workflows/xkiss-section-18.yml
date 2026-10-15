@@ -1,4 +1,4 @@
-name: XKiss Section 18 Autonomous Control
+name: X4Kiss Section 18 Autonomous Control
 on:
   push:
     paths:
