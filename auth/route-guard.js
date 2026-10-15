@@ -1,12 +1,9 @@
 (function () {
   "use strict";
   var SESSION_KEY = "x4keys_session_token";
-  var LEGACY_SESSION_KEY = "xkiss_session_token";
   var token = "";
   try {
-    token = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
-    if (token) sessionStorage.setItem(SESSION_KEY, token);
-    sessionStorage.removeItem(LEGACY_SESSION_KEY);
+    token = sessionStorage.getItem(SESSION_KEY) || "";
   } catch (_) {}
   var file = (location.pathname.split("/").pop() || "index.html").split("?")[0];
   var target = file + location.search + location.hash;
@@ -27,7 +24,7 @@
     if (!data || data.ok !== true || data.status !== "authenticated") throw new Error("session_invalid");
     document.documentElement.style.visibility = "visible";
   }).catch(function () {
-    try { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(LEGACY_SESSION_KEY); } catch (_) {}
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
     sendToRegistration("session");
   });
 })();
