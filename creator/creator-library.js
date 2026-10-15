@@ -2,7 +2,8 @@
   "use strict";
 
   const API_BASE = "https://x4kiss-backend-neon.onrender.com";
-  const SESSION_KEY = "x4keys_session_token";
+  const SESSION_KEY = "x4kiss_session_token";
+  const LEGACY_SESSION_KEY = "x4keys_session_token";
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -27,7 +28,7 @@
     const notice = document.getElementById("library-notice");
     if (!count || !grid || !empty) return;
 
-    const token = window.sessionStorage.getItem(SESSION_KEY) || "";
+    const token = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
     if (!token) {
       count.textContent = "Sign-in required";
       grid.replaceChildren();
@@ -60,6 +61,7 @@
 
       if (response.status === 401) {
         window.sessionStorage.removeItem(SESSION_KEY);
+        window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
         throw new Error("Your creator session has expired. Sign in again to access your private library.");
       }
       if (!response.ok || data.ok !== true) {
