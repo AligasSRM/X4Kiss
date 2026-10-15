@@ -6,7 +6,7 @@ button,input,select,textarea{font:inherit}
 .upload-header{position:sticky;top:0;z-index:20;background:rgba(7,8,11,.94);border-bottom:1px solid #202229;backdrop-filter:blur(14px)}
 .upload-nav{max-width:1180px;margin:auto;min-height:70px;padding:0 20px;display:flex;align-items:center;gap:26px}
 .brand{font-size:25px;font-weight:800;letter-spacing:-1px;margin-right:auto}
-.brand-x{color:#fff}.brand-kiss{color:#bbb}
+.brand-wordmark__prefix{color:#fff}.brand-wordmark__suffix{color:#bbb}
 .nav-links{display:flex;align-items:center;gap:20px;font-size:14px;color:#b7b9c0}
 .nav-links a.active,.nav-links a:hover{color:#fff}
 .login{border:1px solid #333740;border-radius:999px;padding:10px 16px;font-size:13px}
