@@ -369,6 +369,10 @@
       return;
     }
 
+    // Always translate from the original English source, never from a previous translation.
+    for (const entry of originalNodes) {
+      if (entry.node.isConnected) entry.node.nodeValue = entry.original;
+    }
     const texts = Array.from(new Set(originalNodes.map(entry => entry.original.trim()).filter(Boolean)));
     const results = new Map();
     try {
