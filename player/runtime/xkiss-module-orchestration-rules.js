@@ -1,14 +1,14 @@
-export const XKISS_MODULE_ORCHESTRATION_RULES = Object.freeze({
+export const X4KISS_MODULE_ORCHESTRATION_RULES = Object.freeze({
   stage: "15.26",
   name: "Module Dependency Orchestration",
   coreControlled: true,
   failClosed: true
 });
 
-export function validateXKissModuleOrchestrationRules() {
+export function validateX4KissModuleOrchestrationRules() {
   return {
-    ok: XKISS_MODULE_ORCHESTRATION_RULES.coreControlled === true &&
-      XKISS_MODULE_ORCHESTRATION_RULES.failClosed === true,
-    ...XKISS_MODULE_ORCHESTRATION_RULES
+    ok: X4KISS_MODULE_ORCHESTRATION_RULES.coreControlled === true &&
+      X4KISS_MODULE_ORCHESTRATION_RULES.failClosed === true,
+    ...X4KISS_MODULE_ORCHESTRATION_RULES
   };
 }
