@@ -31,5 +31,3 @@ export function validateX4KissModuleLifecycleRules() {
   };
 }
 
-// Backward-compatible product-name alias for lifecycle integration.
-export const validateX4KissModuleLifecycleRules = validateX4KissModuleLifecycleRules;
