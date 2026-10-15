@@ -1,4 +1,4 @@
-import { createX4KissModuleSecurity } from "./xkiss-module-security-core.js";
+import { createX4KissModuleSecurity } from "./x4kiss-module-security-core.js";
 
 export function installX4KissModuleSecurity(core) {
   if (!core) return { ok: false, error: "player-core-not-found" };
@@ -24,4 +24,4 @@ export function installX4KissModuleSecurity(core) {
 }
 
 // Backward-compatible alias for existing security workflows.
-export const installXKissModuleSecurity = installX4KissModuleSecurity;
+export const installX4KissModuleSecurity = installX4KissModuleSecurity;
