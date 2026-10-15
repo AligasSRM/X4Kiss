@@ -1,4 +1,4 @@
-export const XKISS_MODULE_LIFECYCLE_RULES = Object.freeze({
+export const X4KISS_MODULE_LIFECYCLE_RULES = Object.freeze({
   stage: "15.24",
   name: "Module Lifecycle Control",
   coreControlled: true,
@@ -12,24 +12,24 @@ export const XKISS_MODULE_LIFECYCLE_RULES = Object.freeze({
   failClosed: true
 });
 
-export function validateXKissModuleLifecycleRules() {
-  const transitions = XKISS_MODULE_LIFECYCLE_RULES.allowedTransitions;
+export function validateX4KissModuleLifecycleRules() {
+  const transitions = X4KISS_MODULE_LIFECYCLE_RULES.allowedTransitions;
   const ok =
     transitions.registered.includes("initialized") &&
     transitions.initialized.includes("active") &&
     transitions.active.includes("inactive") &&
     transitions.inactive.includes("active") &&
     transitions.destroyed.length === 0 &&
-    XKISS_MODULE_LIFECYCLE_RULES.coreControlled === true &&
-    XKISS_MODULE_LIFECYCLE_RULES.failClosed === true;
+    X4KISS_MODULE_LIFECYCLE_RULES.coreControlled === true &&
+    X4KISS_MODULE_LIFECYCLE_RULES.failClosed === true;
 
   return {
     ok,
-    stage: XKISS_MODULE_LIFECYCLE_RULES.stage,
-    coreControlled: XKISS_MODULE_LIFECYCLE_RULES.coreControlled,
-    failClosed: XKISS_MODULE_LIFECYCLE_RULES.failClosed
+    stage: X4KISS_MODULE_LIFECYCLE_RULES.stage,
+    coreControlled: X4KISS_MODULE_LIFECYCLE_RULES.coreControlled,
+    failClosed: X4KISS_MODULE_LIFECYCLE_RULES.failClosed
   };
 }
 
 // Backward-compatible product-name alias for lifecycle integration.
-export const validateX4KissModuleLifecycleRules = validateXKissModuleLifecycleRules;
+export const validateX4KissModuleLifecycleRules = validateX4KissModuleLifecycleRules;
