@@ -21,10 +21,10 @@
 
 
 <section class="location-settings" aria-labelledby="location-heading" style="margin:1.5rem 0;padding:1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem">
-  <div class="section-head"><div><h2 id="location-heading">Location &amp; Country</h2><p>Select any country or let your browser share your current coordinates. Location access is optional.</p></div></div>
+  <div class="section-head"><div><h2 id="location-heading">Location &amp; Country</h2><p>Choose a country or request your device coordinates. Coordinates do not identify a country automatically, and location access is optional.</p></div></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;align-items:end">
     <label for="country-select" style="display:grid;gap:.45rem">Country or territory
-      <select id="country-select" name="country" autocomplete="country-name" style="width:100%;padding:.8rem;border-radius:.6rem">
+      <select id="country-select" name="country" autocomplete="country-name" aria-describedby="country-help" style="width:100%;padding:.8rem;border-radius:.6rem">
         <option value="">Choose a country or territory</option>
       </select>
     </label>
@@ -33,7 +33,7 @@
       <p id="location-status" role="status" aria-live="polite" style="margin:0">Your location has not been requested.</p>
     </div>
   </div>
-  <p style="margin:.75rem 0 0;font-size:.9em;opacity:.8">Your browser will ask permission before sharing coordinates. Coordinates are not sent to the dashboard server by this control.</p>
+  <p id="country-help" style="margin:.75rem 0 0;font-size:.9em;opacity:.8">Your browser asks permission before sharing coordinates. This control displays coordinates only: it does not infer or select a country, and it does not send coordinates to the dashboard server.</p>
 </section>
 <script>
 (() => {
@@ -69,13 +69,14 @@
     'YE','YT',
     'ZA','ZM','ZW'
   ];
-  const displayNames = typeof Intl !== 'undefined' && Intl.DisplayNames
-    ? new Intl.DisplayNames([navigator.language || 'en'], { type: 'region' })
+  // Keep country names consistent with this page, whose document language is English.
+  const displayNames = typeof Intl !== 'undefined' && typeof Intl.DisplayNames === 'function'
+    ? new Intl.DisplayNames(['en'], { type: 'region' })
     : null;
   const options = countryCodes.map(code => ({
     code,
     name: displayNames ? displayNames.of(code) : code
-  })).sort((a, b) => a.name.localeCompare(b.name, navigator.language || 'en'));
+  })).sort((a, b) => a.name.localeCompare(b.name, 'en'));
   for (const country of options) {
     const option = document.createElement('option');
     option.value = country.code;
@@ -84,6 +85,10 @@
   }
 
   detectButton.addEventListener('click', () => {
+    if (!window.isSecureContext) {
+      status.textContent = 'Location access requires a secure context (normally HTTPS). Please open the secure site or choose your country manually.';
+      return;
+    }
     if (!('geolocation' in navigator)) {
       status.textContent = 'Location detection is not supported by this browser. Please choose your country manually.';
       return;
@@ -93,7 +98,7 @@
     navigator.geolocation.getCurrentPosition(position => {
       const latitude = position.coords.latitude.toFixed(5);
       const longitude = position.coords.longitude.toFixed(5);
-      status.textContent = 'Coordinates detected: ' + latitude + ', ' + longitude + '. Choose your country above if it is not already selected.';
+      status.textContent = 'Coordinates detected: ' + latitude + ', ' + longitude + '. Country detection is not available here; please choose your country manually.';
       detectButton.disabled = false;
     }, error => {
       const messages = {
