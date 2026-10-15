@@ -1,8 +1,8 @@
-import { createXKissModuleLifecycle } from "./xkiss-module-lifecycle-core.js";
-import { validateXKissModuleLifecycleRules } from "./xkiss-module-lifecycle-rules.js";
+import { createX4KissModuleLifecycle } from "./x4kiss-module-lifecycle-core.js";
+import { validateX4KissModuleLifecycleRules } from "./x4kiss-module-lifecycle-rules.js";
 
-export function runXKissModuleLifecycleSelfCheck() {
-  const rules = validateXKissModuleLifecycleRules();
+export function runX4KissModuleLifecycleSelfCheck() {
+  const rules = validateX4KissModuleLifecycleRules();
   const core = {
     modules: {},
     registerModule(name, status) {
@@ -11,7 +11,7 @@ export function runXKissModuleLifecycleSelfCheck() {
     }
   };
 
-  const lifecycle = createXKissModuleLifecycle(core);
+  const lifecycle = createX4KissModuleLifecycle(core);
   const calls = [];
   const hooks = {
     init: () => calls.push("init"),
