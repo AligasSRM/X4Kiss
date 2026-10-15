@@ -1,19 +1,19 @@
-const XKISS_VIDEOS = {
+const X4KISS_VIDEOS = {
 
   "video-001": {
 
     id: "video-001",
 
-    title: "XKiss Test Video",
+    title: "X4Kiss Test Video",
 
-    creator: "XKiss Creator",
+    creator: "X4Kiss Creator",
 
     creatorId: "creator-001",
 
     duration: "00:04",
 
     tags: [
-      "XKiss",
+      "X4Kiss",
       "Video",
       "Test"
     ],
