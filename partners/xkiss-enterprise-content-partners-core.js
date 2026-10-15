@@ -1,4 +1,4 @@
-export const XKISS_ENTERPRISE_CONTENT_PARTNERS_SECTION = {
+export const X4KISS_ENTERPRISE_CONTENT_PARTNERS_SECTION = {
   section: "16",
   name: "Enterprise Content & Partners",
   version: "1.0.0",
@@ -47,7 +47,7 @@ export const XKISS_ENTERPRISE_CONTENT_PARTNERS_SECTION = {
 };
 
 export function getEnterpriseContentPartnersSectionStatus() {
-  const section = XKISS_ENTERPRISE_CONTENT_PARTNERS_SECTION;
+  const section = X4KISS_ENTERPRISE_CONTENT_PARTNERS_SECTION;
   return {
     section: section.section,
     status: section.status,
@@ -57,7 +57,7 @@ export function getEnterpriseContentPartnersSectionStatus() {
 }
 
 export function validateEnterpriseContentPartnersFoundation() {
-  const section = XKISS_ENTERPRISE_CONTENT_PARTNERS_SECTION;
+  const section = X4KISS_ENTERPRISE_CONTENT_PARTNERS_SECTION;
   const controlsGreen = Object.values(section.controls).every(Boolean);
   return {
     ok:
