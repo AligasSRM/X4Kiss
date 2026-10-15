@@ -21,12 +21,12 @@ const sections = [
   ["12","Safety & Verification",["safety/safety-integration.js","safety/age-verification.js"]],
   ["13","Admin Dashboard",["admin.html","admin/admin-integration.js"]],
   ["14","Super Admin & Security",["security/super-admin-security-core.js","security/super-admin-mfa.js"]],
-  ["15","Platform Settings",["settings/xkiss-platform-settings-section-core.js","settings/xkiss-platform-settings-section-self-test.js"]],
-  ["16","Enterprise Content & Partners",["partners/xkiss-enterprise-content-partners-core.js","partners/xkiss-enterprise-content-partners-self-test.js","partners/xkiss-enterprise-content-partners-integration.js","partners/xkiss-section-16-external-dependencies.js","partners/xkiss-section-16-regression.js","partners/xkiss-section-16-lock.js"]],
-  ["17","Consumer Product Features",["consumer/xkiss-consumer-product-section-core.js","consumer/xkiss-consumer-product-section-self-test.js","consumer/xkiss-consumer-product-section-integration.js","consumer/xkiss-consumer-product-regression.js","consumer/xkiss-section-17-external-dependencies.js","consumer/xkiss-section-17-lock.js"]],
-  ["18","Alex Control Engine",["control/xkiss-autonomous-control-core.js","control/xkiss-autonomous-control-policy.js","control/xkiss-control-runner.js","control/xkiss-control-section-self-test.js","control/xkiss-control-lock.js"]],
-  ["19","Production Activation Readiness",["activation/xkiss-production-activation-readiness-core.js","activation/xkiss-production-activation-readiness-self-test.js","activation/xkiss-section-19-external-dependencies.js","activation/xkiss-section-19-regression.js","activation/xkiss-section-19-lock.js"]],
-  ["20","Final Master Release Lock",["release/xkiss-final-master-lock.js","release/xkiss-final-master-release-self-test.js","release/xkiss-final-master-regression.js"]]
+  ["15","Platform Settings",["settings/x4kiss-platform-settings-section-core.js","settings/x4kiss-platform-settings-section-self-test.js"]],
+  ["16","Enterprise Content & Partners",["partners/x4kiss-enterprise-content-partners-core.js","partners/x4kiss-enterprise-content-partners-self-test.js","partners/x4kiss-enterprise-content-partners-integration.js","partners/x4kiss-section-16-external-dependencies.js","partners/x4kiss-section-16-regression.js","partners/x4kiss-section-16-lock.js"]],
+  ["17","Consumer Product Features",["consumer/x4kiss-consumer-product-section-core.js","consumer/x4kiss-consumer-product-section-self-test.js","consumer/x4kiss-consumer-product-section-integration.js","consumer/x4kiss-consumer-product-regression.js","consumer/x4kiss-section-17-external-dependencies.js","consumer/x4kiss-section-17-lock.js"]],
+  ["18","Alex Control Engine",["control/x4kiss-autonomous-control-core.js","control/x4kiss-autonomous-control-policy.js","control/x4kiss-control-runner.js","control/x4kiss-control-section-self-test.js","control/x4kiss-control-lock.js"]],
+  ["19","Production Activation Readiness",["activation/x4kiss-production-activation-readiness-core.js","activation/x4kiss-production-activation-readiness-self-test.js","activation/x4kiss-section-19-external-dependencies.js","activation/x4kiss-section-19-regression.js","activation/x4kiss-section-19-lock.js"]],
+  ["20","Final Master Release Lock",["release/x4kiss-final-master-lock.js","release/x4kiss-final-master-release-self-test.js","release/x4kiss-final-master-regression.js"]]
 ];
 
 const jsFiles = [];
@@ -66,7 +66,7 @@ const configuredD1Bindings = d1Blocks.map(block => {
   const match = block.match(/\bbinding\s*=\s*["']([^"']+)["']/);
   return match ? match[1] : null;
 }).filter(Boolean);
-const runtimeD1Bindings = [...workerSource.matchAll(/\benv\.((?:XKISS|X4KISS)_[A-Z0-9_]+)\b/g)]
+const runtimeD1Bindings = [...workerSource.matchAll(/\benv\.((?:X4KISS|X4KISS)_[A-Z0-9_]+)\b/g)]
   .map(match => match[1])
   .filter((name, index, all) => all.indexOf(name) === index && !name.endsWith("_AUTH_SESSIONS"));
 for (const binding of runtimeD1Bindings) {
@@ -107,21 +107,21 @@ const requiredQualities = ["340p","460p","720p","1080p"];
 const qualityOk = requiredQualities.every(q=>qualityContent.includes(q)) &&
   !/\b(?:360p|400p|1040p)\b/.test(qualityContent);
 
-const releaseLock = exists("core/xkiss-release-lock.js") ? read("core/xkiss-release-lock.js") : "";
+const releaseLock = exists("core/x4kiss-release-lock.js") ? read("core/x4kiss-release-lock.js") : "";
 const lockStateOk = releaseLock.includes('state: "DEVELOPMENT_ACTIVE"') || releaseLock.includes('locked: true');
 
-const section16 = await import(path.join(root,"partners/xkiss-enterprise-content-partners-self-test.js").replaceAll(path.sep,"/"));
+const section16 = await import(path.join(root,"partners/x4kiss-enterprise-content-partners-self-test.js").replaceAll(path.sep,"/"));
 const section16Result = section16.runEnterpriseContentPartnersSectionSelfTest();
-const section17 = await import(path.join(root,"consumer/xkiss-consumer-product-section-self-test.js").replaceAll(path.sep,"/"));
+const section17 = await import(path.join(root,"consumer/x4kiss-consumer-product-section-self-test.js").replaceAll(path.sep,"/"));
 const section17Result = section17.runConsumerProductSectionSelfTest();
-const section18 = await import(path.join(root,"control/xkiss-control-section-self-test.js").replaceAll(path.sep,"/"));
+const section18 = await import(path.join(root,"control/x4kiss-control-section-self-test.js").replaceAll(path.sep,"/"));
 const section18Result = await section18.runControlSectionSelfTest();
 
-const section15 = await import(path.join(root,"settings/xkiss-platform-settings-section-self-test.js").replaceAll(path.sep,"/"));
+const section15 = await import(path.join(root,"settings/x4kiss-platform-settings-section-self-test.js").replaceAll(path.sep,"/"));
 const section15Result = section15.runX4KissPlatformSettingsSectionSelfTest();
-const section19 = await import(path.join(root,"activation/xkiss-production-activation-readiness-self-test.js").replaceAll(path.sep,"/"));
+const section19 = await import(path.join(root,"activation/x4kiss-production-activation-readiness-self-test.js").replaceAll(path.sep,"/"));
 const section19Result = section19.runSection19SelfTest();
-const section20 = await import(path.join(root,"release/xkiss-final-master-release-self-test.js").replaceAll(path.sep,"/"));
+const section20 = await import(path.join(root,"release/x4kiss-final-master-release-self-test.js").replaceAll(path.sep,"/"));
 const section20Result = section20.runSection20SelfTest();
 
 const reviewedCommit = execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
