@@ -49,7 +49,7 @@ import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuper
 import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
-import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
+import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/xkiss-settings-backend.js";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://aligassrm.github.io",
@@ -106,35 +106,39 @@ export default {
     }
 
     if (url.pathname === "/api/auth/register" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_input" }, 400); }
-      const result = await registerMember(env, body);
+      const result = await registerMember({ ...env, XKISS_AUTH_DB: authDb }, body);
       const statusCode = result.ok ? 201 : result.status === "already_exists" ? 409 : result.status === "invalid_input" ? 400 : 500;
       return json(result, statusCode);
     }
 
     if (url.pathname === "/api/auth/login" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ ok: false, status: "backend_not_configured" }, 503);
       let body;
       try { body = await request.json(); } catch { return json({ ok: false, status: "invalid_credentials" }, 401); }
-      const result = await loginMember(env, body);
+      const result = await loginMember({ ...env, XKISS_AUTH_DB: authDb }, body);
       return json(result, result.ok ? 200 : 401);
     }
 
     if (url.pathname === "/api/auth/me" && request.method === "GET") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
-      const result = await authenticateSession(env, token);
+      const result = await authenticateSession({ ...env, XKISS_AUTH_DB: authDb }, token);
       return json(result, result.ok ? 200 : 401);
     }
 
     if (url.pathname === "/api/auth/logout" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ ok: false, status: "backend_not_configured" }, 503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ ok: false, status: "backend_not_configured" }, 503);
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
-      return json(await logoutMember(env, token));
+      return json(await logoutMember({ ...env, XKISS_AUTH_DB: authDb }, token));
     }
 
     if (url.pathname === "/api/admin/backend/status" && request.method === "GET") {
@@ -142,48 +146,53 @@ export default {
     }
 
     if (url.pathname === "/api/admin/security/reauth" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
-      const result=await reauthenticateMemberSession(env,token,body.password);
+      const result=await reauthenticateMemberSession({ ...env, XKISS_AUTH_DB: authDb },token,body.password);
       return json(result,result.ok?200:result.status==="unauthenticated"?401:403);
     }
 
     if (url.pathname === "/api/admin/security/mfa/enroll" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ok:false,status:"backend_not_configured"},503);
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
-      const session=await authenticateSession(env,token);
+      const session=await authenticateSession({ ...env, XKISS_AUTH_DB: authDb },token);
       if(!session.ok) return json({ok:false,status:"unauthenticated"},401);
-      const result=await beginSuperAdminMfaEnrollment(env,session.user,session);
+      const result=await beginSuperAdminMfaEnrollment({ ...env, XKISS_AUTH_DB: authDb },session.user,session);
       return json(result,result.ok?200:result.status==="forbidden"?403:result.status==="reauthentication_required"?428:503);
     }
 
     if (url.pathname === "/api/admin/security/mfa/enable" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
-      const session=await authenticateSession(env,token);
+      const session=await authenticateSession({ ...env, XKISS_AUTH_DB: authDb },token);
       if(!session.ok) return json({ok:false,status:"unauthenticated"},401);
-      const result=await verifyAndEnableSuperAdminMfa(env,session.user,session,body.code);
+      const result=await verifyAndEnableSuperAdminMfa({ ...env, XKISS_AUTH_DB: authDb },session.user,session,body.code);
       return json(result,result.ok?200:result.status==="forbidden"?403:result.status==="reauthentication_required"?428:401);
     }
 
     if (url.pathname === "/api/admin/security/mfa/verify" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) return json({ok:false,status:"backend_not_configured"},503);
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) return json({ok:false,status:"backend_not_configured"},503);
       let body; try { body=await request.json(); } catch { return json({ok:false,status:"invalid_input"},400); }
       const authorization=request.headers.get("Authorization")||"";
       const token=authorization.startsWith("Bearer ")?authorization.slice(7).trim():"";
-      const session=await authenticateSession(env,token);
+      const session=await authenticateSession({ ...env, XKISS_AUTH_DB: authDb },token);
       if(!session.ok) return json({ok:false,status:"unauthenticated"},401);
-      const result=await verifySuperAdminMfaForSession(env,session.user,session,body.code);
+      const result=await verifySuperAdminMfaForSession({ ...env, XKISS_AUTH_DB: authDb },session.user,session,body.code);
       return json(result,result.ok?200:result.status==="forbidden"?403:401);
     }
 
     if (url.pathname === "/api/admin/authorize" && request.method === "POST") {
-      if (!env.X4KISS_AUTH_DB) {
+      const authDb = env.XKISS_AUTH_DB || env.X4KISS_AUTH_DB;
+      if (!authDb) {
         return json({ ok: false, allowed: false, status: "auth_backend_not_configured" }, 503);
       }
 
@@ -197,10 +206,13 @@ export default {
       // Never trust identity or role fields supplied by the caller.
       const authorization = request.headers.get("Authorization") || "";
       const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
-      const session = await authenticateSession(env, token);
+      const session = await authenticateSession({ ...env, XKISS_AUTH_DB: authDb }, token);
       const requestId = request.headers.get("cf-ray") || request.headers.get("x-request-id") || null;
 
-      if (!env.X4KISS_DB || !env.X4KISS_ADMIN_AUDIT) {
+      const mainDb = env.XKISS_DB || env.X4KISS_DB;
+      const adminAuditDb = env.XKISS_ADMIN_AUDIT || env.X4KISS_ADMIN_AUDIT;
+
+      if (!mainDb || !adminAuditDb) {
         return json({ ok: false, allowed: false, status: "admin_security_providers_not_configured" }, 503);
       }
 
