@@ -75,7 +75,8 @@ test("video upload forwards safe metadata and returns stored status", async (t) 
   const originalFetch = globalThis.fetch;
   let seen;
   globalThis.fetch = async (request, init) => {
-    seen = { url: String(request), headers: new Headers(init?.headers || request.headers), method: init?.method || request.method };
+    const req = request instanceof Request ? request : new Request(request, init);
+    seen = { url: req.url, headers: new Headers(req.headers), method: req.method };
     return new Response("", { status: 200 });
   };
   t.after(() => { globalThis.fetch = originalFetch; });
