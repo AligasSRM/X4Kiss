@@ -94,7 +94,7 @@ SYNTAX VALIDATION EVIDENCE (GREEN — SYNTAX ONLY):
 IMPORTANT LIMIT:
 These results validate the submitted source text and syntax only. They do NOT certify the live page, authentication, API, storage, browser behavior, mobile layout, accessibility, or production readiness. Re-check that the deployed files match the tested GitHub versions before relying on this certificate.
 
-REAL-WORLD TESTS REQUIRED — DO NOT MARK GREEN/LOCKED UNTIL EVIDENCE IS RECORDED:
+FINAL LIVE-TEST GATE — DEFERRED TO THE LAST STEP BEFORE OPERATIONAL RELEASE:
 [ ] Open the actual deployed X4Kiss Creator Library page over HTTPS and record the exact URL, date/time, device/browser, and commit tested.
 [ ] Confirm auth/route-guard.js and creator/creator-library.js load successfully (no 404s) and the stylesheet loads.
 [ ] While logged out, verify the page redirects/blocks access according to the intended authentication policy.
@@ -105,10 +105,12 @@ REAL-WORLD TESTS REQUIRED — DO NOT MARK GREEN/LOCKED UNTIL EVIDENCE IS RECORDE
 [ ] Check responsive layout on a real phone and desktop; verify mobile navigation remains usable.
 [ ] Run regression/security checks and record the evidence before operational GREEN; LOCK only after all required gates pass.
 
-CURRENT STATUS:
-GREEN — SYNTAX VALIDATION ONLY.
-YELLOW — LIVE / AUTH / API / RESPONSIVE / REGRESSION TESTS NOT YET VERIFIED.
-LOCKED: NOT GRANTED.
+STAGE HANDOVER / CURRENT STATUS:
+GREEN — SYNTAX VALIDATION STAGE COMPLETE.
+LOCKED — SYNTAX VALIDATION STAGE CLOSED; do not repeat unless a source file changes or new evidence requires it.
+YELLOW — REAL LIVE SITE / AUTH / API / RESPONSIVE / REGRESSION TESTING IS DEFERRED AND IS THE FINAL CHECKPOINT BEFORE OPERATIONAL GREEN.
+OVERALL CREATOR LIBRARY: NOT OPERATIONALLY GREEN; NOT LOCKED.
+NEXT ACTION: proceed to the next planned project stage. Return to this page only for the final live-site verification, then append the actual URL, tested commit, date/time, device/browser, observed results, and evidence.
 
 Maintenance rule: update this note in this same file after each real test, recording exact evidence and changing status only when supported. This HTML comment is not displayed in the page UI.
 -->
