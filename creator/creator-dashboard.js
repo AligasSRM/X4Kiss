@@ -117,7 +117,7 @@
     if (detail) detail.textContent = "Checking creator library…";
     try {
       const library = await getJSON("/api/creator/videos");
-      if (!Array.isArray(library.videos)) {
+      if (library.ok !== true || !Array.isArray(library.videos)) {
         count.textContent = "—";
         if (detail) detail.textContent = "Library response is invalid; video count is unavailable.";
         return;
@@ -140,7 +140,7 @@
 
       // storageReady is a health flag, not proof of a fresh write/read test.
       if (health.storageReady === true) {
-        setStorageStatus("Ready", "Worker health check reports storage ready; live storage self-test not run here.", "ready", "Worker online · storage reported ready");
+        setStorageStatus("Reported ready", "Worker reports storage ready; a fresh live storage self-test has not been run here.", "pending", "Worker online · storage reported ready, not independently verified");
       } else {
         setStorageStatus("Pending", "Worker online; storage is not reported ready.", "pending", "Worker online · storage pending");
       }
