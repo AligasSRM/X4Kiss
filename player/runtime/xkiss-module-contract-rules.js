@@ -1,4 +1,4 @@
-export const XKISS_MODULE_CONTRACT_RULES = Object.freeze({
+export const X4KISS_MODULE_CONTRACT_RULES = Object.freeze({
   stage: "15.25",
   name: "Module Contract Registry",
   coreControlled: true,
@@ -10,7 +10,7 @@ function validName(name) {
   return typeof name === "string" && /^[A-Za-z0-9._-]{1,80}$/.test(name);
 }
 
-export function validateXKissModuleContract(contract = {}) {
+export function validateX4KissModuleContract(contract = {}) {
   const dependencies = Array.isArray(contract.dependencies) ? contract.dependencies : [];
   const capabilities = Array.isArray(contract.capabilities) ? contract.capabilities : [];
   const validDependencies = dependencies.every(validName) && new Set(dependencies).size === dependencies.length;
@@ -27,14 +27,14 @@ export function validateXKissModuleContract(contract = {}) {
   };
 }
 
-export function validateXKissModuleContractRules() {
+export function validateX4KissModuleContractRules() {
   return {
-    ok: XKISS_MODULE_CONTRACT_RULES.coreControlled === true &&
-      XKISS_MODULE_CONTRACT_RULES.failClosed === true &&
-      XKISS_MODULE_CONTRACT_RULES.maxNameLength === 80,
-    ...XKISS_MODULE_CONTRACT_RULES
+    ok: X4KISS_MODULE_CONTRACT_RULES.coreControlled === true &&
+      X4KISS_MODULE_CONTRACT_RULES.failClosed === true &&
+      X4KISS_MODULE_CONTRACT_RULES.maxNameLength === 80,
+    ...X4KISS_MODULE_CONTRACT_RULES
   };
 }
 
 // Backward-compatible product-name alias for contract integration.
-export const validateX4KissModuleContractRules = validateXKissModuleContractRules;
+export const validateX4KissModuleContractRules = validateX4KissModuleContractRules;
