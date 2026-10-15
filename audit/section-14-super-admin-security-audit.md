@@ -1,4 +1,4 @@
-# XKiss — Section 14 Super Admin & Security Audit
+# X4Kiss — Section 14 Super Admin & Security Audit
 
 Date: 2026-10-11
 Branch: main
@@ -30,11 +30,11 @@ Correction: the route now derives identity exclusively from a valid server-side 
 
 ## Verification evidence
 - Section 14 JavaScript syntax check, fail-closed self-test, and lock-state self-test: required in the dedicated workflow.
-- Repository final review and earlier Section 14 run: https://github.com/AligasSRM/XKiss/actions/runs/38091935443
-- Live authentication acceptance, including registration, duplicate registration rejection, wrong-password rejection, authenticated session lookup, logout revocation, and spoofed Super Admin rejection: **PASS** on rerun https://github.com/AligasSRM/XKiss/actions/runs/38092300632 (attempt 2).
+- Repository final review and earlier Section 14 run: https://github.com/AligasSRM/X4Kiss/actions/runs/38091935443
+- Live authentication acceptance, including registration, duplicate registration rejection, wrong-password rejection, authenticated session lookup, logout revocation, and spoofed Super Admin rejection: **PASS** on rerun https://github.com/AligasSRM/X4Kiss/actions/runs/38092300632 (attempt 2).
 - The first attempt failed because the live Worker had not yet picked up the source correction; after the Worker deployment updated, rerunning the same acceptance workflow passed.
-- Dedicated Section 14 workflow: `.github/workflows/xkiss-section-14-security.yml`.
-- Production auth acceptance workflow: `.github/workflows/xkiss-auth-production-acceptance.yml`.
+- Dedicated Section 14 workflow: `.github/workflows/x4kiss-section-14-security.yml`.
+- Production auth acceptance workflow: `.github/workflows/x4kiss-auth-production-acceptance.yml`.
 
 ## External production gates — intentionally not claimed as complete
 - Admin authorization database and durable audit provider are not bound to the Worker.
