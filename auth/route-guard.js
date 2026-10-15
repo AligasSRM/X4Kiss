@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  var SESSION_KEY = "x4keys_session_token";
+  var SESSION_KEY = "x4kiss_session_token";
   var token = "";
   try {
     token = sessionStorage.getItem(SESSION_KEY) || "";
@@ -13,7 +13,7 @@
   }
   document.documentElement.style.visibility = "hidden";
   if (!token) { sendToRegistration("required"); return; }
-  fetch("https://x4kiss-backend-neon.onrender.com/api/auth/me", {
+  fetch("https://x4kiss.srourr-ali73.workers.dev/api/auth/me", {
     method: "GET",
     headers: { "Authorization": "Bearer " + token },
     cache: "no-store"
