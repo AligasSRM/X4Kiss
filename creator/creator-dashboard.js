@@ -4,10 +4,11 @@
   // This deployed Worker is the dashboard's existing API backend.
   // It is not the storage provider; uploaded-object storage is ElasticLake.
   const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
-  const SESSION_KEY = "xkiss_session_token";
+  const SESSION_KEY = "x4keys_session_token";
+  const LEGACY_SESSION_KEY = "xkiss_session_token";
 
   async function getJSON(path) {
-    const token = window.sessionStorage.getItem(SESSION_KEY) || "";
+    const token = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
     const response = await fetch(API_BASE + path, {
       headers: {
         Accept: "application/json",
