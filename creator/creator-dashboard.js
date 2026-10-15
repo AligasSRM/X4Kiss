@@ -70,15 +70,15 @@
       throw new ApiError("Network request failed.", 0, "network_error");
     }
 
+    if (!response.ok) {
+      throw new ApiError("API request failed.", response.status, "http_error");
+    }
+
     let data;
     try {
       data = await response.json();
     } catch {
       throw new ApiError("Invalid JSON response.", response.status, "invalid_json");
-    }
-
-    if (!response.ok) {
-      throw new ApiError("API request failed.", response.status, "http_error");
     }
 
     return data;
