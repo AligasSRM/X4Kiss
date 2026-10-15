@@ -111,21 +111,23 @@
 
   async function loadLibrary() {
     const count = document.getElementById("video-count");
+    const detail = document.getElementById("video-count-detail");
     if (!count) return;
 
     count.textContent = "…";
+    if (detail) detail.textContent = "Checking creator library…";
     try {
       const library = await getJSON("/api/creator/videos");
       if (!Array.isArray(library.videos)) {
         count.textContent = "—";
-        count.title = "The library response did not contain a videos array.";
+        if (detail) detail.textContent = "Library response is invalid; video count is unavailable.";
         return;
       }
       count.textContent = String(library.videos.length);
-      count.removeAttribute("title");
+      if (detail) detail.textContent = "Library endpoint responded; full owner-scoped library flow remains to be verified.";
     } catch (error) {
       count.textContent = "—";
-      count.title = messageForError(error, "Creator library");
+      if (detail) detail.textContent = messageForError(error, "Creator library");
     }
   }
 
@@ -190,10 +192,9 @@
     await Promise.allSettled([loadLibrary(), loadHealth(), loadWallet()]);
 
     const liveCount = document.getElementById("live-count");
-    if (liveCount) {
-      liveCount.textContent = "—";
-      liveCount.title = "Live-room count endpoint is not wired to this dashboard.";
-    }
+    const liveDetail = document.getElementById("live-count-detail");
+    if (liveCount) liveCount.textContent = "—";
+    if (liveDetail) liveDetail.textContent = "Live-room count endpoint is not connected to this dashboard.";
   }
 
   window.addEventListener("DOMContentLoaded", loadDashboard);
