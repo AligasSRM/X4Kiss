@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
+  const API_BASE = "https://x4kiss-backend-neon.onrender.com";
   const SESSION_KEY = "x4keys_session_token";
 
   function escapeHtml(value) {
