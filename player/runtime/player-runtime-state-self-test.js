@@ -1,13 +1,13 @@
-import { getXKissPlayerRuntimeState, evaluateXKissPlayerRuntimeState } from "./player-runtime-state-core.js";
+import { getX4KissPlayerRuntimeState, evaluateX4KissPlayerRuntimeState } from "./player-runtime-state-core.js";
 
-export function runXKissPlayerRuntimeStateSelfCheck() {
-  const valid = evaluateXKissPlayerRuntimeState({
+export function runX4KissPlayerRuntimeStateSelfCheck() {
+  const valid = evaluateX4KissPlayerRuntimeState({
     operation: "read_state",
     playerCoreConnected: true,
     videoElementReady: true,
     stateReadable: true
   });
-  const denied = evaluateXKissPlayerRuntimeState({
+  const denied = evaluateX4KissPlayerRuntimeState({
     operation: "read_state",
     playerCoreConnected: true,
     videoElementReady: false,
@@ -17,7 +17,7 @@ export function runXKissPlayerRuntimeStateSelfCheck() {
     paused: true, currentTime: 0, duration: 10, readyState: 4, networkState: 1,
     ended: false, muted: false, volume: 1, playbackRate: 1, currentSrc: "test.mp4"
   };
-  const state = getXKissPlayerRuntimeState(fakeVideo);
+  const state = getX4KissPlayerRuntimeState(fakeVideo);
   const checks = {
     stage: true,
     validAccepted: valid.allowed === true,
