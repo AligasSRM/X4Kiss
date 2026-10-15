@@ -91,7 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function updateAccountNavigation() {
-    const token = window.sessionStorage.getItem("xkiss_session_token") || "";
+    const SESSION_KEY = "x4keys_session_token";
+    const LEGACY_SESSION_KEY = "xkiss_session_token";
+    const token = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
+    if (token) window.sessionStorage.setItem(SESSION_KEY, token);
+    window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
     const accountLink = document.querySelector("[data-auth-nav]");
     const quickAuthLink = document.querySelector("[data-auth-quick]");
     if (!token) return;
@@ -102,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await response.json();
       if (!response.ok || data.ok !== true || data.status !== "authenticated") {
+        window.sessionStorage.removeItem("x4keys_session_token");
         window.sessionStorage.removeItem("xkiss_session_token");
         return;
       }
