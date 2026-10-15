@@ -1,4 +1,4 @@
-export const XKISS_MODULE_RECOVERY_RULES=Object.freeze({
+export const X4KISS_MODULE_RECOVERY_RULES=Object.freeze({
   stage:"15.30",name:"Module Self-Healing & Auto-Recovery",coreControlled:true,failClosed:true,
   maxAttempts:1,maxHistory:100,
   statuses:["RECOVERED","FAILED","SKIPPED"]
