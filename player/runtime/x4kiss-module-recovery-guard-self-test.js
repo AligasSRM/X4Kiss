@@ -1,4 +1,4 @@
-import{installX4KissModuleRecoveryGuard}from"./xkiss-module-recovery-guard-integration.js";
+import{installX4KissModuleRecoveryGuard}from"./x4kiss-module-recovery-guard-integration.js";
 export async function runX4KissModuleRecoveryGuardSelfCheck(){
 const calls=[];
 const core={moduleRecovery:{recover:async r=>{calls.push(r.module);return calls.length<4?{ok:false,status:"FAILED"}:{ok:true,status:"RECOVERED",module:r.module};}},registerModule(){return{ok:true}}};
@@ -18,4 +18,4 @@ return{ok:Object.values(checks).every(Boolean),stage:"15.31",checks,status:g.get
 }
 
 // Backward-compatible alias for existing runtime workflows.
-export const runXKissModuleRecoveryGuardSelfCheck = runX4KissModuleRecoveryGuardSelfCheck;
+export const runX4KissModuleRecoveryGuardSelfCheck = runX4KissModuleRecoveryGuardSelfCheck;
