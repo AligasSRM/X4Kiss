@@ -1,12 +1,9 @@
 (() => {
   "use strict";
 
-  const API_BASE = "https://xkiss.srourr-ali73.workers.dev";
+  const API_BASE = "https://x4kiss.srourr-ali73.workers.dev";
   const SESSION_KEY = "x4keys_session_token";
-  const LEGACY_SESSION_KEY = "xkiss_session_token";
-  let sessionToken = window.sessionStorage.getItem(SESSION_KEY) || window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
-  if (sessionToken) window.sessionStorage.setItem(SESSION_KEY, sessionToken);
-  window.sessionStorage.removeItem(LEGACY_SESSION_KEY);
+  let sessionToken = window.sessionStorage.getItem(SESSION_KEY) || "";
 
   async function request(path, options = {}) {
     const response = await fetch(API_BASE + path, {
@@ -106,5 +103,5 @@
     else window.sessionStorage.removeItem(SESSION_KEY);
   }
 
-  window.XKissUploadAPI = { getStorageStatus, authenticate, verifySession, prepareUpload, uploadFile, setSessionToken };
+  window.X4KissUploadAPI = { getStorageStatus, authenticate, verifySession, prepareUpload, uploadFile, setSessionToken };
 })();
