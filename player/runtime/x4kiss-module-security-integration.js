@@ -23,5 +23,3 @@ export function installX4KissModuleSecurity(core) {
   };
 }
 
-// Backward-compatible alias for existing security workflows.
-export const installX4KissModuleSecurity = installX4KissModuleSecurity;
