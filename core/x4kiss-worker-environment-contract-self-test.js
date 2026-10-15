@@ -1,26 +1,26 @@
 import {
-  XKISS_WORKER_ENVIRONMENT_CONTRACT,
+  X4KISS_WORKER_ENVIRONMENT_CONTRACT,
   evaluateWorkerEnvironment,
   validateWorkerEnvironmentContract
-} from "./xkiss-worker-environment-contract.js";
+} from "./x4kiss-worker-environment-contract.js";
 
 const TEST_ENV = {
   ELASTICLAKE_ENDPOINT: "https://app.elasticlake.com",
-  ELASTICLAKE_BUCKET: "xkiss-storage--xkiss-production--xkiss-midea",
+  ELASTICLAKE_BUCKET: "x4kiss-storage--x4kiss-production--x4kiss-midea",
   ELASTICLAKE_REGION: "auto",
   ELASTICLAKE_ACCESS_KEY_ID: "test-access-key",
   ELASTICLAKE_SECRET_ACCESS_KEY: "test-secret-key"
 };
 
-export function runXKissWorkerEnvironmentContractSelfTest() {
+export function runX4KissWorkerEnvironmentContractSelfTest() {
   const empty = evaluateWorkerEnvironment({});
   const complete = evaluateWorkerEnvironment(TEST_ENV);
-  const missingBindingCases = XKISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map(({ name }) => {
+  const missingBindingCases = X4KISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map(({ name }) => {
     const env = { ...TEST_ENV };
     delete env[name];
     return evaluateWorkerEnvironment(env);
   });
-  const falseyBindingCases = XKISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map(({ name }) =>
+  const falseyBindingCases = X4KISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.map(({ name }) =>
     evaluateWorkerEnvironment({ ...TEST_ENV, [name]: "" })
   );
 
@@ -28,7 +28,7 @@ export function runXKissWorkerEnvironmentContractSelfTest() {
     empty.status === "BLOCKED" &&
     empty.activationAllowed === false &&
     empty.failClosed === true &&
-    empty.missingBindings.length === XKISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.length &&
+    empty.missingBindings.length === X4KISS_WORKER_ENVIRONMENT_CONTRACT.requiredBindings.length &&
     complete.status === "READY_FOR_PROVIDER_VERIFICATION" &&
     complete.missingBindings.length === 0 &&
     complete.activationAllowed === false &&
