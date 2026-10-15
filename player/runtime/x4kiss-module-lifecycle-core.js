@@ -125,5 +125,3 @@ export function createX4KissModuleLifecycle(core) {
   });
 }
 
-// Keep the new product-name export available alongside the established API.
-export const createX4KissModuleLifecycle = createX4KissModuleLifecycle;
