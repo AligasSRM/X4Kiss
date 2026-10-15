@@ -222,7 +222,6 @@
   let supportedLanguages = [];
   let originalNodes = [];
   let activeRequest = 0;
-  let originalTexts = new Map();
 
   function languageLabel(code, fallback) {
     try {
@@ -251,7 +250,6 @@
     while ((node = walker.nextNode())) {
       const original = node.nodeValue;
       nodes.push({node, original});
-      originalTexts.set(node, original);
     }
     return nodes;
   }
