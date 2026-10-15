@@ -10,7 +10,7 @@ function readSetting(env, names, fallback = "") {
   for (const name of names) {
     const value = env?.[name];
     if (value !== undefined && value !== null && String(value).trim() !== "") {
-      return String(value).trim().replace(/^(['"])(.*)\\1$/, "$2").trim();
+      return String(value).trim().replace(/^(['"])(.*)\1$/, "$2").trim();
     }
   }
   return fallback;
@@ -18,7 +18,7 @@ function readSetting(env, names, fallback = "") {
 
 function configuration(env = {}) {
   let endpoint = readSetting(env, ["ELASTICLAKE_ENDPOINT"], DEFAULTS.endpoint);
-  if (!/^https?:\\/\\//i.test(endpoint)) endpoint = "https://" + endpoint;
+  if (!/^https?:\/\//i.test(endpoint)) endpoint = "https://" + endpoint;
 
   let parsed;
   try {
@@ -31,7 +31,7 @@ function configuration(env = {}) {
   }
 
   return {
-    endpoint: parsed.toString().replace(/\\/$/, ""),
+    endpoint: parsed.toString().replace(/\/$/, ""),
     bucket: readSetting(env, ["ELASTICLAKE_BUCKET"], DEFAULTS.bucket),
     region: readSetting(env, ["ELASTICLAKE_REGION"], DEFAULTS.region),
     accessKey: readSetting(env, ["ELASTICLAKE_ACCESS_KEY_ID", "ELASTICLAKE_ACCESS_KEY"]),
@@ -50,7 +50,7 @@ export function isStorageReady(env = {}) {
 
 function objectKey(input) {
   const key = String(input ?? "");
-  if (!key || key.startsWith("/") || key.includes("\\\\") ||
+  if (!key || key.startsWith("/") || key.includes("\\") ||
       key.split("/").some(part => !part || part === "." || part === "..")) {
     throw new Error("ElasticLake object key is invalid.");
   }
@@ -62,7 +62,7 @@ function encodedKey(key) {
 }
 
 function safeText(value, limit = 512) {
-  return String(value ?? "").replace(/[\\r\\n\\0]/g, " ").slice(0, limit);
+  return String(value ?? "").replace(/[\r\n\0]/g, " ").slice(0, limit);
 }
 
 function fileName(value) {
@@ -174,7 +174,7 @@ export async function listVideos(env) {
   const response = await requestObject(env, "GET", "", undefined, {}, "?list-type=2&prefix=videos%2F");
   await requireSuccess("video listing", response);
   const xml = await response.text();
-  const videos = (xml.match(/<Contents>[\\s\\S]*?<\\/Contents>/g) || [])
+  const videos = (xml.match(/<Contents>[\s\S]*?<\/Contents>/g) || [])
     .map(block => ({
       key: xmlValue(block, "Key"),
       size: Number(xmlValue(block, "Size") || 0),
