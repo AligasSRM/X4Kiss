@@ -26,5 +26,3 @@ export function getX4KissReleaseLockStatus() {
   };
 }
 
-// Backward-compatible export for existing self-tests and consumers.
-export const getX4KissReleaseLockStatus = getX4KissReleaseLockStatus;
