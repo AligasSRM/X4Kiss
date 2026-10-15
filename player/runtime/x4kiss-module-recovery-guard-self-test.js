@@ -17,5 +17,3 @@ exceptionFailsClosed:exceptionResult?.ok===false&&exceptionResult?.status==="FAI
 return{ok:Object.values(checks).every(Boolean),stage:"15.31",checks,status:g.getStatus()};
 }
 
-// Backward-compatible alias for existing runtime workflows.
-export const runX4KissModuleRecoveryGuardSelfCheck = runX4KissModuleRecoveryGuardSelfCheck;
