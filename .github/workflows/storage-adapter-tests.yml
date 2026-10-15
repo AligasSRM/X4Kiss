@@ -21,6 +21,11 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/storage-adapter-tests.yml"
+      - "worker.js"
+      - "wrangler.toml"
+      - "admin/**"
+      - "security/**"
+      - "settings/**"
   workflow_dispatch:
 
 permissions:
