@@ -9,11 +9,11 @@
   };
 
   function loadVideos() {
-    if (typeof XKISS_VIDEOS !== "object" || XKISS_VIDEOS === null) {
-      console.error("XKiss Search: video data is unavailable.");
+    if (typeof X4KISS_VIDEOS !== "object" || X4KISS_VIDEOS === null) {
+      console.error("X4Kiss Search: video data is unavailable.");
       return [];
     }
-    return Object.values(XKISS_VIDEOS).filter(video => video && video.id);
+    return Object.values(X4KISS_VIDEOS).filter(video => video && video.id);
   }
 
   function clean(value) {
@@ -25,7 +25,7 @@
   }
 
   function getCategories() {
-    const configured = window.XKissSearchCategories?.getDefinitions?.() || [];
+    const configured = window.X4KissSearchCategories?.getDefinitions?.() || [];
     const categories = configured.map(category => category.label);
     const known = new Set(categories.map(category => normalize(category)));
 
@@ -179,7 +179,7 @@
     apply();
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:search-state-changed")
+      new CustomEvent("x4kiss:search-state-changed")
     );
 
     return getState();
@@ -248,7 +248,7 @@
 
     return {
       ok: checks.every(check => check.ok),
-      service: "XKiss Search & Categories",
+      service: "X4Kiss Search & Categories",
       version: "1.0",
       status: "connected",
       checks,
@@ -261,7 +261,7 @@
     readUrlState();
     apply();
 
-    window.XKissSearch = {
+    window.X4KissSearch = {
       getState,
       getCategories,
       getSearchShareUrl,
@@ -275,7 +275,7 @@
     window.addEventListener("popstate", syncFromUrl);
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:search-ready")
+      new CustomEvent("x4kiss:search-ready")
     );
   }
 
