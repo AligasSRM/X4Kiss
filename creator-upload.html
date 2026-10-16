@@ -1,132 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="theme-color" content="#07080b">
-<title>X4Kiss — Creator Upload</title>
-<script src="auth/route-guard.js"></script>
-<link rel="stylesheet" href="upload/upload.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#07080b">
+  <meta name="description" content="Prepare a private video upload for your X4Kiss creator library.">
+  <title>X4Kiss — Creator Upload</title>
+  <link rel="stylesheet" href="upload/upload.css">
 </head>
 <body>
-<header class="upload-header">
-  <nav class="upload-nav">
-    <a class="brand" href="index.html" aria-label="X4Kiss Home"><span class="brand-wordmark__prefix">X4</span><span class="brand-wordmark__suffix">Kiss</span></a>
-    <nav class="nav-links" aria-label="Primary navigation">
-      <a href="index.html">Home</a>
-      <a href="videos.html">Videos</a>
-      <a href="live.html">Live</a>
-      <a class="active" href="creator-upload.html">Upload</a>
-      <a href="index.html#account">Account</a>
-    </nav>
-    <a class="login" href="creator-dashboard.html">My Account</a>
-  </nav>
-</header>
-
-<main class="upload-page">
-  <section class="upload-hero">
-    <span class="eyebrow">X4KISS CREATOR</span>
-    <h1>Upload Video</h1>
-    <p>Select a video up to 100 MB. X4Kiss will open My Videos only after the upload endpoint returns success. Public publishing and playback remain disabled for now.</p>
-  </section>
-
-  <section class="upload-section">
-    <div class="upload-card">
-      <div class="architecture-note" id="creator-auth-status" aria-live="polite">
-        <strong>Creator session</strong>
-        <span>Uploads require a verified account session. Videos remain private and appear in My Videos only after the server confirms storage.</span>
-      </div>
-      <div class="section-head">
-        <div>
-          <h2>Video file</h2>
-          <p id="upload-status">Choose a video file to begin.</p>
-        </div>
-        <span id="storage-status" class="status-pill">Checking storage…</span>
-      </div>
-
-      <label class="file-drop" id="file-drop">
-        <input id="video-file" type="file" accept="video/*" aria-label="Select a video file" aria-describedby="video-file-help">
-        <span class="file-icon" aria-hidden="true">↑</span>
-        <strong>Select video</strong>
-        <span id="video-file-help">MP4, WebM and other browser-supported video files. Maximum file size: 100 MB.</span>
-        <span id="file-name" class="file-name">No file selected</span>
-      </label>
-
-      <div class="upload-grid">
-        <label>
-          <span>Title (required)</span>
-          <input id="video-title" type="text" autocomplete="off" maxlength="120" placeholder="Video title" required aria-describedby="video-title-help">
-          <span id="video-title-help">Use up to 120 characters.</span>
-        </label>
-
-        <label>
-          <span>Category (required)</span>
-          <select id="video-category" required>
-            <option value="">Select category</option>
-            <option>Entertainment</option>
-            <option>Music</option>
-            <option>Lifestyle</option>
-            <option>Fitness</option>
-            <option>Education</option>
-            <option>Other</option>
-          </select>
-        </label>
-
-        <label class="full">
-          <span>Description</span>
-          <textarea id="video-description" autocomplete="off" maxlength="2000" rows="5" placeholder="Describe your video" aria-describedby="video-description-help"></textarea>
-          <span id="video-description-help">Optional. Maximum 2,000 characters.</span>
-        </label>
-
-        <label>
-          <span>Download</span>
-          <select id="download-policy" disabled>
-            <option value="disabled">Downloads disabled</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Visibility</span>
-          <select id="video-visibility" disabled>
-            <option value="private">Private only</option>
-          </select>
-        </label>
-      </div>
-
-      <p id="upload-policy-note">Public or unlisted visibility, paid/free downloads, publishing, and playback are not enabled. These settings cannot be changed from this page.</p>
-
-      <div class="upload-progress" aria-live="polite">
-        <div class="progress-head">
-          <span id="progress-label">Upload not started</span>
-          <strong id="progress-value">0%</strong>
-        </div>
-        <div class="progress-track">
-          <div id="progress-bar" class="progress-bar" style="width:0%"></div>
-        </div>
-      </div>
-
-      <div class="upload-actions">
-        <button id="prepare-upload" class="primary" type="button">Upload Video Privately</button>
-        <button id="reset-upload" class="secondary" type="button">Reset</button>
-      </div>
-
-      <div id="upload-result" class="upload-result" hidden></div>
-
-      <div class="architecture-note">
-        <strong>Storage architecture</strong>
-        <span>X4Kiss uses the ElasticLake storage adapter. A storage self-test is not proof that every video upload works; each upload must be confirmed by the server and then appear in your private library. Public publishing, processing, and playback remain disabled until their secure paths are completed and tested.</span>
-      </div>
+  <header class="upload-header">
+    <div class="upload-nav">
+      <a class="brand" href="index.html" aria-label="X4Kiss Home">
+        <span class="brand-wordmark__prefix">X4</span><span class="brand-wordmark__suffix">Kiss</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a href="videos.html">Videos</a>
+        <a href="live.html">Live</a>
+        <a class="active" href="creator-upload.html" aria-current="page">Upload</a>
+        <a href="index.html#account">Account</a>
+      </nav>
+      <a class="login" href="creator-dashboard.html">My Account</a>
     </div>
-  </section>
-</main>
+  </header>
 
-<footer class="upload-footer">
-  <div>X4Kiss — Creator Upload</div>
-  <a href="index.html">Back to Home</a>
-</footer>
+  <main class="upload-page">
+    <section class="upload-hero" aria-labelledby="upload-page-title">
+      <span class="eyebrow">X4KISS CREATOR</span>
+      <h1 id="upload-page-title">Prepare a Video Upload</h1>
+      <p>This page is being prepared for the X4Kiss creator workflow. Account verification, video transfer, and storage confirmation will be connected and tested in a later phase.</p>
+    </section>
 
-<script src="upload/upload-api.js"></script>
-<script src="upload/upload-core.js"></script>
-<script src="upload/upload-navigation.js"></script>
+    <section class="upload-section" aria-label="Video upload details">
+      <div class="upload-card">
+        <div class="architecture-note" id="creator-auth-status" aria-live="polite">
+          <strong>Creator account</strong>
+          <span>Sign-in verification is not active in this phase. Do not treat this page as an authenticated upload session.</span>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h2>Video file</h2>
+            <p id="upload-status">Choose a video file when upload functionality is enabled.</p>
+          </div>
+          <span id="storage-status" class="status-pill">Storage integration pending</span>
+        </div>
+
+        <label class="file-drop" id="file-drop">
+          <input id="video-file" type="file" accept="video/*" aria-label="Select a video file" aria-describedby="video-file-help" disabled>
+          <span class="file-icon" aria-hidden="true">↑</span>
+          <strong>Video selection unavailable</strong>
+          <span id="video-file-help">Video selection and transfer will be enabled after account and storage integration are tested. Maximum planned file size: 100 MB.</span>
+          <span id="file-name" class="file-name">Upload is not active</span>
+        </label>
+
+        <div class="upload-grid">
+          <label>
+            <span>Title</span>
+            <input id="video-title" type="text" autocomplete="off" maxlength="120" placeholder="Video title" aria-describedby="video-title-help" disabled>
+            <span id="video-title-help">Up to 120 characters.</span>
+          </label>
+
+          <label>
+            <span>Category</span>
+            <select id="video-category" disabled>
+              <option value="">Select category</option>
+              <option>Entertainment</option>
+              <option>Music</option>
+              <option>Lifestyle</option>
+              <option>Fitness</option>
+              <option>Education</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label class="full">
+            <span>Description</span>
+            <textarea id="video-description" autocomplete="off" maxlength="2000" rows="5" placeholder="Describe your video" aria-describedby="video-description-help" disabled></textarea>
+            <span id="video-description-help">Optional. Up to 2,000 characters.</span>
+          </label>
+
+          <label>
+            <span>Download</span>
+            <select id="download-policy" disabled>
+              <option value="disabled">Downloads disabled</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Visibility</span>
+            <select id="video-visibility" disabled>
+              <option value="private">Private only</option>
+            </select>
+          </label>
+        </div>
+
+        <p id="upload-policy-note">Uploading, publishing, playback, and download controls are not active in this phase. Visibility is planned to default to private when the secure upload flow is implemented.</p>
+
+        <div class="upload-progress" aria-live="polite">
+          <div class="progress-head">
+            <span id="progress-label">Upload integration pending</span>
+            <strong id="progress-value">—</strong>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="upload-actions">
+          <button id="prepare-upload" class="primary" type="button" disabled>Upload Not Available Yet</button>
+          <button id="reset-upload" class="secondary" type="button" disabled>Reset Unavailable</button>
+        </div>
+
+        <div id="upload-result" class="upload-result" hidden></div>
+
+        <div class="architecture-note">
+          <strong>Storage and security</strong>
+          <span>The storage provider, account verification, upload endpoint, and private-library confirmation will be connected and tested in a later phase. This page does not claim that a video has been uploaded or stored.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="upload-footer">
+    <div>X4Kiss — Creator Upload</div>
+    <a href="index.html">Back to Home</a>
+  </footer>
 </body>
 </html>
