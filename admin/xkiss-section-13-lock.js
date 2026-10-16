@@ -1,4 +1,4 @@
-export const XKISS_SECTION_13_LOCK = Object.freeze({
+export const X4KISS_SECTION_13_LOCK = Object.freeze({
   section: "13",
   name: "Admin Dashboard",
   status: "GREEN",
@@ -12,5 +12,5 @@ export const XKISS_SECTION_13_LOCK = Object.freeze({
 });
 
 export function getSection13LockStatus() {
-  return { ...XKISS_SECTION_13_LOCK };
+  return { ...X4KISS_SECTION_13_LOCK };
 }
