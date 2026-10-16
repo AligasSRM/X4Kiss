@@ -1,6 +1,6 @@
-export const XKISS_BACKEND_PROVIDER_CONTRACT = {
+export const X4KISS_BACKEND_PROVIDER_CONTRACT = {
   stage: "AUDIT-05",
-  name: "XKiss Backend Provider Contract",
+  name: "X4Kiss Backend Provider Contract",
   version: "1.0.0",
   failClosed: true,
   providers: {
@@ -26,7 +26,7 @@ export const XKISS_BACKEND_PROVIDER_CONTRACT = {
 function providerReady(providers, key) {
   const provider = providers && providers[key];
   if (!provider || provider.connected !== true) return false;
-  const required = XKISS_BACKEND_PROVIDER_CONTRACT.providers[key].capabilities;
+  const required = X4KISS_BACKEND_PROVIDER_CONTRACT.providers[key].capabilities;
   return required.every((capability) =>
     Array.isArray(provider.capabilities) && provider.capabilities.includes(capability)
   );
@@ -34,13 +34,13 @@ function providerReady(providers, key) {
 
 export function evaluateBackendProviderContract(providers = {}) {
   const checks = Object.fromEntries(
-    Object.keys(XKISS_BACKEND_PROVIDER_CONTRACT.providers).map((key) => [key, providerReady(providers, key)])
+    Object.keys(X4KISS_BACKEND_PROVIDER_CONTRACT.providers).map((key) => [key, providerReady(providers, key)])
   );
   const missing = Object.keys(checks).filter((key) => !checks[key]);
 
   return {
     ok: true,
-    stage: XKISS_BACKEND_PROVIDER_CONTRACT.stage,
+    stage: X4KISS_BACKEND_PROVIDER_CONTRACT.stage,
     status: missing.length === 0 ? "READY_FOR_INTEGRATION_TEST" : "BLOCKED",
     activationAllowed: false,
     failClosed: true,
