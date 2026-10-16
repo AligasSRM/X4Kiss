@@ -1,4 +1,4 @@
-document.addEventListener("xkiss:videos-ready", () => {
+document.addEventListener("x4kiss:videos-ready", () => {
   "use strict";
 
   const API = window.XKissVideos;
@@ -68,9 +68,9 @@ document.addEventListener("xkiss:videos-ready", () => {
 
     resultCount.textContent = `${filteredVideos.length} ${filteredVideos.length === 1 ? "video" : "videos"}`;
     emptyState.hidden = filteredVideos.length !== 0;
-    document.dispatchEvent(new CustomEvent("xkiss:videos-rendered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-rendered"));
   }
 
   render();
-  document.addEventListener("xkiss:videos-filtered", render);
+  document.addEventListener("x4kiss:videos-filtered", render);
 });
