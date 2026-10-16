@@ -34,8 +34,8 @@ function configuration(env = {}) {
     endpoint: parsed.toString().replace(/\/$/, ""),
     bucket: readSetting(env, ["ELASTICLAKE_BUCKET"], DEFAULTS.bucket),
     region: readSetting(env, ["ELASTICLAKE_REGION"], DEFAULTS.region),
-    accessKey: readSetting(env, ["ELASTICLAKE_ACCESS_KEY_ID", "ELASTICLAKE_ACCESS_KEY"]),
-    secretKey: readSetting(env, ["ELASTICLAKE_SECRET_ACCESS_KEY", "ELASTICLAKE_SECRET_KEY"])
+    accessKey: readSetting(env, ["ELASTICLAKE_ACCESS_KEY_ID"]),
+    secretKey: readSetting(env, ["ELASTICLAKE_SECRET_ACCESS_KEY"])
   };
 }
 
