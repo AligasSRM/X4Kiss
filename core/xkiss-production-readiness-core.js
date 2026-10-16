@@ -1,6 +1,6 @@
-export const XKISS_PRODUCTION_READINESS = {
+export const X4KISS_PRODUCTION_READINESS = {
   stage: "AUDIT-02",
-  name: "XKiss Production Readiness Gate",
+  name: "X4Kiss Production Readiness Gate",
   version: "1.0.1",
   failClosed: true,
   productionActivationAllowed: false,
@@ -16,20 +16,20 @@ export const XKISS_PRODUCTION_READINESS = {
   ]
 };
 
-export function getXKissProductionReadiness() {
+export function getX4KissProductionReadiness() {
   return {
     ok: true,
-    stage: XKISS_PRODUCTION_READINESS.stage,
+    stage: X4KISS_PRODUCTION_READINESS.stage,
     status: "BLOCKED",
     productionActivationAllowed: false,
     failClosed: true,
-    blockerCount: XKISS_PRODUCTION_READINESS.blockers.length,
-    blockers: XKISS_PRODUCTION_READINESS.blockers
+    blockerCount: X4KISS_PRODUCTION_READINESS.blockers.length,
+    blockers: X4KISS_PRODUCTION_READINESS.blockers
   };
 }
 
-export function validateXKissProductionReadiness() {
-  const result = getXKissProductionReadiness();
+export function validateX4KissProductionReadiness() {
+  const result = getX4KissProductionReadiness();
   return {
     ok:
       result.status === "BLOCKED" &&
