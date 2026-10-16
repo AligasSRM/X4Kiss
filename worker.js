@@ -1,4 +1,4 @@
-import { getXKissSettingsRuntimeStatus as getX4KissSettingsRuntimeStatus } from "./settings/x4kiss-settings-runtime-core.js";
+import { getX4KissSettingsRuntimeStatus as getX4KissSettingsRuntimeStatus } from "./settings/x4kiss-settings-runtime-core.js";
 import {
   createVideoKey,
   isStorageReady,
@@ -46,7 +46,7 @@ import { verifyVeriffWebhook, mapVeriffVerificationState } from "./safety/veriff
 import { createVeriffSession } from "./safety/veriff-session-provider.js";
 import { registerMember, loginMember, authenticateSession, logoutMember, reauthenticateMemberSession, AUTH_SECURITY_INVARIANTS } from "./security/x4kiss-auth-backend.js";
 import { beginSuperAdminMfaEnrollment, verifyAndEnableSuperAdminMfa, verifySuperAdminMfaForSession } from "./security/super-admin-mfa.js";
-import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/xkiss-admin-backend.js";
+import { adminBackendStatus, authorizeAdminAction, ADMIN_BACKEND_SECURITY } from "./admin/x4kiss-admin-backend.js";
 import { recordAdminSecurityAudit } from "./security/admin-security-audit.js";
 import { isRecentSuperAdminMfa } from "./security/admin-mfa-authorization.js";
 import { settingsBackendStatus, validateSettingsBackendAction, SETTINGS_BACKEND_SECURITY } from "./settings/x4kiss-settings-backend.js";
