@@ -135,7 +135,7 @@ Lock: not locked until targeted verification passes.
     state.allVideos = getVideos();
     applyFilters();
 
-    window.XKissVideos = {
+    window.X4KissVideos = {
       getState,
       getCategories,
       setState,
