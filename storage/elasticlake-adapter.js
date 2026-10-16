@@ -270,7 +270,7 @@ export async function listVideos(env, options = {}) {
   const response = await requestObject(env, "GET", "", undefined, {}, "?" + params.toString());
   await requireSuccess("video listing", response);
   const xml = await response.text();
-  const videos = (xml.match(/<Contents>[\\s\\S]*?<\\/Contents>/g) || [])
+  const videos = (xml.match(/<Contents>[\s\S]*?<\/Contents>/g) || [])
     .map(block => ({
       key: xmlValue(block, "Key"),
       size: Number(xmlValue(block, "Size") || 0),
