@@ -1,14 +1,14 @@
 document.addEventListener("x4kiss:videos-ready", () => {
   "use strict";
 
-  const API = window.XKissVideos;
+  const API = window.X4KissVideos;
   const searchInput = document.getElementById("video-search");
   const filterContainer = document.getElementById("video-filters");
   const sortSelect = document.getElementById("video-sort");
   const clearButton = document.getElementById("clear-filters");
 
   if (!API || !searchInput || !filterContainer || !sortSelect) {
-    console.error("XKiss Videos: filter UI could not initialize.");
+    console.error("X4Kiss Videos: filter UI could not initialize.");
     return;
   }
 
