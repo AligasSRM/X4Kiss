@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const SESSION_KEY = "xkiss_viewer_session_id";
+  const SESSION_KEY = "x4kiss_viewer_session_id";
 
   function getViewerSessionId() {
     let id = sessionStorage.getItem(SESSION_KEY);
@@ -54,7 +54,7 @@
     return data;
   }
 
-  window.XKissViews = {
+  window.X4KissViews = {
     getViewerSessionId,
     createViewEvent,
     validateViewEvent
