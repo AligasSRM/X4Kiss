@@ -18,9 +18,9 @@
       );
 
       const data = await response.json();
-      console.log("XKiss Watch Progress:", data);
+      console.log("X4Kiss Watch Progress:", data);
     } catch (error) {
-      console.error("XKiss: Watch progress check failed:", error);
+      console.error("X4Kiss: Watch progress check failed:", error);
     }
   }
 
@@ -48,8 +48,8 @@
       videoId: String(videoData.id || ""),
       creatorId: String(videoData.creatorId || ""),
       playbackSignal: "playing",
-      viewerSessionId: window.XKissViews
-        ? window.XKissViews.getViewerSessionId()
+      viewerSessionId: window.X4KissViews
+        ? window.X4KissViews.getViewerSessionId()
         : "",
       watchSeconds: currentTime,
       watchPercent,
@@ -63,7 +63,7 @@
       return true;
     }
 
-    const state = window.XKissPlayer;
+    const state = window.X4KissPlayer;
 
     if (!state || !state.video || !state.data) {
       return false;
