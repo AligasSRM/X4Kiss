@@ -1,4 +1,4 @@
-document.addEventListener("xkiss:search-ready", () => {
+document.addEventListener("x4kiss:search-ready", () => {
   "use strict";
 
   const API = window.XKissSearch;
@@ -155,7 +155,7 @@ document.addEventListener("xkiss:search-ready", () => {
 
   clearButton.addEventListener("click", clearSearch);
   shareButton.addEventListener("click", shareSearch);
-  document.addEventListener("xkiss:search-state-changed", refreshFromUrl);
+  document.addEventListener("x4kiss:search-state-changed", refreshFromUrl);
 
   syncInput();
   renderCategories();
