@@ -143,7 +143,7 @@ Lock: not locked until targeted verification passes.
     };
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:videos-ready")
+      new CustomEvent("x4kiss:videos-ready")
     );
   }
 
