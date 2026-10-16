@@ -1,3 +1,12 @@
+/*
+X4KISS FILE CERTIFICATE
+Status: YELLOW — source cleanup applied; runtime tests pending
+Scope: legacy demo video catalog / X4Kiss data identifier
+Completed: removed unverified sample-video data and the obsolete Cloudflare Stream provider label; aligned the data identifier with X4Kiss.
+Verification: static source review only. Browser rendering, player playback, search, and full test suite have not been run.
+Next phase: BLUE — run targeted tests and browser checks with real catalog data before enabling playback.
+Lock: not locked until targeted verification passes.
+*/
 (() => {
   "use strict";
 
@@ -11,14 +20,14 @@
 
   function getVideos() {
     if (
-      typeof XKISS_VIDEOS !== "object" ||
-      XKISS_VIDEOS === null
+      typeof X4KISS_VIDEOS !== "object" ||
+      X4KISS_VIDEOS === null
     ) {
-      console.error("XKiss Videos: XKISS_VIDEOS data is unavailable.");
+      console.error("X4Kiss Videos: X4KISS_VIDEOS data is unavailable.");
       return [];
     }
 
-    return Object.values(XKISS_VIDEOS).filter(
+    return Object.values(X4KISS_VIDEOS).filter(
       video => video && video.id
     );
   }
