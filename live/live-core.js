@@ -97,7 +97,7 @@
       renderUpcoming
     };
 
-    document.dispatchEvent(new CustomEvent("xkiss:live-ready"));
+    document.dispatchEvent(new CustomEvent("x4kiss:live-ready"));
   }
 
   window.addEventListener("DOMContentLoaded", initialize);
