@@ -5,7 +5,7 @@ import {
 
 const complete = {
   ELASTICLAKE_ENDPOINT: "https://app.elasticlake.com",
-  ELASTICLAKE_BUCKET: "xkiss-storage--xkiss-production--xkiss-midea",
+  ELASTICLAKE_BUCKET: "x4kiss-storage--x4kiss-production--x4kiss-media",
   ELASTICLAKE_REGION: "auto",
   ELASTICLAKE_ACCESS_KEY_ID: "test-access-key",
   ELASTICLAKE_SECRET_ACCESS_KEY: "test-secret-key"
