@@ -113,8 +113,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     if (installProgressTracking()) return;
 
-    window.addEventListener("xkiss:player-ready", installProgressTracking, { once: true });
+    window.addEventListener("x4kiss:player-ready", installProgressTracking, { once: true });
   });
 
-  window.addEventListener("xkiss:player-ready", installProgressTracking, { once: true });
+  window.addEventListener("x4kiss:player-ready", installProgressTracking, { once: true });
 })();
