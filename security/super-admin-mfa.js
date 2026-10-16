@@ -59,7 +59,7 @@ export async function beginSuperAdminMfaEnrollment(env,user,session) {
   const secret=b32enc(crypto.getRandomValues(new Uint8Array(20))), enc=await encrypt(env,secret), now=nowISO();
   await db.prepare("INSERT INTO super_admin_mfa (user_id,secret_ciphertext,secret_iv,enabled_at,failed_attempts,locked_until,last_verified_step,created_at,updated_at) VALUES (?1,?2,?3,NULL,0,NULL,NULL,?4,?4) ON CONFLICT(user_id) DO UPDATE SET secret_ciphertext=excluded.secret_ciphertext,secret_iv=excluded.secret_iv,enabled_at=NULL,failed_attempts=0,locked_until=NULL,last_verified_step=NULL,updated_at=excluded.updated_at")
     .bind(user.id,enc.secretCiphertext,enc.secretIv,now).run();
-  return {ok:true,status:"enrollment_pending",secret,otpauthUri:"otpauth://totp/"+encodeURIComponent("XKiss:"+user.email)+"?secret="+secret+"&issuer=XKiss&algorithm=SHA1&digits=6&period=30"};
+  return {ok:true,status:"enrollment_pending",secret,otpauthUri:"otpauth://totp/"+encodeURIComponent("X4Kiss:"+user.email)+"?secret="+secret+"&issuer=X4Kiss&algorithm=SHA1&digits=6&period=30"};
 }
 export async function verifyAndEnableSuperAdminMfa(env,user,session,code) {
   if(!env?.X4KISS_AUTH_DB||user?.role!=="super_admin")return {ok:false,status:"forbidden"};
