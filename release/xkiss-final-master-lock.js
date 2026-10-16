@@ -1,4 +1,4 @@
-export const XKISS_FINAL_MASTER_LOCK=Object.freeze({
+export const X4KISS_FINAL_MASTER_LOCK=Object.freeze({
   section:"20",
   name:"Final Master Release Lock",
   state:"GREEN_CLOSED",
@@ -11,7 +11,7 @@ export const XKISS_FINAL_MASTER_LOCK=Object.freeze({
 });
 
 export function validateFinalMasterLock(){
-  const s=XKISS_FINAL_MASTER_LOCK;
+  const s=X4KISS_FINAL_MASTER_LOCK;
   return {
     ok:s.state==="GREEN_CLOSED"&&s.locked&&s.failClosed&&!s.productionActivationAllowed&&
       s.externalVerificationRequired&&s.protectedSections.length===19,
