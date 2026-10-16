@@ -1,13 +1,13 @@
 document.addEventListener("x4kiss:videos-ready", () => {
   "use strict";
 
-  const API = window.XKissVideos;
+  const API = window.X4KissVideos;
   const grid = document.getElementById("videos-grid");
   const emptyState = document.getElementById("videos-empty");
   const resultCount = document.getElementById("video-result-count");
 
   if (!API || !grid || !emptyState || !resultCount) {
-    console.error("XKiss Videos: render UI could not initialize.");
+    console.error("X4Kiss Videos: render UI could not initialize.");
     return;
   }
 
@@ -56,7 +56,7 @@ document.addEventListener("x4kiss:videos-ready", () => {
             <div class="video-title">${escapeHtml(video.title)}</div>
             <div class="video-creator">
               <div class="creator-avatar">${getInitial(video.creator)}</div>
-              <div class="creator-name">${escapeHtml(video.creator || "XKiss Creator")}</div>
+              <div class="creator-name">${escapeHtml(video.creator || "X4Kiss Creator")}</div>
             </div>
             <div class="video-meta">${escapeHtml(video.duration || "—")} · ${views.toLocaleString()} views</div>
             <div class="video-tags">${tags}</div>
