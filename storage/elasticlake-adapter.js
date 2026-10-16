@@ -1,143 +1,290 @@
-const VIDEO_PREFIX = "videos/";
-
 import { AwsClient } from "aws4fetch";
 
-function cleanEnvValue(value, fallback = "") {
-  const raw = String(value ?? fallback).trim();
-  return raw.replace(/^["']|["']$/g, "").trim();
+const DEFAULTS = Object.freeze({
+  endpoint: "https://app.elasticlake.com",
+  bucket: "x4kiss-storage--x4kiss-production--x4kiss-media",
+  region: "auto"
+});
+
+function readSetting(env, names, fallback = "") {
+  for (const name of names) {
+    const value = env?.[name];
+    if (value !== undefined && value !== null && String(value).trim() !== "") {
+      return String(value).trim().replace(/^(['"])(.*)\1$/, "$2").trim();
+    }
+  }
+  return fallback;
 }
 
-function getConfig(env) {
-  let endpoint = cleanEnvValue(env?.ELASTICLAKE_ENDPOINT, "https://app.elasticlake.com");
-  if (endpoint && !/^https?:\/\//i.test(endpoint)) endpoint = "https://" + endpoint;
-  endpoint = endpoint.replace(/\/$/, "");
+function configuration(env = {}) {
+  let endpoint = readSetting(env, ["ELASTICLAKE_ENDPOINT"], DEFAULTS.endpoint);
+  if (!/^https?:\/\//i.test(endpoint)) endpoint = "https://" + endpoint;
+
+  let parsed;
+  try {
+    parsed = new URL(endpoint);
+  } catch {
+    throw new Error("Invalid ElasticLake endpoint URL.");
+  }
+  if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new Error("ElasticLake endpoint must be an HTTPS URL without credentials or query parameters.");
+  }
+
   return {
-    endpoint,
-    bucket: cleanEnvValue(env?.ELASTICLAKE_BUCKET, "x4kiss-storage--x4kiss-production--x4kiss-media"),
-    region: cleanEnvValue(env?.ELASTICLAKE_REGION, "auto"),
-    accessKey: cleanEnvValue(env?.ELASTICLAKE_ACCESS_KEY_ID || env?.ELASTICLAKE_ACCESS_KEY),
-    secretKey: cleanEnvValue(env?.ELASTICLAKE_SECRET_ACCESS_KEY || env?.ELASTICLAKE_SECRET_KEY)
+    endpoint: parsed.toString().replace(/\/$/, ""),
+    bucket: readSetting(env, ["ELASTICLAKE_BUCKET"], DEFAULTS.bucket),
+    region: readSetting(env, ["ELASTICLAKE_REGION"], DEFAULTS.region),
+    accessKey: readSetting(env, ["ELASTICLAKE_ACCESS_KEY_ID"]),
+    secretKey: readSetting(env, ["ELASTICLAKE_SECRET_ACCESS_KEY"])
   };
 }
 
-export function isStorageReady(env) {
-  const c = getConfig(env);
-  return Boolean(c.endpoint && c.bucket && c.region && c.accessKey && c.secretKey);
+export function isStorageReady(env = {}) {
+  try {
+    const c = configuration(env);
+    return Boolean(c.endpoint && c.bucket && c.region && c.accessKey && c.secretKey);
+  } catch {
+    return false;
+  }
 }
 
-function sanitizeFileName(fileName) {
-  return String(fileName || "video").replace(/[^a-zA-Z0-9._-]/g, "_").slice(-180);
+function objectKey(input) {
+  const key = String(input ?? "");
+  if (!key || key.startsWith("/") || key.includes("\\") ||
+      key.split("/").some(part => !part || part === "." || part === "..")) {
+    throw new Error("ElasticLake object key is invalid.");
+  }
+  return key;
 }
 
-export function createVideoKey(fileName) {
-  return VIDEO_PREFIX + crypto.randomUUID() + "-" + sanitizeFileName(fileName);
+function encodedKey(key) {
+  return objectKey(key).split("/").map(encodeURIComponent).join("/");
 }
 
-function encodeObjectKey(key) {
-  return String(key || "").split("/").map((segment) => encodeURIComponent(segment)).join("/");
+function safeText(value, limit = 512) {
+  return String(value ?? "").replace(/[\r\n\0]/g, " ").slice(0, limit);
 }
 
-async function signedRequest(env, method, key = "", body = null, extraHeaders = {}) {
-  const c = getConfig(env);
-  if (!isStorageReady(env)) throw new Error("ElasticLake storage credentials are not configured.");
+function fileName(value) {
+  return safeText(value || "video", 180).replace(/[^a-zA-Z0-9._-]/g, "_") || "video";
+}
 
-  // ElasticLake's S3-compatible API uses path-style URLs: /{bucket}/{key}.
-  const path = "/" + encodeURIComponent(c.bucket) + (key ? "/" + encodeObjectKey(key) : "");
-  const url = c.endpoint + path;
-  const headers = new Headers(extraHeaders);
-  if (!headers.has("content-type") && body != null) headers.set("content-type", "application/octet-stream");
+export function createVideoKey(name) {
+  return "videos/" + crypto.randomUUID() + "-" + fileName(name);
+}
 
-  const client = new AwsClient({
+async function requestObject(env, method, key = "", body = undefined, headers = {}, query = "") {
+  const c = configuration(env);
+  if (!c.accessKey || !c.secretKey || !c.bucket) {
+    throw new Error("ElasticLake credentials or bucket configuration are missing.");
+  }
+
+  const resource = "/" + encodeURIComponent(c.bucket) + (key ? "/" + encodedKey(key) : "");
+  const url = c.endpoint + resource + query;
+  const requestHeaders = new Headers(headers);
+  if (body !== undefined && body !== null && !requestHeaders.has("content-type")) {
+    requestHeaders.set("content-type", "application/octet-stream");
+  }
+
+  const signer = new AwsClient({
     accessKeyId: c.accessKey,
     secretAccessKey: c.secretKey,
     service: "s3",
     region: c.region
   });
-  const signed = await client.sign(url, { method, headers, body });
+  const signed = await signer.sign(url, { method, headers: requestHeaders, body });
   return fetch(signed);
 }
 
-async function throwStorageError(action, response) {
+async function requireSuccess(operation, response) {
   if (response.ok) return;
-  const detail = await response.text().catch(() => "");
-  throw new Error("ElasticLake " + action + " failed (" + response.status + "): " + detail.slice(0, 500));
+  const detail = (await response.text().catch(() => "")).slice(0, 240);
+  throw new Error("ElasticLake " + operation + " failed (HTTP " + response.status + ")" +
+    (detail ? ": " + detail : ""));
 }
 
 export async function storeJsonObject(env, key, value) {
-  if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
-  const response = await signedRequest(env, "PUT", key, JSON.stringify(value), {
-    "content-type": "application/json; charset=UTF-8"
+  if (!isStorageReady(env)) {
+    return { ok: false, storageReady: false, status: "storage-not-ready" };
+  }
+  const keyName = objectKey(key);
+  const response = await requestObject(env, "PUT", keyName, JSON.stringify(value), {
+    "content-type": "application/json; charset=utf-8"
   });
-  await throwStorageError("JSON object store", response);
-  return { ok: true, storageReady: true, status: "stored", key, storage: "ElasticLake" };
+  await requireSuccess("JSON write", response);
+  return { ok: true, storageReady: true, status: "stored", key: keyName, storage: "ElasticLake" };
 }
 
 export async function getJsonObject(env, key) {
-  if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready", value: null };
-  const response = await signedRequest(env, "GET", key);
-  if (response.status === 404) return { ok: true, storageReady: true, status: "not-found", value: null };
-  await throwStorageError("JSON object read", response);
+  if (!isStorageReady(env)) {
+    return { ok: false, storageReady: false, status: "storage-not-ready", value: null };
+  }
+  const keyName = objectKey(key);
+  const response = await requestObject(env, "GET", keyName);
+  if (response.status === 404) {
+    return { ok: true, storageReady: true, status: "not-found", value: null };
+  }
+  await requireSuccess("JSON read", response);
   return { ok: true, storageReady: true, status: "found", value: await response.json() };
 }
 
 export async function deleteJsonObject(env, key) {
-  if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
-  const response = await signedRequest(env, "DELETE", key);
-  if (!response.ok && response.status !== 404) await throwStorageError("JSON object delete", response);
+  if (!isStorageReady(env)) {
+    return { ok: false, storageReady: false, status: "storage-not-ready" };
+  }
+  const keyName = objectKey(key);
+  const response = await requestObject(env, "DELETE", keyName);
+  if (response.status !== 404) await requireSuccess("object delete", response);
   return {
     ok: true,
     storageReady: true,
     status: response.status === 404 ? "not-found" : "deleted",
-    key,
+    key: keyName,
     storage: "ElasticLake"
   };
 }
 
+const MULTIPART_THRESHOLD = 100 * 1024 * 1024;
+const MULTIPART_PART_SIZE = 10 * 1024 * 1024;
+
+function knownBodySize(body) {
+  if (typeof Blob !== "undefined" && body instanceof Blob) return body.size;
+  if (body instanceof ArrayBuffer) return body.byteLength;
+  if (ArrayBuffer.isView(body)) return body.byteLength;
+  if (typeof body === "string") return new TextEncoder().encode(body).byteLength;
+  return null;
+}
+
+function bodyPart(body, start, end) {
+  if (typeof Blob !== "undefined" && body instanceof Blob) return body.slice(start, end);
+  if (body instanceof ArrayBuffer) return body.slice(start, end);
+  if (ArrayBuffer.isView(body)) return new Uint8Array(body.buffer, body.byteOffset + start, end - start);
+  if (typeof body === "string") return new TextEncoder().encode(body).slice(start, end);
+  throw new Error("Large video uploads require a Blob, ArrayBuffer, or typed-array body to split safely.");
+}
+
+function escapeXml(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
 export async function storeVideo(env, key, body, metadata = {}) {
-  if (!isStorageReady(env)) return { ok: false, storageReady: false, status: "storage-not-ready" };
+  if (!isStorageReady(env)) {
+    return { ok: false, storageReady: false, status: "storage-not-ready" };
+  }
+  const keyName = objectKey(key);
   const headers = {
-    "content-type": String(metadata.contentType || "application/octet-stream"),
-    "x-amz-meta-originalfilename": String(metadata.fileName || "video"),
-    "x-amz-meta-title": String(metadata.title || ""),
-    "x-amz-meta-creatorid": String(metadata.creatorId || ""),
-    "x-amz-meta-description": String(metadata.description || ""),
-    "x-amz-meta-category": String(metadata.category || ""),
-    "x-amz-meta-downloadpolicy": String(metadata.downloadPolicy || "disabled"),
-    "x-amz-meta-visibility": String(metadata.visibility || "private"),
-    "x-amz-meta-status": "Ready"
+    "content-type": safeText(metadata.contentType || "application/octet-stream", 128),
+    "x-amz-meta-filename": fileName(metadata.fileName),
+    "x-amz-meta-title": safeText(metadata.title, 180),
+    "x-amz-meta-visibility": safeText(metadata.visibility || "private", 32)
   };
-  const response = await signedRequest(env, "PUT", key, body, headers);
-  await throwStorageError("upload", response);
-  return { ok: true, storageReady: true, status: "stored", key, storage: "ElasticLake" };
-}
+  const size = knownBodySize(body);
 
-function xmlTag(xml, tag) {
-  const match = xml.match(new RegExp("<" + tag + ">([\\s\\S]*?)</" + tag + ">"));
-  return match ? match[1] : "";
-}
-
-export async function listVideos(env) {
-  if (!isStorageReady(env)) return { ok: true, storageReady: false, videos: [] };
-  const response = await signedRequest(env, "GET");
-  await throwStorageError("list", response);
-  const xml = await response.text();
-  const blocks = xml.match(/<Contents>[\s\S]*?<\/Contents>/g) || [];
-  const videos = blocks.map((block) => {
-    const key = xmlTag(block, "Key");
-    if (!key || !key.startsWith(VIDEO_PREFIX)) return null;
+  if (size === null || size <= MULTIPART_THRESHOLD) {
+    const response = await requestObject(env, "PUT", keyName, body, headers);
+    await requireSuccess("video upload", response);
     return {
-      key,
-      size: Number(xmlTag(block, "Size") || 0),
-      uploaded: xmlTag(block, "LastModified") || null,
-      etag: xmlTag(block, "ETag") || null,
-      title: key.split("/").pop() || "Untitled video",
-      description: "",
-      category: "Uncategorized",
-      downloadPolicy: "disabled",
-      visibility: "private",
-      status: "Ready",
-      storage: "ElasticLake"
+      ok: true, storageReady: true, status: "stored", key: keyName,
+      storage: "ElasticLake", uploadMode: "single"
     };
-  }).filter(Boolean);
-  return { ok: true, storageReady: true, videos };
+  }
+
+  const partCount = Math.ceil(size / MULTIPART_PART_SIZE);
+  if (partCount > 10000) throw new Error("Video exceeds the supported multipart upload part limit.");
+
+  const initiate = await requestObject(env, "POST", keyName, undefined, headers, "?uploads");
+  await requireSuccess("multipart upload initiation", initiate);
+  const uploadId = xmlValue(await initiate.text(), "UploadId");
+  if (!uploadId) throw new Error("ElasticLake did not return a multipart upload ID.");
+
+  const parts = [];
+  try {
+    for (let partNumber = 1, offset = 0; offset < size; partNumber++, offset += MULTIPART_PART_SIZE) {
+      const end = Math.min(offset + MULTIPART_PART_SIZE, size);
+      const partResponse = await requestObject(
+        env, "PUT", keyName, bodyPart(body, offset, end), {},
+        "?partNumber=" + partNumber + "&uploadId=" + encodeURIComponent(uploadId)
+      );
+      await requireSuccess("multipart part " + partNumber, partResponse);
+      const etag = partResponse.headers.get("etag");
+      if (!etag) throw new Error("ElasticLake did not return an ETag for multipart part " + partNumber + ".");
+      parts.push({ partNumber, etag });
+    }
+
+    const completionXml = "<CompleteMultipartUpload>" + parts.map(part =>
+      "<Part><PartNumber>" + part.partNumber + "</PartNumber><ETag>" +
+      escapeXml(part.etag) + "</ETag></Part>"
+    ).join("") + "</CompleteMultipartUpload>";
+    const complete = await requestObject(
+      env, "POST", keyName, completionXml,
+      { "content-type": "application/xml" },
+      "?uploadId=" + encodeURIComponent(uploadId)
+    );
+    await requireSuccess("multipart upload completion", complete);
+    const completionBody = await complete.text().catch(() => "");
+    if (/<Error(?:\s|>)/i.test(completionBody)) {
+      throw new Error("ElasticLake reported an error while completing the multipart upload.");
+    }
+  } catch (error) {
+    try {
+      const abort = await requestObject(
+        env, "DELETE", keyName, undefined, {}, "?uploadId=" + encodeURIComponent(uploadId)
+      );
+      if (!abort.ok) await abort.body?.cancel?.().catch(() => {});
+    } catch {
+      // Preserve the original upload failure; cleanup is best effort.
+    }
+    throw error;
+  }
+
+  return {
+    ok: true, storageReady: true, status: "stored", key: keyName,
+    storage: "ElasticLake", uploadMode: "multipart", parts: parts.length
+  };
+}
+function xmlValue(block, tag) {
+  const match = block.match(new RegExp("<" + tag + ">([\\s\\S]*?)</" + tag + ">"));
+  if (!match) return "";
+  return match[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+}
+
+export async function listVideos(env, options = {}) {
+  if (!isStorageReady(env)) {
+    return {
+      ok: false, storageReady: false, status: "storage-not-ready",
+      videos: [], isTruncated: false, nextContinuationToken: null
+    };
+  }
+  const requestedMax = Number(options.maxKeys ?? 1000);
+  if (!Number.isInteger(requestedMax) || requestedMax < 1 || requestedMax > 1000) {
+    throw new Error("Video listing maxKeys must be an integer between 1 and 1000.");
+  }
+  const params = new URLSearchParams({
+    "list-type": "2",
+    prefix: "videos/",
+    "max-keys": String(requestedMax)
+  });
+  if (options.continuationToken) params.set("continuation-token", String(options.continuationToken));
+  const response = await requestObject(env, "GET", "", undefined, {}, "?" + params.toString());
+  await requireSuccess("video listing", response);
+  const xml = await response.text();
+  const videos = (xml.match(/<Contents>[\s\S]*?<\/Contents>/g) || [])
+    .map(block => ({
+      key: xmlValue(block, "Key"),
+      size: Number(xmlValue(block, "Size") || 0),
+      lastModified: xmlValue(block, "LastModified"),
+      etag: xmlValue(block, "ETag").replace(/^"|"$/g, "")
+    }))
+    .filter(item => item.key.startsWith("videos/"));
+  const isTruncated = xmlValue(xml, "IsTruncated").toLowerCase() === "true";
+  const nextContinuationToken = isTruncated ? (xmlValue(xml, "NextContinuationToken") || null) : null;
+  if (isTruncated && !nextContinuationToken) {
+    throw new Error("ElasticLake marked the video listing as truncated but omitted the continuation token.");
+  }
+  return {
+    ok: true, storageReady: true, status: "listed", videos,
+    isTruncated, nextContinuationToken
+  };
 }
