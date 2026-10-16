@@ -57,3 +57,17 @@ Configured bucket in `wrangler.toml` and `storage/elasticlake-adapter.js`:
 ## Decision
 
 Status remains **YELLOW for this cleanup scope**. The production release remains **RED / BLOCKED** until the documented live Worker and provider-credential blockers are resolved with fresh evidence.
+
+
+## Branding migration follow-up — 2026-10-16
+
+The follow-up rename sweep has now:
+- Renamed runtime bindings in `wrangler.toml`, auth/MFA code, admin backend, and relevant tests from `XKISS_AUTH_DB`, `XKISS_DB`, and `XKISS_ADMIN_AUDIT` to `X4KISS_...` forms.
+- Standardized the browser event prefix from `xkiss:` to `x4kiss:` in player, videos, search, live, and view-progress modules.
+- Renamed selected global identifiers and labels from `XKISS_` / `XKiss` to `X4KISS_` / `X4Kiss` across the inspected core, release, partner, safety, live, search, video, and security modules.
+- Renamed `security/xkiss-auth-backend.js` to `security/x4kiss-auth-backend.js` and updated the Worker import.
+- Renamed `settings/xkiss-settings-runtime-core.js` to `settings/x4kiss-settings-runtime-core.js` and updated the Worker and platform-core imports.
+
+This is **not yet a repository-wide completed rename**. Other source filenames still use the old `xkiss-` prefix, and some import graphs may still reference those names. The next pass must inventory every remaining old identifier and filename, migrate each dependency group together, and verify imports.
+
+Tests and build were not run after this branding migration. Therefore the renamed scope is YELLOW, not GREEN, and the repository must not be treated as release-ready.
