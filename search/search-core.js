@@ -188,7 +188,7 @@ Lock: not locked until targeted verification passes.
     apply();
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:search-state-changed")
+      new CustomEvent("x4kiss:search-state-changed")
     );
 
     return getState();
@@ -284,7 +284,7 @@ Lock: not locked until targeted verification passes.
     window.addEventListener("popstate", syncFromUrl);
 
     document.dispatchEvent(
-      new CustomEvent("xkiss:search-ready")
+      new CustomEvent("x4kiss:search-ready")
     );
   }
 
