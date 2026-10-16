@@ -1,4 +1,4 @@
-import { getX4KissSettingsRuntimeStatus as getX4KissSettingsRuntimeStatus, validateX4KissSettingsRuntimeCore as validateX4KissSettingsRuntimeCore } from "../settings/xkiss-settings-runtime-core.js";
+import { getX4KissSettingsRuntimeStatus as getX4KissSettingsRuntimeStatus, validateX4KissSettingsRuntimeCore as validateX4KissSettingsRuntimeCore } from "../settings/x4kiss-settings-runtime-core.js";
 import { getSystemSettingsRuntimeActivationStatus } from "../settings/system-settings-runtime-activation-core.js";
 
 export const X4KISS_PLATFORM_CORE = {
