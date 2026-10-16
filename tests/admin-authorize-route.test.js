@@ -4,9 +4,9 @@ import worker from "../worker.js";
 
 function makeEnv() {
   return {
-    XKISS_AUTH_DB: {},
-    XKISS_DB: {},
-    XKISS_ADMIN_AUDIT: {
+    X4KISS_AUTH_DB: {},
+    X4KISS_DB: {},
+    X4KISS_ADMIN_AUDIT: {
       prepare(sql) {
         assert.match(sql, /INSERT INTO admin_security_audit/);
         return {
