@@ -41,7 +41,7 @@ export const PRIVACY_DATA_RULES = {
   sensitiveDataMinimized: true,
   identityDocumentsStoredInFrontend: false,
   identityDocumentsStoredInBrowserStorage: false,
-  paymentCardDataStoredByXKiss: false,
+  paymentCardDataStoredByX4Kiss: false,
 
   encryptionAtRestRequired: true,
   encryptionInTransitRequired: true,
