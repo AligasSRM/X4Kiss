@@ -34,7 +34,7 @@ Lock: not locked until targeted verification passes.
   }
 
   function getCategories() {
-    const configured = window.XKissSearchCategories?.getDefinitions?.() || [];
+    const configured = window.X4KissSearchCategories?.getDefinitions?.() || [];
     const categories = configured.map(category => category.label);
     const known = new Set(categories.map(category => normalize(category)));
 
@@ -270,7 +270,7 @@ Lock: not locked until targeted verification passes.
     readUrlState();
     apply();
 
-    window.XKissSearch = {
+    window.X4KissSearch = {
       getState,
       getCategories,
       getSearchShareUrl,
