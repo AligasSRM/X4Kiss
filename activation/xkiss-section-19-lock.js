@@ -1,4 +1,4 @@
-export const XKISS_SECTION_19_LOCK=Object.freeze({
+export const X4KISS_SECTION_19_LOCK=Object.freeze({
   section:"19",
   state:"FINAL_LOCKED",
   locked:true,
@@ -15,10 +15,10 @@ export const XKISS_SECTION_19_LOCK=Object.freeze({
 
 export function validateSection19Lock(){
   return {
-    ok:XKISS_SECTION_19_LOCK.locked===true&&
-       XKISS_SECTION_19_LOCK.failClosed===true&&
-       XKISS_SECTION_19_LOCK.productionActivationAllowed===false&&
-       XKISS_SECTION_19_LOCK.externalActivationRequired===true,
+    ok:X4KISS_SECTION_19_LOCK.locked===true&&
+       X4KISS_SECTION_19_LOCK.failClosed===true&&
+       X4KISS_SECTION_19_LOCK.productionActivationAllowed===false&&
+       X4KISS_SECTION_19_LOCK.externalActivationRequired===true,
     section:"19",
     state:"FINAL_LOCKED"
   };
