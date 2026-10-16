@@ -31,10 +31,10 @@
         button.disabled = true;
         try {
           const id = button.dataset.liveReminder;
-          const reminders = JSON.parse(localStorage.getItem("xkiss_live_reminders") || "[]");
+          const reminders = JSON.parse(localStorage.getItem("x4kiss_live_reminders") || "[]");
           if (id && !reminders.includes(id)) {
             reminders.push(id);
-            localStorage.setItem("xkiss_live_reminders", JSON.stringify(reminders));
+            localStorage.setItem("x4kiss_live_reminders", JSON.stringify(reminders));
           }
         } catch (_) {}
       });
@@ -44,5 +44,5 @@
   document.addEventListener("x4kiss:live-ready", bindLiveActions);
   window.addEventListener("DOMContentLoaded", bindLiveActions);
 
-  window.XKissLiveNavigation = { bindLiveActions };
+  window.X4KissLiveNavigation = { bindLiveActions };
 })();
