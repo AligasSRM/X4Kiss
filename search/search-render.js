@@ -1,7 +1,7 @@
 document.addEventListener("x4kiss:search-ready", () => {
   "use strict";
 
-  const API = window.XKissSearch;
+  const API = window.X4KissSearch;
   const input = document.getElementById("search-input");
   const categoryList = document.getElementById("category-list");
   const resultsGrid = document.getElementById("results-grid");
@@ -12,7 +12,7 @@ document.addEventListener("x4kiss:search-ready", () => {
   const shareStatus = document.getElementById("share-status");
 
   if (!API || !input || !categoryList || !resultsGrid || !resultCount || !emptyState || !clearButton || !shareButton || !shareStatus) {
-    console.error("XKiss Search: UI could not initialize.");
+    console.error("X4Kiss Search: UI could not initialize.");
     return;
   }
 
@@ -80,7 +80,7 @@ document.addEventListener("x4kiss:search-ready", () => {
 
       const views = Number(video.statistics?.views ?? video.views ?? 0);
 
-      return "<article class=\"result-card\"><div class=\"result-thumb\"><div class=\"thumb-brand\"><span class=\"thumb-x\">X</span><span class=\"thumb-kiss\">kiss</span></div><span class=\"quality\">" + escapeHtml(quality) + "</span></div><div class=\"result-info\"><h3>" + highlight(video.title, query) + "</h3><div class=\"creator\"><span class=\"avatar\">" + getInitial(video.creator) + "</span><span>" + highlight(video.creator || "XKiss Creator", query) + "</span></div><p>" + escapeHtml(video.duration || "—") + " · " + views.toLocaleString() + " views</p><a class=\"watch\" href=\"player.html?id=" + encodeURIComponent(video.id) + "\">Watch Now</a></div></article>";
+      return "<article class=\"result-card\"><div class=\"result-thumb\"><div class=\"thumb-brand\"><span class=\"thumb-x\">X</span><span class=\"thumb-kiss\">kiss</span></div><span class=\"quality\">" + escapeHtml(quality) + "</span></div><div class=\"result-info\"><h3>" + highlight(video.title, query) + "</h3><div class=\"creator\"><span class=\"avatar\">" + getInitial(video.creator) + "</span><span>" + highlight(video.creator || "X4Kiss Creator", query) + "</span></div><p>" + escapeHtml(video.duration || "—") + " · " + views.toLocaleString() + " views</p><a class=\"watch\" href=\"player.html?id=" + encodeURIComponent(video.id) + "\">Watch Now</a></div></article>";
     }).join("");
 
     const hasFilter = Boolean(query.trim()) || category.toLowerCase() !== "all";
@@ -112,8 +112,8 @@ document.addEventListener("x4kiss:search-ready", () => {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "XKiss Search",
-          text: "XKiss Search & Categories",
+          title: "X4Kiss Search",
+          text: "X4Kiss Search & Categories",
           url
         });
         showShareStatus("Share sheet opened.");
