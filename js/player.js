@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.dispatchEvent(new CustomEvent("xkiss:player-ready"));
+  window.dispatchEvent(new CustomEvent("x4kiss:player-ready"));
 
   console.log(
     "X4Kiss Player loaded:",
