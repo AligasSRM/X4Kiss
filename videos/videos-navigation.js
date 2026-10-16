@@ -1,4 +1,4 @@
-document.addEventListener("xkiss:videos-rendered", () => {
+document.addEventListener("x4kiss:videos-rendered", () => {
   "use strict";
 
   document.querySelectorAll("[data-video-id]").forEach(element => {
