@@ -14,7 +14,7 @@ test("Super Admin role is the only role requiring MFA", () => {
 });
 
 test("MFA enrollment fails closed without reauthentication", async () => {
-  const result = await beginSuperAdminMfaEnrollment({ XKISS_AUTH_DB: {} }, { id:"u1", email:"admin@example.com", role:"super_admin" }, { sessionId:"s1" });
+  const result = await beginSuperAdminMfaEnrollment({ X4KISS_AUTH_DB: {} }, { id:"u1", email:"admin@example.com", role:"super_admin" }, { sessionId:"s1" });
   assert.deepEqual(result, { ok:false, status:"reauthentication_required" });
 });
 
@@ -29,6 +29,6 @@ test("MFA verification fails closed for non-super-admin users", async () => {
 });
 
 test("MFA enablement requires recent password reauthentication", async () => {
-  const result = await verifyAndEnableSuperAdminMfa({ XKISS_AUTH_DB:{} }, { id:"u1", role:"super_admin" }, { sessionId:"s1" }, "123456");
+  const result = await verifyAndEnableSuperAdminMfa({ X4KISS_AUTH_DB:{} }, { id:"u1", role:"super_admin" }, { sessionId:"s1" }, "123456");
   assert.deepEqual(result, { ok:false, status:"reauthentication_required" });
 });
