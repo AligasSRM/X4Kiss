@@ -41,7 +41,7 @@
     });
   }
 
-  document.addEventListener("xkiss:live-ready", bindLiveActions);
+  document.addEventListener("x4kiss:live-ready", bindLiveActions);
   window.addEventListener("DOMContentLoaded", bindLiveActions);
 
   window.XKissLiveNavigation = { bindLiveActions };
