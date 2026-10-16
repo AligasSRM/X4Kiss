@@ -1,4 +1,4 @@
-document.addEventListener("xkiss:videos-ready", () => {
+document.addEventListener("x4kiss:videos-ready", () => {
   "use strict";
 
   const API = window.XKissVideos;
@@ -26,7 +26,7 @@ document.addEventListener("xkiss:videos-ready", () => {
         API.setState({ category });
         API.applyFilters();
         renderFilters();
-        document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+        document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
       });
 
       filterContainer.appendChild(button);
@@ -36,7 +36,7 @@ document.addEventListener("xkiss:videos-ready", () => {
   function handleSearch() {
     API.setState({ search: searchInput.value });
     API.applyFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   }
 
   searchInput.addEventListener("input", handleSearch);
@@ -44,7 +44,7 @@ document.addEventListener("xkiss:videos-ready", () => {
   sortSelect.addEventListener("change", () => {
     API.setState({ sort: sortSelect.value });
     API.applyFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   });
 
   clearButton?.addEventListener("click", () => {
@@ -53,7 +53,7 @@ document.addEventListener("xkiss:videos-ready", () => {
     API.setState({ category: "All", search: "", sort: "latest" });
     API.applyFilters();
     renderFilters();
-    document.dispatchEvent(new CustomEvent("xkiss:videos-filtered"));
+    document.dispatchEvent(new CustomEvent("x4kiss:videos-filtered"));
   });
 
   renderFilters();
