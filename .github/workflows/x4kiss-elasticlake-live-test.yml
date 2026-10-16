@@ -1,0 +1,33 @@
+name: X4Kiss ElasticLake Live Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-storage-test:
+    name: Temporary object write-read-delete
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Verify ElasticLake using repository secrets
+        env:
+          ELASTICLAKE_ENDPOINT: ${{ vars.ELASTICLAKE_ENDPOINT }}
+          ELASTICLAKE_BUCKET: ${{ vars.ELASTICLAKE_BUCKET }}
+          ELASTICLAKE_REGION: ${{ vars.ELASTICLAKE_REGION }}
+          ELASTICLAKE_ACCESS_KEY_ID: ${{ secrets.ELASTICLAKE_ACCESS_KEY_ID }}
+          ELASTICLAKE_SECRET_ACCESS_KEY: ${{ secrets.ELASTICLAKE_SECRET_ACCESS_KEY }}
+        run: node scripts/elasticlake-live-test.mjs
