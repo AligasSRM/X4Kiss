@@ -16,8 +16,8 @@
 
   function initialize() {
     const roomId = getRoomId();
-    const rooms = Array.isArray(window.XKISS_LIVE?.liveRooms)
-      ? window.XKISS_LIVE.liveRooms
+    const rooms = Array.isArray(window.X4KISS_LIVE?.liveRooms)
+      ? window.X4KISS_LIVE.liveRooms
       : [];
     const room = rooms.find(item => item && item.id === roomId);
 
@@ -31,7 +31,7 @@
     if (!room) {
       if (title) title.textContent = "Live Room";
       if (status) status.textContent = "This live room is not currently available.";
-      if (creator) creator.textContent = "XKiss Live";
+      if (creator) creator.textContent = "X4Kiss Live";
       if (id) id.textContent = roomId || "—";
       if (state) state.textContent = "Unavailable";
       if (viewers) viewers.textContent = "0";
@@ -40,7 +40,7 @@
 
     if (title) title.textContent = room.title || "Live Room";
     if (status) status.textContent = "Live room shell loaded. Real-time stream provider is not connected.";
-    if (creator) creator.textContent = room.creator || "XKiss Creator";
+    if (creator) creator.textContent = room.creator || "X4Kiss Creator";
     if (id) id.textContent = escapeHtml(room.id);
     if (state) state.textContent = "Ready";
     if (viewers) viewers.textContent = Number(room.viewers || 0).toLocaleString();
